@@ -1,0 +1,218 @@
+<template>
+  <div class="p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black">
+       <Sidebar />
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+      <div class="flex gap-4 justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">💰 Pagos</h1>
+        <div class="flex gap-4">
+            <router-link
+            to="/Menu"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
+          >
+            🏠 Inicio
+          </router-link>
+
+          <button @click="openModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
+          ➕ Registrar pago
+        </button>
+        </div>
+      </div>
+
+<div class="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-4 rounded">
+  <p class="text-lg font-semibold">💰 Total Recolectado Hoy:</p>
+  <p class="text-2xl font-bold">
+    {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalHoy) }}
+  </p>
+</div>
+
+
+      <table class="min-w-full bg-white">
+        <thead>
+          <tr class="text-left border-b text-gray-600">
+            <th class="py-3">Cliente</th>
+            <th class="py-3">Monto</th>
+            <th class="py-3">Método</th>
+            <th class="py-3">Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="pago in pagos" :key="pago.id" class="border-b hover:bg-gray-50">
+           <td class="py-3">{{ pago.paymentable?.member?.name || '—' }}</td>
+            <td class="py-3">
+              {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(pago.amount) }}
+            </td>
+            <td class="py-3">{{ pago.payment_method?.name }}</td>
+            <td class="py-3">{{ formatDate(pago.paid_at) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Modal -->
+      <div v-if="openModal" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+          <h2 class="text-xl font-bold mb-4">Registrar nuevo pago</h2>
+
+          <form @submit.prevent="registrarPago">
+            <div class="mb-4">
+              <label class="block mb-1 text-sm">Buscar cliente</label>
+              <input
+                v-model="busqueda"
+                type="text"
+                placeholder="Escriba nombre o correo"
+                class="w-full border px-3 py-2 rounded"
+                autocomplete="off"
+              />
+              <ul v-if="miembrosFiltrados.length > 0" class="border rounded bg-white mt-1 max-h-40 overflow-y-auto">
+                <li
+                  v-for="miembro in miembrosFiltrados"
+                  :key="miembro.id"
+                  @click="seleccionarMiembro(miembro)"
+                  class="px-3 py-2 hover:bg-blue-100 cursor-pointer"
+                >
+                  {{ miembro.name }} – {{ miembro.email }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mb-4">
+              <label class="block mb-1 text-sm">Monto</label>
+              <input v-model="nuevoPago.amount" type="number" min="0" step="0.01" required class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div class="mb-4">
+              <label class="block mb-1 text-sm">Método de pago</label>
+              <select v-model="nuevoPago.payment_method_id" required class="w-full border rounded px-3 py-2">
+                <option disabled value="">Seleccione un método</option>
+                <option v-for="m in metodosPago" :key="m.id" :value="m.id">{{ m.name }}</option>
+              </select>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+              <button type="button" @click="cerrarModal" class="px-4 py-2 text-gray-600">Cancelar</button>
+              <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
+import Sidebar from '@/views/Sidebar.vue'
+
+
+const pagos = ref([])
+const miembros = ref([])
+const metodosPago = ref([])
+const openModal = ref(false)
+const busqueda = ref('')
+const  totalHoy = ref(0)
+
+const nuevoPago = ref({
+  member_id: '',
+  amount: '',
+  payment_method_id: '',
+})
+
+// Configuración del token
+const token = localStorage.getItem('token')
+const headers = {
+  Authorization: `Bearer ${token}`,
+  Accept: 'application/json'
+}
+
+// Cargar datos
+const cargarPagos = async () => {
+  const { data } = await axios.get('http://127.0.0.1:8000/api/payments', { headers })
+  pagos.value = data
+
+}
+
+const cargarMiembros = async () => {
+  const { data } = await axios.get('http://127.0.0.1:8000/api/members', { headers })
+  miembros.value = data
+}
+
+const cargarMetodos = async () => {
+  const { data } = await axios.get('http://127.0.0.1:8000/api/payment_methods', { headers })
+  metodosPago.value = data
+}
+
+// Filtrado
+const miembrosFiltrados = computed(() => {
+  const term = busqueda.value.toLowerCase()
+  if (!term) return []
+  return miembros.value.filter(m =>
+    m.name.toLowerCase().includes(term) || m.email.toLowerCase().includes(term)
+  )
+})
+
+const seleccionarMiembro = (miembro) => {
+  nuevoPago.value.member_id = miembro.id
+  busqueda.value = miembro.name + ' - ' + miembro.email
+}
+
+// Registrar pago
+const registrarPago = async () => {
+  try {
+    await axios.post(
+      'http://127.0.0.1:8000/api/payments',
+      {
+        member_id: nuevoPago.value.member_id, // 👈 esto es lo que espera tu backend
+        amount: nuevoPago.value.amount,
+        payment_method_id: nuevoPago.value.payment_method_id,
+      },
+      { headers } // solo si ya tienes configurado tu header con token
+    )
+    limpiarFormulario()
+    openModal.value = false
+    cargarPagos()
+  } catch (error) {
+    console.error('Error al registrar el pago:', error.response?.data || error)
+    alert('Error al registrar el pago.')
+  }
+}
+
+
+const limpiarFormulario = () => {
+  busqueda.value = ''
+  nuevoPago.value = {
+    member_id: '',
+    amount: '',
+    payment_method_id: '',
+  }
+}
+
+const cerrarModal = () => {
+  openModal.value = false
+  limpiarFormulario()
+}
+
+const formatDate = (dateStr) => {
+  return new Date(dateStr).toLocaleDateString('es-CO')
+}
+
+const cargarTotalHoy = async () =>{
+  try {
+    const {data} = await axios.get('http://127.0.0.1:8000/api/paymentsToday',{headers})
+  totalHoy.value = data.total
+}catch(error){
+  console.error('Error cargando total de hoy', error)
+}
+}
+
+
+onMounted(() => {
+  cargarPagos()
+  cargarMiembros()
+  cargarMetodos()
+  cargarTotalHoy()
+})
+</script>
+
+
