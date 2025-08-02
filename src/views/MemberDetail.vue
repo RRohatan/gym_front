@@ -76,7 +76,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
+import api from '@/axios'
 import dayjs from 'dayjs'
 
 const route = useRoute()
@@ -88,12 +88,7 @@ onMounted(async () => {
   const token = localStorage.getItem('token')
 
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/members/${memberId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      }
-    })
+    const response = await api.get(`/members/${memberId}`)
     member.value = response.data
   } catch (error) {
     console.error('Error al obtener el detalle del miembro:', error)

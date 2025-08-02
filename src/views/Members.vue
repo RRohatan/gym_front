@@ -139,7 +139,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
+import api from '@/axios'
 import Sidebar from '@/views/Sidebar.vue'
 
 const members = ref([])
@@ -147,10 +147,6 @@ const loading = ref(true)
 const busqueda = ref('')
 const token = localStorage.getItem('token')
 
-const headers = {
-  Authorization: `Bearer ${token}`,
-  Accept: 'application/json'
-}
 
 // Modal
 const modalAbierto = ref(false)
@@ -192,7 +188,7 @@ const traducirFrecuencia = (f) => {
 
 const cargarMiembros = async () => {
   try {
-    const { data } = await axios.get('http://127.0.0.1:8000/api/members', { headers })
+    const { data } = await api.get('/members')
     members.value = data
   } catch (e) {
     console.error('Error al cargar miembros:', e)
@@ -203,7 +199,7 @@ const cargarMiembros = async () => {
 
 const cargarPlanes = async () => {
   try {
-    const { data } = await axios.get('http://127.0.0.1:8000/api/membershipPlan', { headers })
+    const { data } = await api.get('/membershipPlan')
     planes.value = data
   } catch (e) {
     console.error('Error al cargar planes:', e)
@@ -212,16 +208,16 @@ const cargarPlanes = async () => {
 
 const registrarMiembro = async () => {
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/members', nuevoMiembro.value, { headers })
+    const res = await api.post('/members', nuevoMiembro.value)
     const nuevoId = res.data.id
 
     // Si hay plan seleccionado y fecha, asignar membresía
     if (nuevaMembresia.value.plan_id && nuevaMembresia.value.start_date) {
-      await axios.post('http://127.0.0.1:8000/api/memberships', {
+      await api.post('/memberships', {
         member_id: nuevoId,
         plan_id: nuevaMembresia.value.plan_id,
         start_date: nuevaMembresia.value.start_date
-      }, { headers })
+      })
     }
 
     cerrarModal()

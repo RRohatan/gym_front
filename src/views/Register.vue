@@ -114,11 +114,9 @@ body {
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import api from '@/axios' // ✅ Esto ya usa tu baseURL desde .env
 import { useAuthStore } from '@/stores/useAuthStore'
 import Swal from 'sweetalert2'
-
-
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -133,17 +131,7 @@ const form = reactive({
 
 const register = async () => {
   try {
-    console.log('Enviando datos de registro:', form)
-
-    const response = await axios.post('http://127.0.0.1:8000/api/register', {
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      password_confirmation: form.password_confirmation,
-      gym_name: form.gym_name
-    })
-
-    console.log('Respuesta del backend:', response.data)
+    const response = await api.post('/register', form)
 
     auth.setToken(response.data.access_token)
 
@@ -154,7 +142,6 @@ const register = async () => {
       confirmButtonText: 'OK',
       confirmButtonColor: '#2563EB',
       background: '#f9f9f9',
-      showConfirmButton: true,  // ✅ Esto asegura que el botón aparezca
       backdrop: `rgba(0,0,123,0.4) left top no-repeat`,
       showClass: {
         popup: 'animate__animated animate__fadeInDown'
@@ -166,25 +153,13 @@ const register = async () => {
 
     router.push({ name: 'Login' })
 
-  } catch (error) {
-    // ✅ Manejo seguro del error con axios.isAxiosError
-    if (axios.isAxiosError(error)) {
-      Swal.fire({
-        title: 'Error en el registro',
-        text: error.response?.data?.message || 'Error de red o del servidor.',
-        icon: 'error',
-        confirmButtonText: 'Cerrar'
-      })
-    } else {
-      Swal.fire({
-        title: 'Error inesperado',
-        text: 'Ocurrió un error desconocido.',
-        icon: 'error',
-        confirmButtonText: 'Cerrar'
-      })
-    }
+  } catch (error: any) {
+    Swal.fire({
+      title: 'Error en el registro',
+      text: error?.response?.data?.message || 'Ocurrió un error desconocido.',
+      icon: 'error',
+      confirmButtonText: 'Cerrar'
+    })
   }
 }
-
 </script>
-

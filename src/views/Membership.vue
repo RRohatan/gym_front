@@ -201,7 +201,7 @@
 </template>
 
 <script setup>
-import axios from 'axios'
+import api from '@/axios'
 import { ref, onMounted, computed } from 'vue'
 import dayjs from 'dayjs'
 import Sidebar from '@/views/Sidebar.vue'
@@ -224,12 +224,6 @@ const form = ref({
 
 const busqueda = ref('')
 
-const token = localStorage.getItem('token')
-const headers = {
-  Authorization: `Bearer ${token}`,
-  Accept: 'application/json'
-}
-
 const membresiasFiltradas = computed(() => {
   const term = busquedaMembresia.value.toLowerCase()
   return term
@@ -240,7 +234,7 @@ const membresiasFiltradas = computed(() => {
 
 const cargarMembresias = async () => {
   try {
-    const { data } = await axios.get('http://127.0.0.1:8000/api/memberships?status=active', { headers })
+    const { data } = await api.get('/memberships?status=active')
     membresias.value = data
   } catch (error) {
     console.error('Error al cargar membresías:', error)
@@ -248,12 +242,12 @@ const cargarMembresias = async () => {
 }
 
 const cargarMiembros = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/members', { headers })
+  const { data } = await api.get('/members')
   miembros.value = data
 }
 
 const cargarPlanes = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/membershipPlan', { headers })
+  const { data } = await api.get('/membershipPlan')
   planes.value = data
 }
 
@@ -298,7 +292,7 @@ const asignarMembresia = async () => {
 
     form.value.end_date = fin.format('YYYY-MM-DD')
 
-    await axios.post('http://127.0.0.1:8000/api/memberships', form.value, { headers })
+    await api.post('/memberships', form.value)
 
     cerrarModal()
     await cargarMembresias()
@@ -357,15 +351,14 @@ const cerrarEditarModal = () => {
 
 const guardarCambios = async () => {
   try {
-    await axios.put(
-      `http://127.0.0.1:8000/api/memberships/${editarMembresia.value.id}`,
+    await api.put(
+      `/memberships/${editarMembresia.value.id}`,
       {
         plan_id: editarMembresia.value.plan.id,     // 👈 editando plan
         start_date: editarMembresia.value.start_date,
         end_date: editarMembresia.value.end_date,
         status: editarMembresia.value.status
-      },
-      { headers }
+      }
     )
 
     showEditModal.value = false

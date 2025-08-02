@@ -30,7 +30,7 @@
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
           Registrar miembro
         </button>
-        
+
       </form>
 
       <div v-if="successMessage" class="mt-4 p-3 rounded bg-green-100 text-green-800 border border-green-300">
@@ -44,8 +44,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import api from '@/axios'
 import dayjs from 'dayjs'
 
 const form = ref({
@@ -68,14 +68,7 @@ const errorMessage = ref('')
 
 onMounted(async () => {
   try {
-    const token = localStorage.getItem('token')
-
-    const response = await axios.get('http://127.0.0.1:8000/api/membershipPlan', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    })
+    const response = await api.get('/membershipPlan')
     planes.value = response.data
   } catch (err) {
     console.error('Error al cargar los planes', err)
@@ -111,31 +104,18 @@ const calcularFechaFin = () => {
 
 const registerMember = async () => {
   try {
-    const token = localStorage.getItem('token')
-
     // Registrar miembro
-    const res = await axios.post('http://127.0.0.1:8000/api/members', form.value, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    })
-
+    const res = await api.post('/members', form.value)
     const member = res.data
 
     // Si se eligió un plan, registrar membresía
     if (membership.value.plan_id && membership.value.start_date && membership.value.end_date) {
-      await axios.post('http://127.0.0.1:8000/api/memberships', {
+      await api.post('/memberships', {
         member_id: member.id,
         plan_id: membership.value.plan_id,
         start_date: membership.value.start_date,
         end_date: membership.value.end_date,
         status: membership.value.status
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json'
-        }
       })
     }
 
@@ -143,6 +123,7 @@ const registerMember = async () => {
     errorMessage.value = ''
     form.value = { name: '', email: '', phone: '', birth_date: '' }
     membership.value = { plan_id: '', start_date: '', end_date: '', status: 'active' }
+
   } catch (error) {
     successMessage.value = ''
     if (error.response && error.response.status === 422) {
@@ -159,4 +140,5 @@ const registerMember = async () => {
   }
 }
 </script>
+
 

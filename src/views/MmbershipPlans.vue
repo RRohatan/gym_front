@@ -82,7 +82,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import api from '@/axios'
 import Sidebar from '@/views/Sidebar.vue'
 
 const planes = ref([])
@@ -114,34 +114,19 @@ const traducirFrecuencia = (freq) => {
 
 
 const cargarPlanes = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/membershipPlan', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json'
-    }
-  })
+  const { data } = await api.get('/membershipPlan')
   planes.value = data
 }
 
 const cargarTipos = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/membershipType', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json'
-    }
-  })
+  const { data } = await api.get('/membershipType')
   tipos.value = data
 }
 
 const crearPlan = async () => {
   try {
     console.log('Datos a enviar:', nuevoPlan.value)
-    await axios.post('http://127.0.0.1:8000/api/membershipPlan', nuevoPlan.value, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    })
+    await api.post('/membershipPlan', nuevoPlan.value)
     openModal.value = false
     nuevoPlan.value = { membership_type_id: '', frequency: '', price: '' }
     await cargarPlanes()

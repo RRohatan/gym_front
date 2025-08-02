@@ -1,30 +1,28 @@
 <template>
   <div class="p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black">
-       <Sidebar />
+    <Sidebar />
     <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8">
       <div class="flex gap-4 justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">💰 Pagos</h1>
         <div class="flex gap-4">
-            <router-link
+          <router-link
             to="/Menu"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
           >
             🏠 Inicio
           </router-link>
-
           <button @click="openModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
-          ➕ Registrar pago
-        </button>
+            ➕ Registrar pago
+          </button>
         </div>
       </div>
 
-<div class="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-4 rounded">
-  <p class="text-lg font-semibold">💰 Total Recolectado Hoy:</p>
-  <p class="text-2xl font-bold">
-    {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalHoy) }}
-  </p>
-</div>
-
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-4 rounded">
+        <p class="text-lg font-semibold">💰 Total Recolectado Hoy:</p>
+        <p class="text-2xl font-bold">
+          {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalHoy) }}
+        </p>
+      </div>
 
       <table class="min-w-full bg-white">
         <thead>
@@ -37,10 +35,8 @@
         </thead>
         <tbody>
           <tr v-for="pago in pagos" :key="pago.id" class="border-b hover:bg-gray-50">
-           <td class="py-3">{{ pago.paymentable?.member?.name || '—' }}</td>
-            <td class="py-3">
-              {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(pago.amount) }}
-            </td>
+            <td class="py-3">{{ pago.paymentable?.member?.name || '—' }}</td>
+            <td class="py-3">{{ formatCurrency(pago.amount) }}</td>
             <td class="py-3">{{ pago.payment_method?.name }}</td>
             <td class="py-3">{{ formatDate(pago.paid_at) }}</td>
           </tr>
@@ -102,16 +98,15 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
+import api from '@/axios'
 import Sidebar from '@/views/Sidebar.vue'
-
 
 const pagos = ref([])
 const miembros = ref([])
 const metodosPago = ref([])
 const openModal = ref(false)
 const busqueda = ref('')
-const  totalHoy = ref(0)
+const totalHoy = ref(0)
 
 const nuevoPago = ref({
   member_id: '',
@@ -119,56 +114,39 @@ const nuevoPago = ref({
   payment_method_id: '',
 })
 
-// Configuración del token
-const token = localStorage.getItem('token')
-const headers = {
-  Authorization: `Bearer ${token}`,
-  Accept: 'application/json'
-}
-
-// Cargar datos
+// Obtener datos del backend
 const cargarPagos = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/payments', { headers })
+  const { data } = await api.get('/payments')
   pagos.value = data
-
 }
 
 const cargarMiembros = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/members', { headers })
+  const { data } = await api.get('/members')
   miembros.value = data
 }
 
 const cargarMetodos = async () => {
-  const { data } = await axios.get('http://127.0.0.1:8000/api/payment_methods', { headers })
+  const { data } = await api.get('/payment_methods')
   metodosPago.value = data
 }
 
-// Filtrado
-const miembrosFiltrados = computed(() => {
-  const term = busqueda.value.toLowerCase()
-  if (!term) return []
-  return miembros.value.filter(m =>
-    m.name.toLowerCase().includes(term) || m.email.toLowerCase().includes(term)
-  )
-})
-
-const seleccionarMiembro = (miembro) => {
-  nuevoPago.value.member_id = miembro.id
-  busqueda.value = miembro.name + ' - ' + miembro.email
+const cargarTotalHoy = async () => {
+  try {
+    const { data } = await api.get('/paymentsToday')
+    totalHoy.value = data.total
+  } catch (error) {
+    console.error('Error cargando total de hoy', error)
+  }
 }
 
-// Registrar pago
+// Función para registrar el pago
 const registrarPago = async () => {
   try {
-    await axios.post(
-      'http://127.0.0.1:8000/api/payments',
-      {
-        member_id: nuevoPago.value.member_id, // 👈 esto es lo que espera tu backend
-        amount: nuevoPago.value.amount,
-        payment_method_id: nuevoPago.value.payment_method_id,
-      },
-      { headers } // solo si ya tienes configurado tu header con token
-    )
+    await api.post('/payments', {
+      member_id: nuevoPago.value.member_id,
+      amount: nuevoPago.value.amount,
+      payment_method_id: nuevoPago.value.payment_method_id,
+    })
     limpiarFormulario()
     openModal.value = false
     cargarPagos()
@@ -178,7 +156,7 @@ const registrarPago = async () => {
   }
 }
 
-
+// Funciones auxiliares
 const limpiarFormulario = () => {
   busqueda.value = ''
   nuevoPago.value = {
@@ -193,19 +171,26 @@ const cerrarModal = () => {
   limpiarFormulario()
 }
 
+const seleccionarMiembro = (miembro) => {
+  nuevoPago.value.member_id = miembro.id
+  busqueda.value = `${miembro.name} - ${miembro.email}`
+}
+
+const miembrosFiltrados = computed(() => {
+  const term = busqueda.value.toLowerCase()
+  if (!term) return []
+  return miembros.value.filter(m =>
+    m.name.toLowerCase().includes(term) || m.email.toLowerCase().includes(term)
+  )
+})
+
+const formatCurrency = (val) => {
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val)
+}
+
 const formatDate = (dateStr) => {
   return new Date(dateStr).toLocaleDateString('es-CO')
 }
-
-const cargarTotalHoy = async () =>{
-  try {
-    const {data} = await axios.get('http://127.0.0.1:8000/api/paymentsToday',{headers})
-  totalHoy.value = data.total
-}catch(error){
-  console.error('Error cargando total de hoy', error)
-}
-}
-
 
 onMounted(() => {
   cargarPagos()
@@ -214,5 +199,6 @@ onMounted(() => {
   cargarTotalHoy()
 })
 </script>
+
 
 
