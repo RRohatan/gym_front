@@ -147,14 +147,17 @@ const registrarPago = async () => {
       amount: nuevoPago.value.amount,
       payment_method_id: nuevoPago.value.payment_method_id,
     })
+
     limpiarFormulario()
     openModal.value = false
-    cargarPagos()
+    await cargarPagos()
+    await cargarTotalHoy() // ✅ ACTUALIZA el total del día SIN recargar la página
   } catch (error) {
     console.error('Error al registrar el pago:', error.response?.data || error)
     alert('Error al registrar el pago.')
   }
 }
+
 
 // Funciones auxiliares
 const limpiarFormulario = () => {
