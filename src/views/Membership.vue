@@ -1,88 +1,91 @@
 <template>
+  <div class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+    <sidebar />
 
-  <div class="p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-
-  <sidebar/>
-
-    <div class="max-w-6xl mx-auto bg-white text-gray-800 shadow-lg rounded-2xl p-8">
-
-      <div class="flex justify-between items-center mb-6">
-
-        <h1 class="text-3xl font-bold">🏋️ Membresías activas</h1>
-         <div class="flex gap-4">
+    <div class="max-w-6xl mx-auto bg-white text-gray-800 shadow-lg rounded-2xl p-4 sm:p-8">
+      <!-- Encabezado -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 class="text-2xl sm:text-3xl ml-16 first:font-bold">🏋️ Membresías activas</h1>
+        <div class="flex flex-wrap ml-6 gap-3">
           <router-link
-           to="/Menu"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
-           🏠 Inicio
+            to="/Menu"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-sm"
+          >
+            🏠 Inicio
           </router-link>
           <button
-          @click="showModal = true"
-          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow"
-        >
-          ➕ Asignar nueva membresía
-        </button>
-         </div>
-         </div>
+            @click="showModal = true"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm"
+          >
+            ➕ Asignar nueva membresía
+          </button>
+        </div>
+      </div>
 
-    <div class="overflow-x-auto w-full">
+      <!-- Buscador -->
       <div class="flex justify-end mb-4">
-  <input
-    v-model="busquedaMembresia"
-    type="text"
-    placeholder="Buscar miembro..."
-    class="px-3 py-2 border rounded w-64 text-black"
-  />
-</div>
+        <input
+          v-model="busquedaMembresia"
+          type="text"
+          placeholder="Buscar miembro..."
+          class="px-3 py-2 border rounded w-full sm:w-64 text-black"
+        />
+      </div>
 
-          <table class="w-full min-w[900px] bg-white">
-        <thead>
-          <tr class="text-left border-b text-gray-600">
-            <th class="py-3">Cliente</th>
-            <th class="py-3">Tipo de membresía</th>
-            <th class="py-3">Frecuencia</th>
-            <th class="py-3">Inicio</th>
-            <th class="py-3">Fin</th>
-            <th class="py-3">Estado</th>
-            <th class="py-3">Saldo</th>
-            <th class="py-3">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="m in membresiasFiltradas" :key="m.id" class="border-b hover:bg-gray-50">
-            <td class="py-3">{{ m.member?.name || '—' }}</td>
-            <td class="py-3">{{ m.plan?.membership_type?.name || '—' }}</td>
-            <td class="py-3">{{ traducirFrecuencia(m.plan?.frequency) }}</td>
-            <td class="py-3">{{ formatDate(m.start_date) }}</td>
-           <td class="py-3" :class="getRowColor(m)">
-                             {{ formatDate(m.end_date) }}</td>
-            <td class="py-3">
-              <span
-                class="px-2 py-1 rounded text-sm font-semibold"
-                :class="{
-                  'bg-green-100 text-green-700': m.status === 'active',
-                  'bg-gray-200 text-gray-600': m.status !== 'active'
-                }"
-              >
-                {{ m.status }}
-              </span>
-            </td>
-            <td class="py-3">
-  {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(m.outstanding_balance || 0) }}
-</td>
-  <td class="py-3">
-    <button
-      class="text-blue-600 hover:underline"
-      @click="abrirEditarModal(m)"
-    >
-      ✏️ Editar
-    </button>
-  </td>
-
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
+      <!-- Tabla responsive -->
+      <div class="overflow-x-auto rounded-lg">
+        <table class="min-w-[900px] w-full bg-white text-sm sm:text-base">
+          <thead>
+            <tr class="text-left border-b text-gray-600">
+              <th class="py-3 px-2">Cliente</th>
+              <th class="py-3 px-2">Tipo de membresía</th>
+              <th class="py-3 px-2">Frecuencia</th>
+              <th class="py-3 px-2">Inicio</th>
+              <th class="py-3 px-2">Fin</th>
+              <th class="py-3 px-2">Estado</th>
+              <th class="py-3 px-2">Saldo</th>
+              <th class="py-3 px-2">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="m in membresiasFiltradas"
+              :key="m.id"
+              class="border-b hover:bg-gray-50"
+            >
+              <td class="py-3 px-2">{{ m.member?.name || '—' }}</td>
+              <td class="py-3 px-2">{{ m.plan?.membership_type?.name || '—' }}</td>
+              <td class="py-3 px-2">{{ traducirFrecuencia(m.plan?.frequency) }}</td>
+              <td class="py-3 px-2">{{ formatDate(m.start_date) }}</td>
+              <td class="py-3 px-2" :class="getRowColor(m)">
+                {{ formatDate(m.end_date) }}
+              </td>
+              <td class="py-3 px-2">
+                <span
+                  class="px-2 py-1 rounded text-xs sm:text-sm font-semibold"
+                  :class="{
+                    'bg-green-100 text-green-700': m.status === 'active',
+                    'bg-gray-200 text-gray-600': m.status !== 'active'
+                  }"
+                >
+                  {{ m.status }}
+                </span>
+              </td>
+              <td class="py-3 px-2">
+                {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(m.outstanding_balance || 0) }}
+              </td>
+              <td class="py-3 px-2">
+                <button
+                  class="text-blue-600 hover:underline"
+                  @click="abrirEditarModal(m)"
+                >
+                  ✏️ Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div v-if="membresias.length === 0" class="text-center text-gray-500 mt-8">
         No hay membresías activas registradas.
@@ -90,59 +93,65 @@
     </div>
 
     <!-- Modal de Edición -->
-<div v-if="showEditModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-  <div class="bg-white p-6 rounded-lg w-full max-w-md shadow-lg">
-    <h2 class="text-lg font-bold mb-4">Editar membresía</h2>
-
-    <form @submit.prevent="guardarCambios">
-
-      <div class="mb-4">
-        <label class="block text-sm text-gray-700 mb-1">Plan</label>
-        <select v-model="editarMembresia.plan.id" class="w-full border px-3 py-2 rounded text-black">
-          <option v-for="plan in planes" :key="plan.id" :value="plan.id">
-            {{ plan.membership_type?.name }} – {{ traducirFrecuencia(plan.frequency) }}
-          </option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="block text-sm font-medium text-gray-700">Fecha inicio</label>
-        <input v-model="editarMembresia.start_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
-      </div>
-
-      <div class="mb-3">
-        <label class="block text-sm font-medium text-gray-700">Fecha fin</label>
-        <input v-model="editarMembresia.end_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
-      </div>
-
-      <div class="mb-3">
-        <label class="block text-sm font-medium text-gray-700">Estado</label>
-        <select v-model="editarMembresia.status" class="w-full border rounded px-3 py-2 text-black">
-          <option value="active">Activa</option>
-          <option value="inactive">Inactiva</option>
-          <option value="cancelled">Cancelada</option>
-        </select>
-      </div>
-
-      <div class="flex justify-end space-x-2">
-        <button @click="cerrarEditarModal" type="button" class="px-4 py-2 text-gray-600">Cancelar</button>
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-          Guardar cambios
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-    <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-      <div class="bg-white rounded-lg p-6 w-full max-w-lg">
-        <h2 class="text-xl font-bold mb-4 text-gray-800">Asignar nueva membresía</h2>
-
-        <form @submit.prevent="asignarMembresia">
+    <div
+      v-if="showEditModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-lg">
+        <h2 class="text-lg font-bold mb-4">Editar membresía</h2>
+        <form @submit.prevent="guardarCambios">
           <div class="mb-4">
-            <label class="block text-sm mb-1 text-gray-700">Buscar miembro</label>
+            <label class="block text-sm mb-1">Plan</label>
+            <select
+              v-model="editarMembresia.plan.id"
+              class="w-full border px-3 py-2 rounded text-black"
+            >
+              <option v-for="plan in planes" :key="plan.id" :value="plan.id">
+                {{ plan.membership_type?.name }} – {{ traducirFrecuencia(plan.frequency) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="block text-sm mb-1">Fecha inicio</label>
+            <input v-model="editarMembresia.start_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
+          </div>
+
+          <div class="mb-3">
+            <label class="block text-sm mb-1">Fecha fin</label>
+            <input v-model="editarMembresia.end_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
+          </div>
+
+          <div class="mb-3">
+            <label class="block text-sm mb-1">Estado</label>
+            <select v-model="editarMembresia.status" class="w-full border rounded px-3 py-2 text-black">
+              <option value="active">Activa</option>
+              <option value="inactive">Inactiva</option>
+              <option value="cancelled">Cancelada</option>
+            </select>
+          </div>
+
+          <div class="flex justify-end gap-2">
+            <button @click="cerrarEditarModal" type="button" class="text-gray-600 px-4 py-2">Cancelar</button>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Asignar Membresía -->
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white text-black w-full max-w-lg p-6 rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
+        <h2 class="text-xl font-bold mb-4">Asignar nueva membresía</h2>
+        <form @submit.prevent="asignarMembresia">
+          <!-- Buscador miembro -->
+          <div class="mb-4">
+            <label class="block text-sm mb-1">Buscar miembro</label>
             <input
               v-model="busqueda"
               type="text"
@@ -158,15 +167,16 @@
                 v-for="m in miembrosFiltrados"
                 :key="m.id"
                 @click="seleccionarMiembro(m)"
-                class="px-3 py-2 hover:bg-blue-100 cursor-pointer text-black"
+                class="px-3 py-2 hover:bg-blue-100 cursor-pointer"
               >
                 {{ m.name }} – {{ m.email }}
               </li>
             </ul>
           </div>
 
+          <!-- Plan -->
           <div class="mb-4">
-            <label class="block text-sm mb-1 text-gray-700">Plan</label>
+            <label class="block text-sm mb-1">Plan</label>
             <select v-model="form.plan_id" class="w-full border rounded px-3 py-2 text-black" required>
               <option disabled value="">Seleccione un plan</option>
               <option v-for="p in planes" :key="p.id" :value="p.id">
@@ -175,21 +185,23 @@
             </select>
           </div>
 
+          <!-- Fecha inicio -->
           <div class="mb-4">
-            <label class="block text-sm mb-1 text-gray-700">Fecha de inicio</label>
+            <label class="block text-sm mb-1">Fecha de inicio</label>
             <input type="date" v-model="form.start_date" class="w-full border rounded px-3 py-2 text-black" required />
           </div>
 
+          <!-- Estado -->
           <div class="mb-4">
-            <label class="block text-sm mb-1 text-gray-700">Estado</label>
+            <label class="block text-sm mb-1">Estado</label>
             <select v-model="form.status" class="w-full border rounded px-3 py-2 text-black">
               <option value="active">Activa</option>
               <option value="inactive">Inactiva</option>
             </select>
           </div>
 
-          <div class="flex justify-end space-x-2 mt-4">
-            <button type="button" @click="cerrarModal" class="px-4 py-2 text-gray-600">Cancelar</button>
+          <div class="flex justify-end gap-2 mt-4">
+            <button type="button" @click="cerrarModal" class="text-gray-600 px-4 py-2">Cancelar</button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
               Asignar
             </button>
@@ -199,6 +211,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import api from '@/axios'

@@ -1,61 +1,92 @@
-
 <template>
-  <div class="p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black">
-       <Sidebar />
-    <div class="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-      <div class="flex justify-between items-center mb-6">
+  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black p-4 sm:p-6">
+    <Sidebar />
 
-        <h1 class="text-3xl font-bold text-gray-800">📋 Planes de Membresía</h1>
-         <Sidebar />
-        <div class="flex gap-4">
-         <router-link
-            to="/Menu"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
-          >
-            🏠 Inicio
-          </router-link>
-    <button @click="openModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
-          ➕ Nuevo Plan
-        </button>
-        </div>
+    <div class="max-w-5xl mx-auto bg-white p-4 sm:p-8 rounded-2xl shadow-lg">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 class="text-2xl sm:text-3xl ml-7 font-bold text-gray-800">
+          📋 Planes de Membresía
+        </h1>
+
+        <div class="flex flex-wrap ml-16 gap-4">
+  <router-link
+    to="/Menu"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow whitespace-nowrap"
+  >
+    🏠 Inicio
+  </router-link>
+  <button
+    @click="openModal = true"
+    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow whitespace-nowrap"
+  >
+    ➕ Nuevo Plan
+  </button>
+</div>
 
       </div>
 
-      <table class="min-w-full text-left">
-        <thead class="bg-gray-200 text-gray-700">
-          <tr>
-            <th class="py-2 px-4">Tipo</th>
-            <th class="py-2 px-4">Frecuencia</th>
-            <th class="py-2 px-4">Precio</th>
-
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="plan in planes" :key="plan.id" class="border-b">
-            <td class="py-2 px-4">{{ plan.membership_type.name }}</td>
-            <td class="py-2 px-4">{{ traducirFrecuencia(plan.frequency) }}</td>
-            <td class="py-2 px-4">${{ Number(plan.price).toFixed(2) }}</td>
-
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-gray-200 text-gray-700">
+            <tr>
+              <th class="py-2 px-4">Tipo</th>
+              <th class="py-2 px-4">Frecuencia</th>
+              <th class="py-2 px-4">Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="plan in planes"
+              :key="plan.id"
+              class="border-b hover:bg-gray-50"
+            >
+              <td class="py-2 px-4">
+                {{ plan.membership_type.name }}
+              </td>
+              <td class="py-2 px-4">
+                {{ traducirFrecuencia(plan.frequency) }}
+              </td>
+              <td class="py-2 px-4">
+                ${{ Number(plan.price).toFixed(2) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Modal -->
-      <div v-if="openModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+      <div
+        v-if="openModal"
+        class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4"
+      >
+        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
           <h2 class="text-xl font-bold mb-4">Crear Nuevo Plan</h2>
-          <form @submit.prevent="crearPlan">
-            <div class="mb-4">
-              <label class="block text-sm mb-1">Tipo de Membresía</label>
-              <select v-model="nuevoPlan.membership_type_id" class="w-full border rounded px-3 py-2" required>
+          <form @submit.prevent="crearPlan" class="space-y-4">
+            <div>
+              <label class="block text-sm mb-1 font-medium">Tipo de Membresía</label>
+              <select
+                v-model="nuevoPlan.membership_type_id"
+                class="w-full border rounded px-3 py-2"
+                required
+              >
                 <option disabled value="">Seleccione un tipo</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">{{ tipo.name }}</option>
+                <option
+                  v-for="tipo in tipos"
+                  :key="tipo.id"
+                  :value="tipo.id"
+                >
+                  {{ tipo.name }}
+                </option>
               </select>
             </div>
 
-            <div class="mb-4">
-              <label class="block text-sm mb-1">Frecuencia</label>
-              <select v-model="nuevoPlan.frequency" class="w-full border rounded px-3 py-2" required>
+            <div>
+              <label class="block text-sm mb-1 font-medium">Frecuencia</label>
+              <select
+                v-model="nuevoPlan.frequency"
+                class="w-full border rounded px-3 py-2"
+                required
+              >
                 <option disabled value="">Seleccione frecuencia</option>
                 <option value="daily">Diario</option>
                 <option value="weekly">Semanal</option>
@@ -64,14 +95,32 @@
               </select>
             </div>
 
-            <div class="mb-4">
-              <label class="block text-sm mb-1">Precio</label>
-              <input v-model="nuevoPlan.price" type="number" min="0" step="0.01" class="w-full border rounded px-3 py-2" required />
+            <div>
+              <label class="block text-sm mb-1 font-medium">Precio</label>
+              <input
+                v-model="nuevoPlan.price"
+                type="number"
+                min="0"
+                step="0.01"
+                class="w-full border rounded px-3 py-2"
+                required
+              />
             </div>
 
-            <div class="flex justify-end space-x-2">
-              <button type="button" @click="openModal = false" class="text-gray-600 px-4 py-2">Cancelar</button>
-              <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
+            <div class="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                @click="openModal = false"
+                class="text-gray-600 px-4 py-2"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Guardar
+              </button>
             </div>
           </form>
         </div>
@@ -79,6 +128,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'

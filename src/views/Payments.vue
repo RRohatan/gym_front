@@ -1,54 +1,63 @@
 <template>
-  <div class="p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black">
+  <div class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black">
     <Sidebar />
-    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8">
-      <div class="flex gap-4 justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">💰 Pagos</h1>
-        <div class="flex gap-4">
+    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-2xl p-4 sm:p-8">
+      <!-- Encabezado -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">💰 Pagos</h1>
+        <div class="flex flex-wrap gap-3">
           <router-link
             to="/Menu"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-sm sm:text-base"
           >
             🏠 Inicio
           </router-link>
-          <button @click="openModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
+          <button
+            @click="openModal = true"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm sm:text-base"
+          >
             ➕ Registrar pago
           </button>
         </div>
       </div>
 
-      <div class="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-4 rounded">
-        <p class="text-lg font-semibold">💰 Total Recolectado Hoy:</p>
-        <p class="text-2xl font-bold">
-          {{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalHoy) }}
+      <!-- Total Recolectado -->
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-6 rounded">
+        <p class="text-base sm:text-lg font-semibold">💰 Total Recolectado Hoy:</p>
+        <p class="text-xl sm:text-2xl font-bold">
+          {{ formatCurrency(totalHoy) }}
         </p>
       </div>
 
-      <table class="min-w-full bg-white">
-        <thead>
-          <tr class="text-left border-b text-gray-600">
-            <th class="py-3">Cliente</th>
-            <th class="py-3">Monto</th>
-            <th class="py-3">Método</th>
-            <th class="py-3">Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="pago in pagos" :key="pago.id" class="border-b hover:bg-gray-50">
-            <td class="py-3">{{ pago.paymentable?.member?.name || '—' }}</td>
-            <td class="py-3">{{ formatCurrency(pago.amount) }}</td>
-            <td class="py-3">{{ pago.payment_method?.name }}</td>
-            <td class="py-3">{{ formatDate(pago.paid_at) }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Tabla de Pagos -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr class="text-left border-b text-gray-600">
+              <th class="py-3 px-4 whitespace-nowrap">Cliente</th>
+              <th class="py-3 px-4 whitespace-nowrap">Monto</th>
+              <th class="py-3 px-4 whitespace-nowrap">Método</th>
+              <th class="py-3 px-4 whitespace-nowrap">Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="pago in pagos" :key="pago.id" class="border-b hover:bg-gray-50">
+              <td class="py-3 px-4">{{ pago.paymentable?.member?.name || '—' }}</td>
+              <td class="py-3 px-4">{{ formatCurrency(pago.amount) }}</td>
+              <td class="py-3 px-4">{{ pago.payment_method?.name }}</td>
+              <td class="py-3 px-4">{{ formatDate(pago.paid_at) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Modal -->
-      <div v-if="openModal" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+      <div v-if="openModal" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50 px-4">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md max-h-screen overflow-y-auto">
           <h2 class="text-xl font-bold mb-4">Registrar nuevo pago</h2>
 
           <form @submit.prevent="registrarPago">
+            <!-- Buscar cliente -->
             <div class="mb-4">
               <label class="block mb-1 text-sm">Buscar cliente</label>
               <input
@@ -58,7 +67,10 @@
                 class="w-full border px-3 py-2 rounded"
                 autocomplete="off"
               />
-              <ul v-if="miembrosFiltrados.length > 0" class="border rounded bg-white mt-1 max-h-40 overflow-y-auto">
+              <ul
+                v-if="miembrosFiltrados.length > 0"
+                class="border rounded bg-white mt-1 max-h-40 overflow-y-auto"
+              >
                 <li
                   v-for="miembro in miembrosFiltrados"
                   :key="miembro.id"
@@ -70,11 +82,13 @@
               </ul>
             </div>
 
+            <!-- Monto -->
             <div class="mb-4">
               <label class="block mb-1 text-sm">Monto</label>
               <input v-model="nuevoPago.amount" type="number" min="0" step="0.01" required class="w-full border rounded px-3 py-2">
             </div>
 
+            <!-- Método -->
             <div class="mb-4">
               <label class="block mb-1 text-sm">Método de pago</label>
               <select v-model="nuevoPago.payment_method_id" required class="w-full border rounded px-3 py-2">
@@ -83,7 +97,8 @@
               </select>
             </div>
 
-            <div class="flex justify-end space-x-2">
+            <!-- Botones -->
+            <div class="flex justify-end space-x-3">
               <button type="button" @click="cerrarModal" class="px-4 py-2 text-gray-600">Cancelar</button>
               <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
                 Guardar
@@ -95,6 +110,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
