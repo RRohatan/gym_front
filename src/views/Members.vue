@@ -4,7 +4,7 @@
 
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-      <h1 class="text-2xl font-bold mb-2 ml-12 sm:mb-0">👥 Clientes</h1>
+      <h1 class="text-2xl font-bold mb-4 ml-12 sm:mb-0">👥 Clientes</h1>
       <div class="flex flex-wrap ml-24 gap-3">
         <router-link to="/Menu" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-sm">
           🏠 Inicio
@@ -16,59 +16,92 @@
     </div>
 
     <!-- Buscador -->
-    <div class="mb-4">
+    <div class="mb-6">
       <input
         v-model="busqueda"
         type="text"
-        placeholder="🔍 Buscar por nombre o correo"
+        placeholder="🔍 Buscar por nombre o teléfono"
         class="w-full border px-4 py-2 rounded shadow-sm text-black"
       />
     </div>
 
-    <!-- Tabla de miembros -->
+    <!-- Tarjetas de clientes -->
     <div v-if="loading" class="text-gray-300">Cargando Clientes...</div>
     <div v-else>
-      <div class="overflow-x-auto rounded-lg shadow">
-        <table class="min-w-full bg-white text-left text-sm sm:text-base">
-          <thead class="bg-gray-100 text-black border-b">
-            <tr>
-              <th class="py-2 px-4 whitespace-nowrap">#</th>
-              <th class="py-2 px-4 whitespace-nowrap">Nombre</th>
-              <th class="py-2 px-4 whitespace-nowrap">Email</th>
-              <th class="py-2 px-4 whitespace-nowrap">Teléfono</th>
-              <th class="py-2 px-4 whitespace-nowrap">Nacimiento</th>
-              <th class="py-2 px-4 whitespace-nowrap">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(member, index) in miembrosFiltrados"
-              :key="member.id"
-              class="border-t text-black hover:bg-gray-50"
-            >
-              <td class="py-2 px-4">{{ index + 1 }}</td>
-              <td class="py-2 px-4">{{ member.name }}</td>
-              <td class="py-2 px-4">{{ member.email }}</td>
-              <td class="py-2 px-4">{{ member.phone }}</td>
-              <td class="py-2 px-4">{{ member.birth_date }}</td>
-              <td class="py-2 px-4">
-                <router-link
-                  :to="{ name: 'MemberDetail', params: { id: member.id } }"
-                  class="text-blue-600 hover:underline"
-                >
-                  Ver detalle
-                </router-link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div v-if="members.length === 0" class="text-gray-400">No hay Clientes registrados.</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="member in miembrosFiltrados"
+          :key="member.id"
+          class="bg-white text-black rounded-xl shadow-lg overflow-hidden transition hover:scale-[1.01] duration-150"
+        >
+          <div class="p-4 flex justify-between items-center">
+            <div>
+              <h2 class="text-lg font-bold text-gray-800">🧍 {{ member.name }}</h2>
+              <p class="text-sm text-gray-600">📞 {{ member.phone }}</p>
+              <p class="text-sm text-gray-600">🎂 {{ member.birth_date }}</p>
+            </div>
+            <button @click="toggleDetalle(member.id)" class="text-blue-600 hover:underline text-sm">
+              {{ detallesAbiertos.includes(member.id) ? 'Ocultar' : 'Ver más' }}
+            </button>
+          </div>
 
-      <div v-if="members.length === 0" class="text-gray-400 mt-4">No hay Clientes registrados.</div>
+          <!-- Detalle Expandible -->
+          <div v-if="detallesAbiertos.includes(member.id)" class="px-4 pb-4 text-sm text-gray-700 space-y-2">
+            <p>📧 {{ member.email || 'Sin email registrado' }}</p>
+            <p>⚖️ Peso: {{ member.peso ?? 'N/D' }} kg</p>
+            <p>📏 Estatura: {{ member.estatura ?? 'N/D' }} cm</p>
+            <p>🧬 Sexo: {{ member.sexo || 'N/D' }}</p>
+            <p>🩺 Antecedentes: {{ member.medical_history || 'Ninguno' }}</p>
+
+            <!-- Acciones -->
+            <div class="pt-2 flex gap-3">
+              <router-link
+                :to="{ name: 'MemberDetail', params: { id: member.id } }"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs"
+              >
+                Ver detalle
+              </router-link>
+
+          <!-- Botón de WhatsApp -->
+        <a
+      :href="`https://wa.me/57${member.phone}`"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs flex items-center gap-1"
+      v-if="member.phone"
+    >
+      <svg
+        class="w-4 h-4"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M20.52 3.48A11.89 11.89 0 0 0 12 0a11.9 11.9 0 0 0-10.1 17.94L0 24l6.26-1.89A11.9 11.9 0 0 0 12 24a11.87 11.87 0 0 0 8.52-3.48A11.87 11.87 0 0 0 24 12a11.87 11.87 0 0 0-3.48-8.52ZM12 22a9.93 9.93 0 0 1-5.07-1.38l-.36-.21-3.72 1.12 1.13-3.61-.24-.37A10 10 0 1 1 22 12a9.94 9.94 0 0 1-10 10Zm5.17-7.38c-.28-.14-1.66-.82-1.91-.92s-.44-.14-.63.14-.73.92-.9 1.11-.33.21-.61.07a8.18 8.18 0 0 1-2.4-1.47 9.08 9.08 0 0 1-1.66-2c-.17-.29 0-.45.13-.59s.29-.33.44-.49.19-.28.29-.46a.56.56 0 0 0 0-.53c-.14-.14-.63-1.51-.87-2.07s-.47-.45-.64-.46-.36 0-.55 0a1.06 1.06 0 0 0-.76.35 3.19 3.19 0 0 0-1 2.4 5.53 5.53 0 0 0 1.18 2.86 12.63 12.63 0 0 0 4.88 4.4 5.7 5.7 0 0 0 2.79.76 3.3 3.3 0 0 0 2.18-1.48 2.74 2.74 0 0 0 .19-1.48c-.08-.14-.25-.21-.53-.35Z"
+        />
+      </svg>
+      WhatsApp
+    </a>
+
+ <!-- Botón de editar miembro -->
+      <router-link
+      :to="{ name: 'MemberEdit', params: { id: member.id } }"
+      class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs"
+    >
+      Editar
+    </router-link>
+
+              <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Modal -->
-    <div
+    <!-- Modal de registro -->
+<div
       v-if="modalAbierto"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
@@ -175,7 +208,16 @@ const members = ref([])
 const loading = ref(true)
 const busqueda = ref('')
 const token = localStorage.getItem('token')
+const detallesAbiertos = ref([])
 
+
+const toggleDetalle = (id) => {
+  if (detallesAbiertos.value.includes(id)) {
+    detallesAbiertos.value = detallesAbiertos.value.filter(i => i !== id)
+  } else {
+    detallesAbiertos.value.push(id)
+  }
+}
 
 // Modal
 const modalAbierto = ref(false)
@@ -225,6 +267,17 @@ const cargarMiembros = async () => {
     loading.value = false
   }
 }
+
+function formatearTelefono(numero) {
+  // Asegura que el número esté en formato internacional sin espacios ni signos
+  if (!numero) return '';
+  let limpio = numero.toString().replace(/\D/g, '');
+  if (!limpio.startsWith('57')) {
+    limpio = '57' + limpio; // Asume código de país Colombia si no está
+  }
+  return limpio;
+}
+
 
 const cargarPlanes = async () => {
   try {

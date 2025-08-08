@@ -72,6 +72,14 @@ const router = createRouter({
      name: 'CashBosx',
      component: () => import('@/views/CashBox.vue'),
      meta: {requiresAuth: true},
+  },
+
+  {
+    path: '/MemberEdit/:id/edit',
+    name: 'MemberEdit',
+    component: () => import('@/views/MemberEdit.vue'),
+    meta: {requiresAuth: true},
+    props:true
   }
 
 
