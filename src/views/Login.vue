@@ -55,25 +55,6 @@
   </div>
 </template>
 
-<style scoped>
-@keyframes fadeScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-logo {
-  animation: fadeScale 1.2s ease-out forwards;
-  text-shadow: 0 2px 10px rgba(255, 0, 0, 0.4);
-}
-</style>
-
-
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -92,7 +73,15 @@ const handleLogin = async () => {
       password: password.value
     })
 
-    auth.setToken(response.data.access_token)
+    const { access_token, user } = response.data
+
+    // Guardar token y usuario con gimnasio en el store y localStorage
+    auth.setToken(access_token)
+    auth.setUser(user)
+
+    localStorage.setItem('token', access_token)
+    localStorage.setItem('user', JSON.stringify(user))
+
     router.push('/Menu')
   } catch (error) {
     alert('Credenciales incorrectas')
@@ -100,4 +89,23 @@ const handleLogin = async () => {
   }
 }
 </script>
+
+<style scoped>
+@keyframes fadeScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-logo {
+  animation: fadeScale 1.2s ease-out forwards;
+  text-shadow: 0 2px 10px rgba(255, 0, 0, 0.4);
+}
+</style>
+
 

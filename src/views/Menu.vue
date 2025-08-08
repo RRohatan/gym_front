@@ -1,14 +1,20 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-8">
     <div class="max-w-5xl mx-auto">
-     <h1 class="text-4xl font-extrabold text-center mb-2">🏋️‍♂️ {{ user?.gimnasio?.nombre }}</h1>
-     <p class="text-lg text-center text-gray-300 mb-10">Bienvenido, {{ user?.nombre }}</p>
+
+     <h1 class="text-4xl font-extrabold text-center mb-2">
+  🏋️‍♂️ {{ user?.gimnasio?.nombre || 'Gimnasio no encontrado' }}
+    </h1>
+
+     <p class="text-lg text-center text-gray-300 mb-10">Bienvenido {{ user?.name || 'Usuario no encontrado' }}</p>
+
+    <!--<pre class="text-white">{{ JSON.stringify(user, null, 2) }}</pre>-->
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card -->
         <router-link to="/members" class="menu-card bg-blue-600 hover:bg-blue-700">
           <div class="icon">👥</div>
-          <h2 class="title">Clientes</h2>
+          <h2 class="title"> Ver Clientes</h2>
         </router-link>
 
         <router-link to="/Payments" class="menu-card bg-green-600 hover:bg-green-700">
@@ -16,7 +22,7 @@
           <h2 class="title">Pagos</h2>
         </router-link>
 
-        <router-link to="/products" class="menu-card bg-purple-600 hover:bg-purple-700">
+        <router-link to="#" class="menu-card bg-purple-600 hover:bg-purple-700">
           <div class="icon">📦</div>
           <h2 class="title">Productos</h2>
         </router-link>
@@ -33,7 +39,7 @@
 
 
         <router-link to="/CashBox" class="menu-card bg-orange-600 hover:bg-orange-700">
-          <div class="icon">📦</div>
+          <div class="icon">💼</div>
           <h2 class="title">Caja</h2>
         </router-link>
 
@@ -54,6 +60,8 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const user = auth.user
+
+console.log('Usuario:', user)
 
 const logout = () => {
   auth.logout()
