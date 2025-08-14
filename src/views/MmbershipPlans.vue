@@ -50,6 +50,12 @@
                 >
                   ✏️ Editar
                 </button>
+                <button
+    @click="eliminarPlan(plan.id)"
+    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg shadow text-sm"
+  >
+    🗑️ Eliminar
+  </button>
               </td>
             </tr>
           </tbody>
@@ -214,7 +220,6 @@ const planEditando = ref({
   price: "",
 });
 
-const token = localStorage.getItem("token");
 
 // Función para traducir frecuencia para mostrar en la tabla
 const traducirFrecuencia = (freq) => {
@@ -283,6 +288,20 @@ const actualizarPlan = async () => {
   }
 };
 
+function eliminarPlan(id) {
+  if (confirm("¿Seguro que deseas eliminar este plan?")) {
+    api.delete(`/membershipPlan/${id}`)
+      .then(() => {
+        planes.value = planes.value.filter(plan => plan.id !== id);
+        alert("Plan eliminado correctamente.");
+      })
+      .catch(() => {
+        alert("Error al eliminar el plan.");
+      });
+  }
+}
+
+
 const cerrarModalEdicion = () => {
   editModal.value = false;
   planEditando.value = { id: null, membership_type_id: "", frequency: "", price: "" };
@@ -294,11 +313,6 @@ const cerrarModal = () => {
 };
 
 onMounted(async () => {
-  if (!token) {
-    console.error("Token no encontrado en LocalStorage");
-    return;
-  }
-
   try {
     await Promise.all([cargarPlanes(), cargarTipos()]);
   } catch (error) {

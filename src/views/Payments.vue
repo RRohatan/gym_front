@@ -85,7 +85,7 @@
             <!-- Monto -->
             <div class="mb-4">
               <label class="block mb-1 text-sm">Monto</label>
-              <input v-model="nuevoPago.amount" type="number" min="0" step="0.01" required class="w-full border rounded px-3 py-2">
+              <input v-model="nuevoPago.amount" placeholder="Escriba un valor sin puntos ni comas" type="number" min="0" step="0.01" required class="w-full border rounded px-3 py-2">
             </div>
 
             <!-- Método -->
@@ -167,11 +167,13 @@ const registrarPago = async () => {
     limpiarFormulario()
     openModal.value = false
     await cargarPagos()
+    alert('pago exitoso');
     await cargarTotalHoy() // ✅ ACTUALIZA el total del día SIN recargar la página
   } catch (error) {
     console.error('Error al registrar el pago:', error.response?.data || error)
-    alert('Error al registrar el pago.')
+    alert('Error al registrar el pago. Ingrese un valor valido')
   }
+
 }
 
 
