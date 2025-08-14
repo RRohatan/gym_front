@@ -82,7 +82,6 @@ const router = createRouter({
     props:true
   }
 
-
   ],
 });
 
