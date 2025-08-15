@@ -126,7 +126,7 @@
             <label class="block text-sm mb-1">Estado</label>
             <select v-model="editarMembresia.status" class="w-full border rounded px-3 py-2 text-black">
               <option value="active">Activa</option>
-              <option value="inactive">Inactiva</option>
+              <option value="expired">Inactiva</option>
               <option value="cancelled">Cancelada</option>
             </select>
           </div>
@@ -185,21 +185,6 @@
             </select>
           </div>
 
-          <!-- Fecha inicio -->
-          <div class="mb-4">
-            <label class="block text-sm mb-1">Fecha de inicio</label>
-            <input type="date" v-model="form.start_date" class="w-full border rounded px-3 py-2 text-black" required />
-          </div>
-
-          <!-- Estado -->
-          <div class="mb-4">
-            <label class="block text-sm mb-1">Estado</label>
-            <select v-model="form.status" class="w-full border rounded px-3 py-2 text-black">
-              <option value="active">Activa</option>
-              <option value="inactive">Inactiva</option>
-            </select>
-          </div>
-
           <div class="flex justify-end gap-2 mt-4">
             <button type="button" @click="cerrarModal" class="text-gray-600 px-4 py-2">Cancelar</button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
@@ -217,7 +202,10 @@
 import api from '@/axios'
 import { ref, onMounted, computed } from 'vue'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import Sidebar from '@/views/Sidebar.vue'
+
+dayjs.extend(utc)
 
 const membresias = ref([])
 const miembros = ref([])
@@ -227,12 +215,12 @@ const showEditModal = ref(false)
 const editarMembresia = ref({})
 const busquedaMembresia = ref('')
 
+
 const form = ref({
   member_id: '',
   plan_id: '',
-  start_date: '',
   end_date: '',
-  status: 'active'
+  status: 'active',
 })
 
 const busqueda = ref('')
@@ -268,7 +256,8 @@ const miembrosFiltrados = computed(() => {
   const term = busqueda.value.toLowerCase()
   return term
     ? miembros.value.filter(m =>
-        m.name.toLowerCase().includes(term) || m.email.toLowerCase().includes(term)
+        m.name.toLowerCase().includes(term) ||
+        (m.email || '').toLowerCase().includes(term)
       )
     : []
 })
@@ -292,8 +281,24 @@ const cerrarModal = () => {
 
 const asignarMembresia = async () => {
   try {
+    let existing = null;
+    try {
+      const res = await api.get(`/memberships/by-member/${form.value.member_id}`);
+      existing = res.data;
+    } catch (err) {
+      // Si da 404, significa que no hay membresía, lo ignoramos
+      if (err.response && err.response.status !== 404) {
+        throw err; // otro error sí lo relanzamos
+      }
+    }
+
+    if (existing) {
+      alert('Este cliente ya tiene una membresía activa o vencida.');
+      return;
+    }
+
     const plan = planes.value.find(p => p.id === form.value.plan_id)
-    const inicio = dayjs(form.value.start_date)
+    const inicio = dayjs.utc(form.value.start_date, 'YYYY-MM-DD')
     let fin = inicio
 
     switch (plan.frequency) {
@@ -316,10 +321,10 @@ const asignarMembresia = async () => {
   }
 }
 
-const formatDate = (fecha) => {
-  return new Date(fecha).toLocaleDateString('es-CO')
-}
 
+const formatDate = (fecha) => {
+  return dayjs(fecha).format('DD/MM/YYYY ')
+}
 const traducirFrecuencia = (f) => {
   switch (f) {
     case 'daily': return 'Diaria'

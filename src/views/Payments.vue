@@ -158,21 +158,45 @@ const cargarTotalHoy = async () => {
 // Función para registrar el pago
 const registrarPago = async () => {
   try {
+
+    //verifico la membresia del cliente
+    const {data: membership} = await api.get(`/memberships/by-member/${nuevoPago.value.member_id}`);
+   //verifico si debe algo
+   if (membership.outstanding_balance <= 0) {
+      alert('ESTE CLIENTE NO TIENE SALDO PENDIENTE');
+      return;
+   }
+
+   //Registro el pago
     await api.post('/payments', {
       member_id: nuevoPago.value.member_id,
       amount: nuevoPago.value.amount,
       payment_method_id: nuevoPago.value.payment_method_id,
-    })
+    });
+
+    const {data: updateMembership} = await api.get(`/memberships/by-member/${nuevoPago.value.member_id}`);
+
 
     limpiarFormulario()
     openModal.value = false
     await cargarPagos()
     alert('pago exitoso');
     await cargarTotalHoy() // ✅ ACTUALIZA el total del día SIN recargar la página
+
+     //Mensaje segun el estado actualizado
+    if (updateMembership.status === 'active' && membership.status === 'expired') {
+      alert('Pago registrado exitosamente. La membresía ha sido reactivada.');
+    } else {
+      alert('Pago registrado exitosamente.');
+    }
+
+
   } catch (error) {
     console.error('Error al registrar el pago:', error.response?.data || error)
-    alert('Error al registrar el pago. Ingrese un valor valido')
+    alert(error.response?.data?.message || error.response?.data?.error || 'Error al registrar el pago')
   }
+
+
 
 }
 
@@ -201,7 +225,8 @@ const miembrosFiltrados = computed(() => {
   const term = busqueda.value.toLowerCase()
   if (!term) return []
   return miembros.value.filter(m =>
-    m.name.toLowerCase().includes(term) || m.email.toLowerCase().includes(term)
+    m.name.toLowerCase().includes(term) ||
+    (m.email || '').toLowerCase().includes(term)
   )
 })
 

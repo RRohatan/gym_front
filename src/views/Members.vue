@@ -99,7 +99,7 @@
         <h2 class="text-xl font-bold mb-4">Registrar nuevo cliente</h2>
         <form @submit.prevent="registrarMiembro">
           <input v-model="nuevoMiembro.name" type="text" required placeholder="Nombre" class="w-full mb-2 p-2 border rounded" />
-          <input v-model="nuevoMiembro.email" type="email" required placeholder="Email" class="w-full mb-2 p-2 border rounded" />
+          <input v-model="nuevoMiembro.email" type="email" placeholder="Email" class="w-full mb-2 p-2 border rounded" />
           <input v-model="nuevoMiembro.phone" type="text" required placeholder="Teléfono" class="w-full mb-2 p-2 border rounded" />
           <label class="block mb-1 text-sm">Fecha de nacimiento</label>
           <input v-model="nuevoMiembro.birth_date" type="date" required class="w-full mb-4 p-2 border rounded" />
