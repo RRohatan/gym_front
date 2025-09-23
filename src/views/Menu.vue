@@ -13,39 +13,39 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card -->
         <router-link to="/members" class="menu-card bg-blue-600 hover:bg-blue-700">
-          <div class="icon">👥</div>
-          <h2 class="title"> Ver Clientes</h2>
+          <div class="text-5xl">👥</div>
+          <h2 class="text-xl font-bold"> Ver Clientes</h2>
         </router-link>
 
         <router-link to="/Payments" class="menu-card bg-green-600 hover:bg-green-700">
-          <div class="icon">💰</div>
-          <h2 class="title">Pagos</h2>
+          <div class="text-5xl">💰</div>
+          <h2 class="text-xl font-bold">Pagos</h2>
         </router-link>
 
-        <router-link to="#" class="menu-card bg-purple-600 hover:bg-purple-700">
-          <div class="icon">📦</div>
-          <h2 class="title">Productos</h2>
+        <router-link to="/Products" class="menu-card bg-purple-600 hover:bg-purple-700">
+          <div class="text-5xl">📦</div>
+          <h2 class="text-xl font-bold">Productos</h2>
         </router-link>
 
         <router-link to="/membershipPlans" class="menu-card bg-yellow-600 hover:bg-yellow-700">
-          <div class="icon">📅</div>
-          <h2 class="title">Planes</h2>
+          <div class="text-5xl">📅</div>
+          <h2 class="text-xl font-bold">Planes</h2>
         </router-link>
 
         <router-link to="/Membership" class="menu-card bg-pink-600 hover:bg-pink-700">
-          <div class="icon">📊</div>
-          <h2 class="title">Membresias</h2>
+          <div class="text-5xl">📊</div>
+          <h2 class="text-xl font-bold">Membresias</h2>
         </router-link>
 
 
         <router-link to="/CashBox" class="menu-card bg-orange-600 hover:bg-orange-700">
-          <div class="icon">💼</div>
-          <h2 class="title">Caja</h2>
+          <div class="text-5xl">💼</div>
+          <h2 class="text-xl font-bold">Caja</h2>
         </router-link>
 
         <button @click="logout" class="menu-card bg-red-600 hover:bg-red-700">
-          <div class="icon">🔒</div>
-          <h2 class="title">Cerrar sesión</h2>
+          <div class="text-5xl">🔒</div>
+          <h2 class="text-xl font-bold">Cerrar sesión</h2>
         </button>
       </div>
     </div>
@@ -73,12 +73,4 @@ const logout = () => {
 .menu-card {
   @apply rounded-2xl shadow-xl p-6 text-center transition duration-200 flex flex-col items-center justify-center space-y-3 cursor-pointer;
 }
-.icon {
-  font-size: 3rem;
-}
-.title {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
 </style>
-
