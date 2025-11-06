@@ -15,6 +15,15 @@ const router = createRouter({
       name: "register",
       component: () => import("@/views/Register.vue"),
     },
+    // --- RUTA PÚBLICA (QR) AÑADIDA ---
+    // Esta ruta toma el ID del gimnasio desde la URL
+    {
+      path: "/public-register/:gimnasioId",
+      name: "PublicRegister",
+      component: () => import("@/views/PublicRegister.vue"),
+      // Sin meta: { requiresAuth: true } para que sea pública
+    },
+    // --- FIN DE RUTA AÑADIDA ---
     {
       path: "/members",
       name: "Members",

@@ -5,7 +5,10 @@
     <div class="max-w-6xl mx-auto bg-white text-gray-800 shadow-lg rounded-2xl p-4 sm:p-8">
       <!-- Encabezado -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 class="text-2xl sm:text-3xl ml-16 first:font-bold">🏋️ Membresías activas</h1>
+        <!-- Título ahora es dinámico -->
+        <h1 class="text-2xl sm:text-3xl ml-16 first:font-bold">
+          🏋️ Membresías: {{ tituloFiltro }}
+        </h1>
         <div class="flex flex-wrap ml-6 gap-3">
           <router-link
             to="/Menu"
@@ -22,6 +25,35 @@
         </div>
       </div>
 
+      <!-- ===== SECCIÓN DE FILTROS (NUEVO) ===== -->
+      <div class="flex flex-wrap gap-3 mb-4">
+        <button
+          @click="filtrarMembresias('')"
+          :class="statusFilter === '' ? 'btn-filter-active' : 'btn-filter-inactive'"
+        >
+          Activas y Vencidas (Defecto)
+        </button>
+        <button
+          @click="filtrarMembresias('inactive_unpaid')"
+          :class="statusFilter === 'inactive_unpaid' ? 'btn-filter-active' : 'btn-filter-inactive'"
+        >
+          Inactivas (Por Pagar)
+        </button>
+         <button
+          @click="filtrarMembresias('active')"
+          :class="statusFilter === 'active' ? 'btn-filter-active' : 'btn-filter-inactive'"
+        >
+          Solo Activas
+        </button>
+        <button
+          @click="filtrarMembresias('all')"
+          :class="statusFilter === 'all' ? 'btn-filter-active' : 'btn-filter-inactive'"
+        >
+          Ver Todas
+        </button>
+      </div>
+      <!-- ===== FIN DE FILTROS ===== -->
+
       <!-- Buscador -->
       <div class="flex justify-end mb-4">
         <input
@@ -34,7 +66,8 @@
 
       <!-- Tabla responsive -->
       <div class="overflow-x-auto rounded-lg">
-        <table class="min-w-[900px] w-full bg-white text-sm sm:text-base">
+        <div v-if="loading" class="py-10 text-center text-gray-500">Cargando membresías...</div>
+        <table v-else class="min-w-[900px] w-full bg-white text-sm sm:text-base">
           <thead>
             <tr class="text-left border-b text-gray-600">
               <th class="py-3 px-2">Cliente</th>
@@ -48,6 +81,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="membresiasFiltradas.length === 0">
+              <td colspan="8" class="py-10 text-center text-gray-500">No se encontraron membresías con este filtro.</td>
+            </tr>
             <tr
               v-for="m in membresiasFiltradas"
               :key="m.id"
@@ -61,14 +97,17 @@
                 {{ formatDate(m.end_date) }}
               </td>
               <td class="py-3 px-2">
+                <!-- Estilos de estado mejorados -->
                 <span
                   class="px-2 py-1 rounded text-xs sm:text-sm font-semibold"
                   :class="{
                     'bg-green-100 text-green-700': m.status === 'active',
-                    'bg-gray-200 text-gray-600': m.status !== 'active'
+                    'bg-red-100 text-red-700': m.status === 'expired',
+                    'bg-yellow-100 text-yellow-700': m.status === 'inactive_unpaid',
+                    'bg-gray-200 text-gray-600': m.status === 'cancelled'
                   }"
                 >
-                  {{ m.status }}
+                  {{ traducirEstado(m.status) }}
                 </span>
               </td>
               <td class="py-3 px-2">
@@ -87,112 +126,111 @@
         </table>
       </div>
 
-      <div v-if="membresias.length === 0" class="text-center text-gray-500 mt-8">
-        No hay membresías activas registradas.
-      </div>
-    </div>
-
-    <!-- Modal de Edición -->
-    <div
-      v-if="showEditModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    >
-      <div class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-lg">
-        <h2 class="text-lg font-bold mb-4">Editar membresía</h2>
-        <form @submit.prevent="guardarCambios">
-          <div class="mb-4">
-            <label class="block text-sm mb-1">Plan</label>
-            <select
-              v-model="editarMembresia.plan.id"
-              class="w-full border px-3 py-2 rounded text-black"
-            >
-              <option v-for="plan in planes" :key="plan.id" :value="plan.id">
-                {{ plan.membership_type?.name }} – {{ traducirFrecuencia(plan.frequency) }}
-              </option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="block text-sm mb-1">Fecha inicio</label>
-            <input v-model="editarMembresia.start_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
-          </div>
-
-          <div class="mb-3">
-            <label class="block text-sm mb-1">Fecha fin</label>
-            <input v-model="editarMembresia.end_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
-          </div>
-
-          <div class="mb-3">
-            <label class="block text-sm mb-1">Estado</label>
-            <select v-model="editarMembresia.status" class="w-full border rounded px-3 py-2 text-black">
-              <option value="active">Activa</option>
-              <option value="expired">Inactiva</option>
-              <option value="cancelled">Cancelada</option>
-            </select>
-          </div>
-
-          <div class="flex justify-end gap-2">
-            <button @click="cerrarEditarModal" type="button" class="text-gray-600 px-4 py-2">Cancelar</button>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-              Guardar cambios
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal Asignar Membresía -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    >
-      <div class="bg-white text-black w-full max-w-lg p-6 rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
-        <h2 class="text-xl font-bold mb-4">Asignar nueva membresía</h2>
-        <form @submit.prevent="asignarMembresia">
-          <!-- Buscador miembro -->
-          <div class="mb-4">
-            <label class="block text-sm mb-1">Buscar miembro</label>
-            <input
-              v-model="busqueda"
-              type="text"
-              placeholder="Nombre o correo"
-              class="w-full border rounded px-3 py-2 text-black"
-              autocomplete="off"
-            />
-            <ul
-              v-if="miembrosFiltrados.length"
-              class="border rounded bg-white mt-1 max-h-40 overflow-y-auto text-black"
-            >
-              <li
-                v-for="m in miembrosFiltrados"
-                :key="m.id"
-                @click="seleccionarMiembro(m)"
-                class="px-3 py-2 hover:bg-blue-100 cursor-pointer"
+      <!-- ... (Modales de Edición y Asignar Membresía sin cambios) ... -->
+      <!-- Modal de Edición -->
+      <div
+        v-if="showEditModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      >
+        <div class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-lg">
+          <h2 class="text-lg font-bold mb-4">Editar membresía</h2>
+          <form @submit.prevent="guardarCambios">
+            <div class="mb-4">
+              <label class="block text-sm mb-1">Plan</label>
+              <select
+                v-model="editarMembresia.plan.id"
+                class="w-full border px-3 py-2 rounded text-black"
               >
-                {{ m.name }} – {{ m.email }}
-              </li>
-            </ul>
-          </div>
+                <option v-for="plan in planes" :key="plan.id" :value="plan.id">
+                  {{ plan.membership_type?.name }} – {{ traducirFrecuencia(plan.frequency) }}
+                </option>
+              </select>
+            </div>
 
-          <!-- Plan -->
-          <div class="mb-4">
-            <label class="block text-sm mb-1">Plan</label>
-            <select v-model="form.plan_id" class="w-full border rounded px-3 py-2 text-black" required>
-              <option disabled value="">Seleccione un plan</option>
-              <option v-for="p in planes" :key="p.id" :value="p.id">
-                {{ p.membership_type?.name }} - {{ traducirFrecuencia(p.frequency) }} - ${{ parseInt(p.price).toLocaleString() }}
-              </option>
-            </select>
-          </div>
+            <div class="mb-3">
+              <label class="block text-sm mb-1">Fecha inicio</label>
+              <input v-model="editarMembresia.start_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
+            </div>
 
-          <div class="flex justify-end gap-2 mt-4">
-            <button type="button" @click="cerrarModal" class="text-gray-600 px-4 py-2">Cancelar</button>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-              Asignar
-            </button>
-          </div>
-        </form>
+            <div class="mb-3">
+              <label class="block text-sm mb-1">Fecha fin</label>
+              <input v-model="editarMembresia.end_date" type="date" class="w-full border rounded px-3 py-2 text-black" />
+            </div>
+
+            <div class="mb-3">
+              <label class="block text-sm mb-1">Estado</label>
+              <select v-model="editarMembresia.status" class="w-full border rounded px-3 py-2 text-black">
+                <option value="active">Activa</option>
+                <option value="expired">Vencida</option>
+                <option value="inactive_unpaid">Inactiva (Por Pagar)</option>
+                <option value="cancelled">Cancelada</option>
+              </select>
+            </div>
+
+            <div class="flex justify-end gap-2">
+              <button @click="cerrarEditarModal" type="button" class="text-gray-600 px-4 py-2">Cancelar</button>
+              <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                Guardar cambios
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+
+      <!-- Modal Asignar Membresía -->
+      <div
+        v-if="showModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      >
+        <div class="bg-white text-black w-full max-w-lg p-6 rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
+          <h2 class="text-xl font-bold mb-4">Asignar nueva membresía</h2>
+          <form @submit.prevent="asignarMembresia">
+            <!-- Buscador miembro -->
+            <div class="mb-4">
+              <label class="block text-sm mb-1">Buscar miembro</label>
+              <input
+                v-model="busqueda"
+                type="text"
+                placeholder="Nombre o correo"
+                class="w-full border rounded px-3 py-2 text-black"
+                autocomplete="off"
+              />
+              <ul
+                v-if="miembrosFiltrados.length"
+                class="border rounded bg-white mt-1 max-h-40 overflow-y-auto text-black"
+              >
+                <li
+                  v-for="m in miembrosFiltrados"
+                  :key="m.id"
+                  @click="seleccionarMiembro(m)"
+                  class="px-3 py-2 hover:bg-blue-100 cursor-pointer"
+                >
+                  {{ m.name }} – {{ m.email }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Plan -->
+            <div class="mb-4">
+              <label class="block text-sm mb-1">Plan</label>
+              <select v-model="form.plan_id" class="w-full border rounded px-3 py-2 text-black" required>
+                <option disabled value="">Seleccione un plan</option>
+                <option v-for="p in planes" :key="p.id" :value="p.id">
+                  {{ p.membership_type?.name }} - {{ traducirFrecuencia(p.frequency) }} - ${{ parseInt(p.price).toLocaleString() }}
+                </option>
+              </select>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4">
+              <button type="button" @click="cerrarModal" class="text-gray-600 px-4 py-2">Cancelar</button>
+              <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                Asignar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -214,7 +252,11 @@ const showModal = ref(false)
 const showEditModal = ref(false)
 const editarMembresia = ref({})
 const busquedaMembresia = ref('')
+const loading = ref(true) // Estado de carga
 
+// --- ESTADO MODIFICADO ---
+const statusFilter = ref('') // Por defecto carga el default del API (activas y vencidas)
+const tituloFiltro = ref('Activas y Vencidas') // Título dinámico
 
 const form = ref({
   member_id: '',
@@ -233,14 +275,40 @@ const membresiasFiltradas = computed(() => {
 }
 )
 
+// --- FUNCIÓN MODIFICADA ---
 const cargarMembresias = async () => {
+  loading.value = true
   try {
-    const { data } = await api.get('/memberships?status=active')
+    // El endpoint ahora es dinámico
+    const params = new URLSearchParams()
+    if (statusFilter.value) {
+      params.append('status', statusFilter.value)
+    }
+
+    const { data } = await api.get(`/memberships?${params.toString()}`)
     membresias.value = data
   } catch (error) {
     console.error('Error al cargar membresías:', error)
+    membresias.value = [] // Limpiar en caso de error
+  } finally {
+    loading.value = false
   }
 }
+
+// --- NUEVA FUNCIÓN ---
+// Se llama al hacer clic en los botones de filtro
+const filtrarMembresias = (status) => {
+  statusFilter.value = status
+
+  // Actualizar título
+  if (status === 'active') tituloFiltro.value = 'Solo Activas'
+  else if (status === 'inactive_unpaid') tituloFiltro.value = 'Inactivas (Por Pagar)'
+  else if (status === 'all') tituloFiltro.value = 'Todas'
+  else tituloFiltro.value = 'Activas y Vencidas'
+
+  cargarMembresias() // Recargar datos con el nuevo filtro
+}
+
 
 const cargarMiembros = async () => {
   const { data } = await api.get('/members')
@@ -279,45 +347,50 @@ const cerrarModal = () => {
   }
 }
 
+// --- LÓGICA DE ASIGNAR MEMBRESÍA (MODIFICADA) ---
 const asignarMembresia = async () => {
   try {
+    // 1. Verificar si el miembro ya tiene una membresía (activa, vencida o inactiva)
     let existing = null;
     try {
       const res = await api.get(`/memberships/by-member/${form.value.member_id}`);
       existing = res.data;
     } catch (err) {
-      // Si da 404, significa que no hay membresía, lo ignoramos
       if (err.response && err.response.status !== 404) {
-        throw err; // otro error sí lo relanzamos
+        throw err; // Si el error NO es 404, es un error real
       }
+      // Si es 404, está bien, no tiene membresía.
     }
 
+    // Si encontramos una membresía (activa, vencida o inactiva), bloqueamos.
     if (existing) {
-      alert('Este cliente ya tiene una membresía activa o vencida.');
+      alert(`Este cliente ya tiene una membresía (${existing.status}). No se puede asignar una nueva.`);
       return;
     }
 
+    // 2. Si no tiene, procedemos a crearla
     const plan = planes.value.find(p => p.id === form.value.plan_id)
-    const inicio = dayjs.utc(form.value.start_date, 'YYYY-MM-DD')
-    let fin = inicio
-
-    switch (plan.frequency) {
-      case 'daily': fin = inicio.add(1, 'day'); break
-      case 'weekly': fin = inicio.add(1, 'week'); break
-      case 'biweekly': fin = inicio.add(15, 'day'); break
-      case 'monthly': fin = inicio.add(1, 'month'); break
+    if (!plan) {
+      alert('Plan no encontrado');
+      return;
     }
 
-    form.value.end_date = fin.format('YYYY-MM-DD')
-
-    await api.post('/memberships', form.value)
+    // 3. Crear membresía (SIN fecha de fin, se calcula en backend)
+    // El backend la creará como 'inactive_unpaid'
+    await api.post('/memberships', {
+      member_id: form.value.member_id,
+      plan_id: form.value.plan_id,
+      // Nota: El backend (MembershipController@store) ahora maneja
+      // start_date, end_date, outstanding_balance y status ('inactive_unpaid')
+    });
 
     cerrarModal()
-    await cargarMembresias()
-    alert('Membresía asignada correctamente')
+    await cargarMembresias() // Recarga la lista
+    alert('Membresía asignada (Inactiva). El cliente debe realizar el pago en recepción para activarla.')
+
   } catch (error) {
     console.error('Error al asignar membresía:', error)
-    alert('Error al asignar la membresía.')
+    alert(error.response?.data?.error || 'Error al asignar la membresía.')
   }
 }
 
@@ -325,6 +398,8 @@ const asignarMembresia = async () => {
 const formatDate = (fecha) => {
   return dayjs(fecha).format('DD/MM/YYYY ')
 }
+
+// --- FUNCIONES DE TRADUCCIÓN MEJORADAS ---
 const traducirFrecuencia = (f) => {
   switch (f) {
     case 'daily': return 'Diaria'
@@ -335,8 +410,19 @@ const traducirFrecuencia = (f) => {
   }
 }
 
+const traducirEstado = (s) => {
+  switch (s) {
+    case 'active': return 'Activa'
+    case 'expired': return 'Vencida'
+    case 'inactive_unpaid': return 'Inactiva (Por Pagar)'
+    case 'cancelled': return 'Cancelada'
+    default: return s
+  }
+}
+
+
 onMounted(() => {
-  cargarMembresias()
+  cargarMembresias() // Carga la vista por defecto (activas/vencidas)
   cargarMiembros()
   cargarPlanes()
 })
@@ -350,7 +436,11 @@ const getRowColor = (membresia) => {
     return 'bg-red-100 text-red-700 font-semibold'
   }
 
-  if (diffDays <= 3 && diffDays >= 0) {
+  if (membresia.status === 'inactive_unpaid') {
+    return 'bg-yellow-100 text-yellow-800 font-semibold'
+  }
+
+  if (diffDays <= 3 && diffDays >= 0 && membresia.status === 'active') {
     return 'bg-yellow-100 text-yellow-800 font-semibold'
   }
 
@@ -358,7 +448,15 @@ const getRowColor = (membresia) => {
 }
 
 const abrirEditarModal = (membresia) => {
-  editarMembresia.value = { ...membresia }
+  // Asegurarnos de que las fechas estén en formato YYYY-MM-DD para el input
+  editarMembresia.value = {
+    ...membresia,
+    start_date: dayjs(membresia.start_date).format('YYYY-MM-DD'),
+    end_date: dayjs(membresia.end_date).format('YYYY-MM-DD'),
+    plan: { // Asegurarnos de que el plan.id exista para el v-model
+      id: membresia.plan?.id
+    }
+  }
   showEditModal.value = true
 }
 
@@ -369,10 +467,17 @@ const cerrarEditarModal = () => {
 
 const guardarCambios = async () => {
   try {
+    const planId = editarMembresia.value.plan?.id || editarMembresia.value.plan_id;
+
+    if (!planId) {
+      alert("Error: El plan no está seleccionado correctamente.");
+      return;
+    }
+
     await api.put(
       `/memberships/${editarMembresia.value.id}`,
       {
-        plan_id: editarMembresia.value.plan.id,     // 👈 editando plan
+        plan_id: planId,
         start_date: editarMembresia.value.start_date,
         end_date: editarMembresia.value.end_date,
         status: editarMembresia.value.status
@@ -380,7 +485,7 @@ const guardarCambios = async () => {
     )
 
     showEditModal.value = false
-    await cargarMembresias()
+    await cargarMembresias() // Recarga la lista
     alert('Membresía actualizada correctamente')
   } catch (error) {
     console.error('Error al guardar cambios:', error)
@@ -389,4 +494,14 @@ const guardarCambios = async () => {
 }
 
 </script>
+
+<!-- NUEVOS ESTILOS PARA BOTONES DE FILTRO -->
+<style scoped>
+.btn-filter-active {
+  @apply bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow;
+}
+.btn-filter-inactive {
+  @apply bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300;
+}
+</style>
 
