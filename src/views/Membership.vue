@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <!-- ===== SECCIÓN DE FILTROS (NUEVO) ===== -->
+      <!-- ===== SECCIÓN DE FILTROS (MODIFICADA) ===== -->
       <div class="flex flex-wrap gap-3 mb-4">
         <button
           @click="filtrarMembresias('')"
@@ -45,6 +45,16 @@
         >
           Solo Activas
         </button>
+
+        <!-- --- ¡BOTÓN NUEVO AÑADIDO! --- -->
+        <button
+          @click="filtrarMembresias('expiring_soon')"
+          :class="statusFilter === 'expiring_soon' ? 'btn-filter-active' : 'btn-filter-inactive'"
+        >
+          Próximas a Vencer (3 Días)
+        </button>
+        <!-- --- FIN DEL CAMBIO --- -->
+
         <button
           @click="filtrarMembresias('all')"
           :class="statusFilter === 'all' ? 'btn-filter-active' : 'btn-filter-inactive'"
@@ -68,6 +78,7 @@
       <div class="overflow-x-auto rounded-lg">
         <div v-if="loading" class="py-10 text-center text-gray-500">Cargando membresías...</div>
         <table v-else class="min-w-[900px] w-full bg-white text-sm sm:text-base">
+          <!-- ... (thead sin cambios) ... -->
           <thead>
             <tr class="text-left border-b text-gray-600">
               <th class="py-3 px-2">Cliente</th>
@@ -103,7 +114,7 @@
                   :class="{
                     'bg-green-100 text-green-700': m.status === 'active',
                     'bg-red-100 text-red-700': m.status === 'expired',
-                    'bg-yellow-100 text-yellow-700': m.status === 'inactive_unpaid',
+                    'bg-yellow-100 text-yellow-700': m.status === 'inactive_unpaid' || getRowColor(m).includes('yellow'), // Próximo a vencer
                     'bg-gray-200 text-gray-600': m.status === 'cancelled'
                   }"
                 >
@@ -239,11 +250,13 @@
 <script setup>
 import api from '@/axios'
 import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router' // <-- 1. IMPORTAR USE ROUTE
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import Sidebar from '@/views/Sidebar.vue'
 
 dayjs.extend(utc)
+const route = useRoute() // <-- 2. OBTENER LA RUTA ACTUAL
 
 const membresias = ref([])
 const miembros = ref([])
@@ -295,7 +308,7 @@ const cargarMembresias = async () => {
   }
 }
 
-// --- NUEVA FUNCIÓN ---
+// --- FUNCIÓN MODIFICADA ---
 // Se llama al hacer clic en los botones de filtro
 const filtrarMembresias = (status) => {
   statusFilter.value = status
@@ -304,6 +317,7 @@ const filtrarMembresias = (status) => {
   if (status === 'active') tituloFiltro.value = 'Solo Activas'
   else if (status === 'inactive_unpaid') tituloFiltro.value = 'Inactivas (Por Pagar)'
   else if (status === 'all') tituloFiltro.value = 'Todas'
+  else if (status === 'expiring_soon') tituloFiltro.value = 'Próximas a Vencer' // <-- 3. AÑADIR CASO
   else tituloFiltro.value = 'Activas y Vencidas'
 
   cargarMembresias() // Recargar datos con el nuevo filtro
@@ -385,7 +399,10 @@ const asignarMembresia = async () => {
     });
 
     cerrarModal()
-    await cargarMembresias() // Recarga la lista
+
+    // Al asignar, lo mandamos al filtro de inactivas para que vea la nueva membresía
+    filtrarMembresias('inactive_unpaid');
+
     alert('Membresía asignada (Inactiva). El cliente debe realizar el pago en recepción para activarla.')
 
   } catch (error) {
@@ -414,15 +431,26 @@ const traducirEstado = (s) => {
   switch (s) {
     case 'active': return 'Activa'
     case 'expired': return 'Vencida'
-    case 'inactive_unpaid': return 'Inactiva (Por Pagar)'
+    case.value = 'inactive_unpaid': return 'Inactiva (Por Pagar)'
     case 'cancelled': return 'Cancelada'
     default: return s
   }
 }
 
 
+// --- ONMOUNTED MODIFICADO ---
 onMounted(() => {
-  cargarMembresias() // Carga la vista por defecto (activas/vencidas)
+  // 4. LEER EL FILTRO DE LA URL
+  const filterFromUrl = route.query.filter as string | undefined
+
+  if (filterFromUrl) {
+    // Si la URL trae un filtro (ej: 'expiring_soon'), usarlo
+    filtrarMembresias(filterFromUrl)
+  } else {
+    // Si no, cargar la vista por defecto
+    cargarMembresias()
+  }
+
   cargarMiembros()
   cargarPlanes()
 })
@@ -440,6 +468,8 @@ const getRowColor = (membresia) => {
     return 'bg-yellow-100 text-yellow-800 font-semibold'
   }
 
+  // --- LÓGICA MODIFICADA ---
+  // Marcar en amarillo si vence pronto Y ESTÁ ACTIVA
   if (diffDays <= 3 && diffDays >= 0 && membresia.status === 'active') {
     return 'bg-yellow-100 text-yellow-800 font-semibold'
   }

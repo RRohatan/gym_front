@@ -32,12 +32,18 @@
         <p v-else class="text-4xl font-bold">{{ stats.inactive_unpaid }}</p>
       </div>
 
-      <!-- Card Vencen Pronto -->
-      <div class="stat-card bg-blue-500">
+      <!-- --- ¡CAMBIO AQUÍ! --- -->
+      <!-- Card Vencen Pronto (AHORA ES UN LINK) -->
+      <router-link
+        to="/Membership?filter=expiring_soon"
+        class="stat-card bg-blue-500 hover:bg-blue-600 transition-colors duration-200"
+      >
         <h3 class="text-sm font-semibold uppercase opacity-80">Vencen Pronto (3 Días)</h3>
         <p v-if="loadingStats" class="stat-loading"></p>
         <p v-else class="text-4xl font-bold">{{ stats.expiring_soon }}</p>
-      </div>
+      </router-link>
+      <!-- --- FIN DEL CAMBIO --- -->
+
     </div>
     <!-- ===== FIN DE ESTADÍSTICAS ===== -->
 
