@@ -431,7 +431,7 @@ const traducirEstado = (s) => {
   switch (s) {
     case 'active': return 'Activa'
     case 'expired': return 'Vencida'
-    case.value = 'inactive_unpaid': return 'Inactiva (Por Pagar)'
+    case 'inactive_unpaid': return 'Inactiva (Por Pagar)'
     case 'cancelled': return 'Cancelada'
     default: return s
   }
