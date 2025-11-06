@@ -438,12 +438,12 @@ const traducirEstado = (s) => {
 }
 
 
-// --- ONMOUNTED MODIFICADO ---
+// --- ONMOUNTED MODIFICADO (ERROR DE IMAGEN CORREGIDO) ---
 onMounted(() => {
-  // 4. LEER EL FILTRO DE LA URL
-  const filterFromUrl = route.query.filter as string | undefined
+  // 4. LEER EL FILTRO DE LA URL (Forma segura en TS)
+  const filterFromUrl = route.query.filter
 
-  if (filterFromUrl) {
+  if (typeof filterFromUrl === 'string' && filterFromUrl) {
     // Si la URL trae un filtro (ej: 'expiring_soon'), usarlo
     filtrarMembresias(filterFromUrl)
   } else {
