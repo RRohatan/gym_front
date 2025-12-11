@@ -7,3 +7,11 @@
 
 
 
+/* Fix SweetAlert2: mostrar botones siempre visibles */
+.swal2-actions .swal2-confirm,
+.swal2-actions .swal2-cancel {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  filter: none !important;
+}

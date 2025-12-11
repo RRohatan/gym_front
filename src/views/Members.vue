@@ -75,6 +75,7 @@
               >
                 Ver detalle
               </router-link>
+
               <a
                 :href="`https://wa.me/${formatearTelefono(member.phone)}`"
                 target="_blank"
@@ -83,17 +84,27 @@
               >
                 WhatsApp
               </a>
+
               <router-link
                 :to="{ name: 'MemberEdit', params: { id: member.id } }"
                 class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs"
               >
                 Editar
               </router-link>
+
               <button
                 @click="abrirModalMembresia(member)"
                 class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs"
               >
                 Asignar membresía
+              </button>
+
+              <!-- Nuevo botón de Pagar (Solo si debe) -->
+               <button
+                @click="abrirModalPagoDirecto(member)"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs"
+              >
+                💰 Pagar
               </button>
             </div>
           </div>
@@ -101,7 +112,7 @@
       </div>
     </div>
 
-    <!-- Modal Registro Cliente (MODIFICADO) -->
+    <!-- Modal Registro Cliente -->
     <div
       v-if="modalRegistro"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
@@ -111,8 +122,6 @@
       >
         <h2 class="text-xl font-bold mb-4">Registrar nuevo cliente</h2>
         <form @submit.prevent="registrarMiembro">
-
-          <!-- Datos Personales -->
           <input
             v-model="nuevoMiembro.name"
             type="text"
@@ -139,65 +148,73 @@
             placeholder="Teléfono (Opcional)"
             class="w-full mb-2 p-2 border rounded"
           />
-          <label class="block mb-1 text-sm">Fecha de nacimiento</label>
-          <input
-            v-model="nuevoMiembro.birth_date"
-            type="date"
-            class="w-full mb-4 p-2 border rounded"
-          />
-          <label class="block mb-1 text-sm">Sexo</label>
-          <select v-model="nuevoMiembro.sexo" class="w-full mb-2 p-2 border rounded">
-            <option disabled value="">Seleccione una opción</option>
-            <option value="masculino">Masculino</option>
-            <option value="femenino">Femenino</option>
-            <option value="no binario">No binario</option>
-            <option value="prefiere no decirlo">Prefiere no decirlo</option>
-            <option value="otro">Otro</option>
-          </select>
+          <div class="grid grid-cols-2 gap-2">
+             <div>
+                <label class="block mb-1 text-sm">Fecha nacimiento</label>
+                <input
+                    v-model="nuevoMiembro.birth_date"
+                    type="date"
+                    class="w-full mb-2 p-2 border rounded"
+                />
+             </div>
+             <div>
+                <label class="block mb-1 text-sm">Sexo</label>
+                <select v-model="nuevoMiembro.sexo" class="w-full mb-2 p-2 border rounded">
+                    <option disabled value="">Seleccione...</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="no binario">No binario</option>
+                    <option value="otro">Otro</option>
+                </select>
+             </div>
+          </div>
 
-          <!-- Datos Físicos -->
-          <label class="block mb-1 text-sm">Estatura (m) (Opcional)</label>
-          <input
-            v-model.number="nuevoMiembro.estatura"
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="Ej. 1.70"
-            class="w-full mb-2 p-2 border rounded"
-          />
-          <label class="block mb-1 text-sm">Peso (kg) (Opcional)</label>
-          <input
-            v-model.number="nuevoMiembro.peso"
-            type="number"
-            step="0.1"
-            min="0"
-            placeholder="Ej. 70.5"
-            class="w-full mb-2 p-2 border rounded"
-          />
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+                <label class="block mb-1 text-sm">Estatura (m)</label>
+                <input
+                    v-model.number="nuevoMiembro.estatura"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="Ej. 1.70"
+                    class="w-full mb-2 p-2 border rounded"
+                />
+            </div>
+            <div>
+                <label class="block mb-1 text-sm">Peso (kg)</label>
+                <input
+                    v-model.number="nuevoMiembro.peso"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    placeholder="Ej. 70.5"
+                    class="w-full mb-2 p-2 border rounded"
+                />
+            </div>
+          </div>
+
           <label class="block mb-1 text-sm">Antecedentes médicos (Opcional)</label>
           <textarea
             v-model="nuevoMiembro.medical_history"
-            rows="3"
+            rows="2"
             placeholder="Ej. Asma, diabetes..."
             class="w-full mb-4 p-2 border rounded"
           ></textarea>
 
-          <!-- ===== INICIO DE CAMBIO ===== -->
           <!-- Asignación de Plan (Opcional) -->
-          <div class="border-t pt-4">
-            <label class="block mb-1 text-sm font-semibold">Asignar Plan (Opcional)</label>
+          <div class="border-t pt-4 bg-gray-50 p-3 rounded mb-4">
+            <label class="block mb-1 text-sm font-semibold text-blue-800">Asignar Plan Inicial (Opcional)</label>
             <p class="text-xs text-gray-500 mb-2">
-              Si seleccionas un plan, se creará una membresía inactiva.
-              Deberás registrar el pago en la sección de Pagos para activarla.
+              Se creará la membresía pendiente de pago.
             </p>
-            <select v-model="nuevoMiembro.plan_id" class="w-full mb-4 p-2 border rounded">
-              <option value="">-- No asignar plan por ahora --</option>
+            <select v-model="nuevoMiembro.plan_id" class="w-full p-2 border rounded border-blue-200">
+              <option value="">-- Solo registrar cliente --</option>
               <option v-for="plan in planes" :key="plan.id" :value="plan.id">
                 {{ plan.name }}
               </option>
             </select>
           </div>
-          <!-- ===== FIN DE CAMBIO ===== -->
 
           <div class="flex justify-end gap-3">
             <button type="button" @click="cerrarModalRegistro" class="text-gray-600 px-4 py-2">
@@ -205,7 +222,7 @@
             </button>
             <button
               type="submit"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold"
             >
               Guardar Cliente
             </button>
@@ -214,7 +231,7 @@
       </div>
     </div>
 
-    <!-- Modal Asignar Membresía (SIN CAMBIOS) -->
+    <!-- Modal Asignar Membresía (Existente) -->
     <div
       v-if="modalMembresia"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
@@ -244,6 +261,48 @@
         </form>
       </div>
     </div>
+
+    <!-- NUEVO: Modal de Pago Rápido -->
+    <div
+      v-if="modalPago"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500">
+        <h2 class="text-xl font-bold mb-2 text-gray-800">💰 Registrar Pago y Activar</h2>
+        <p class="text-sm text-gray-600 mb-4">Cliente: <strong>{{ clientePago?.name }}</strong></p>
+
+        <form @submit.prevent="procesarPago">
+            <div class="mb-4 bg-gray-100 p-3 rounded">
+                <p class="text-sm text-gray-500">Monto a pagar:</p>
+                <p class="text-2xl font-bold text-green-700">
+                    {{ formatCurrency(pagoForm.amount) }}
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block mb-1 text-sm font-medium">Método de Pago</label>
+                <select v-model="pagoForm.payment_method_id" class="w-full border rounded px-3 py-2" required>
+                    <option value="" disabled>Seleccione...</option>
+                    <option v-for="m in metodosPago" :key="m.id" :value="m.id">{{ m.name }}</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" @click="cerrarModalPago" class="text-gray-600 px-4 py-2">
+                    Cancelar
+                </button>
+                <button
+                    type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg transform hover:scale-105 transition"
+                    :disabled="procesandoPago"
+                >
+                    {{ procesandoPago ? 'Procesando...' : '✅ Confirmar Pago' }}
+                </button>
+            </div>
+        </form>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -252,19 +311,27 @@ import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
 import Sidebar from "@/views/Sidebar.vue";
 import dayjs from 'dayjs'
-import Swal from 'sweetalert2'; // Importar SweetAlert
+import Swal from 'sweetalert2';
 
 const members = ref([]);
 const planes = ref([]);
+const metodosPago = ref([]); // Lista de métodos de pago
 const loading = ref(true);
 const busqueda = ref("");
 const detallesAbiertos = ref([]);
 
+// Modales
 const modalRegistro = ref(false);
 const modalMembresia = ref(false);
-const clienteSeleccionado = ref(null);
+const modalPago = ref(false); // Nuevo modal
 
-// Objeto para el formulario de nuevo miembro (MODIFICADO)
+// Selecciones
+const clienteSeleccionado = ref(null);
+const clientePago = ref(null);
+
+const procesandoPago = ref(false);
+
+// Formularios
 const nuevoMiembro = ref({
   name: "",
   identification: "",
@@ -272,17 +339,21 @@ const nuevoMiembro = ref({
   phone: "",
   birth_date: "",
   medical_history: "",
-  sexo: "masculino", // Valor por defecto
+  sexo: "masculino",
   peso: null,
   estatura: null,
-  plan_id: "", // <-- CAMPO AÑADIDO para el plan opcional
-});
-
-// Objeto para el modal de asignar membresía
-const nuevaMembresia = ref({
   plan_id: "",
 });
 
+const nuevaMembresia = ref({ plan_id: "" });
+
+const pagoForm = ref({
+    member_id: "",
+    amount: 0,
+    payment_method_id: ""
+});
+
+// --- Métodos de Apertura/Cierre ---
 const abrirModalRegistro = () => (modalRegistro.value = true);
 const cerrarModalRegistro = () => (modalRegistro.value = false);
 
@@ -290,11 +361,77 @@ const abrirModalMembresia = (cliente) => {
   clienteSeleccionado.value = cliente;
   modalMembresia.value = true;
 };
-
 const cerrarModalMembresia = () => {
   modalMembresia.value = false;
   nuevaMembresia.value = { plan_id: "" };
 };
+
+// --- Lógica de Pago Rápido ---
+const abrirModalPagoDirecto = async (cliente) => {
+    // 1. Buscar si tiene deuda
+    try {
+        const {data: membership} = await api.get(`/memberships/by-member/${cliente.id}`);
+
+        if (membership.outstanding_balance <= 0) {
+            Swal.fire("Todo al día", "Este cliente no tiene pagos pendientes.", "info");
+            return;
+        }
+
+        // 2. Preparar formulario
+        clientePago.value = cliente;
+        pagoForm.value = {
+            member_id: cliente.id,
+            amount: membership.outstanding_balance, // El monto exacto que debe
+            payment_method_id: "" // Resetear método
+        };
+
+        // 3. Abrir modal
+        modalPago.value = true;
+
+    } catch (e) {
+        if(e.response && e.response.status === 404){
+             Swal.fire("Sin Membresía", "Este cliente no tiene una membresía asignada.", "warning");
+        } else {
+             Swal.fire("Error", "No se pudo consultar el saldo del cliente.", "error");
+        }
+    }
+}
+
+const cerrarModalPago = () => {
+    modalPago.value = false;
+    clientePago.value = null;
+}
+
+const procesarPago = async () => {
+    procesandoPago.value = true;
+    try {
+        await api.post('/payments', {
+            member_id: pagoForm.value.member_id,
+            amount: pagoForm.value.amount,
+            payment_method_id: pagoForm.value.payment_method_id
+        });
+
+        modalPago.value = false;
+
+        // Recargar para actualizar estados
+        await cargarMiembros();
+
+        Swal.fire({
+            title: '¡Pago Exitoso!',
+            text: 'La membresía ha sido activada correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+    } catch (error) {
+        console.error(error);
+        Swal.fire("Error", "No se pudo registrar el pago.", "error");
+    } finally {
+        procesandoPago.value = false;
+    }
+}
+
 
 const toggleDetalle = (id) => {
   if (detallesAbiertos.value.includes(id)) {
@@ -321,12 +458,11 @@ function formatearTelefono(numero) {
 
 const cargarMiembros = async () => {
   try {
-    loading.value = true; // Poner loading al inicio
+    loading.value = true;
     const { data } = await api.get("/members");
     members.value = data;
   } catch (e) {
     console.error("Error al cargar miembros:", e);
-    Swal.fire('Error', 'No se pudieron cargar los miembros.', 'error');
   } finally {
     loading.value = false;
   }
@@ -344,52 +480,62 @@ const cargarPlanes = async () => {
   }
 };
 
-// --- FUNCIÓN DE REGISTRO MODIFICADA ---
+const cargarMetodosPago = async () => {
+    try {
+        const { data } = await api.get('/payment_methods');
+        metodosPago.value = data;
+    } catch (e) {
+        console.error("Error al cargar métodos de pago", e);
+    }
+}
+
+// --- REGISTRO DE MIEMBRO MODIFICADO ---
 const registrarMiembro = async () => {
   try {
-    // El objeto 'nuevoMiembro' ahora incluye 'plan_id' (puede estar vacío)
-    await api.post("/members", nuevoMiembro.value);
+    const { data: nuevoCliente } = await api.post("/members", nuevoMiembro.value);
 
     cerrarModalRegistro();
-    await cargarMiembros(); // Recarga la lista de miembros
+    await cargarMiembros();
 
     // Limpiar formulario
+    const planSeleccionado = nuevoMiembro.value.plan_id; // Guardamos esto para saber si asignó plan
     nuevoMiembro.value = {
-      name: "",
-      identification: "",
-      email: "",
-      phone: "",
-      birth_date: "",
-      medical_history: "",
-      sexo: "masculino",
-      peso: null,
-      estatura: null,
-      plan_id: "",
+      name: "", identification: "", email: "", phone: "", birth_date: "",
+      medical_history: "", sexo: "masculino", peso: null, estatura: null, plan_id: "",
     };
 
-    // Notificar al admin que el pago está pendiente (si asignó plan)
-    if (nuevoMiembro.value.plan_id) {
-      Swal.fire(
-        '¡Cliente Registrado!',
-        'La membresía se creó como "Inactiva". Por favor, registre el pago para activarla.',
-        'success'
-      );
+    // LÓGICA DE FLUJO: ¿Qué hacer ahora?
+    if (planSeleccionado) {
+        // Si asignó plan, preguntar si quiere pagar ya
+        Swal.fire({
+            title: 'Cliente Registrado',
+            text: "Se creó la membresía pendiente. ¿Deseas registrar el pago ahora?",
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#10B981', // Verde
+            cancelButtonColor: '#6B7280', // Gris
+            confirmButtonText: 'Sí, Pagar y Activar',
+            cancelButtonText: 'Luego'
+
+            
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Abrir modal de pago para este nuevo cliente
+                abrirModalPagoDirecto(nuevoCliente);
+            }
+        });
     } else {
-      Swal.fire(
-        '¡Cliente Registrado!',
-        'El cliente se guardó correctamente.',
-        'success'
-      );
+        // Registro simple
+        Swal.fire('¡Listo!', 'Cliente registrado exitosamente.', 'success');
     }
 
   } catch (e) {
     console.error("Error al registrar miembro:", e);
     if (e.response && e.response.status === 422) {
-      // Manejo de errores de validación
       const errors = e.response.data.errors;
-      let errorMsg = "Por favor revise los campos: \n";
-      if (errors.identification) errorMsg += "- La identificación ya está registrada.\n";
-      if (errors.email) errorMsg += "- El email ya está registrado.\n";
+      let errorMsg = "Revise los campos: \n";
+      if (errors.identification) errorMsg += "- ID ya registrada.\n";
+      if (errors.email) errorMsg += "- Email ya registrado.\n";
       Swal.fire('Error de Validación', errorMsg, 'error');
     } else {
       Swal.fire('Error', 'No se pudo registrar el miembro.', 'error');
@@ -397,17 +543,12 @@ const registrarMiembro = async () => {
   }
 };
 
-// --- FUNCIÓN PARA ASIGNAR MEMBRESÍA (Modal separado) ---
 const guardarMembresia = async () => {
   try {
     const plan = planes.value.find((p) => p.id === nuevaMembresia.value.plan_id);
-    if (!plan) {
-      Swal.fire("Error", "Plan no encontrado", "error");
-      return;
-    }
+    if (!plan) return;
 
-    // El backend (MembershipController@store) se encarga de las fechas
-    // y de poner el estado 'inactive_unpaid'
+    // Payload solo con IDs, el backend maneja fechas y estado
     const payload = {
       member_id: clienteSeleccionado.value.id,
       plan_id: nuevaMembresia.value.plan_id,
@@ -416,32 +557,32 @@ const guardarMembresia = async () => {
     await api.post("/memberships", payload);
 
     cerrarModalMembresia();
-    await cargarMiembros(); // Recargar miembros para actualizar estado 'is_expired'
+    await cargarMiembros();
 
-    Swal.fire(
-      'Membresía Asignada',
-      'La membresía se creó como "Inactiva". Registre el pago para activarla.',
-      'success'
-    );
+    // Preguntar si quiere pagar
+    Swal.fire({
+        title: 'Membresía Asignada',
+        text: "¿Deseas registrar el pago y activarla ahora?",
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonColor: '#10B981',
+        cancelButtonColor: '#6B7280',
+        confirmButtonText: 'Sí, Pagar',
+        cancelButtonText: 'Luego'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            abrirModalPagoDirecto(clienteSeleccionado.value);
+        }
+    });
 
   } catch (error) {
-    console.error("Error al asignar membresía:", error);
-    Swal.fire(
-      'Error',
-      error.response?.data?.error || "Error al asignar la membresía.",
-      'error'
-    );
+    console.error(error);
+    Swal.fire('Error', error.response?.data?.error || "Error al asignar.", 'error');
   }
 };
 
-// --- Funciones Auxiliares (Traducción y Formato) ---
 const traducirFrecuencia = (freq) => {
-  const mapa = {
-    daily: "Diario",
-    weekly: "Semanal",
-    biweekly: "Quincenal",
-    monthly: "Mensual",
-  };
+  const mapa = { daily: "Diario", weekly: "Semanal", biweekly: "Quincenal", monthly: "Mensual" };
   return mapa[freq] || freq;
 };
 
@@ -452,13 +593,7 @@ const formatCurrency = (val) => {
 onMounted(() => {
   cargarMiembros();
   cargarPlanes();
+  cargarMetodosPago(); // Importante cargar métodos de pago
 });
 </script>
 
-<style>
-@keyframes blink {
-  50% {
-    opacity: 0.8;
-  }
-}
-</style>
