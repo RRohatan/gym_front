@@ -19,11 +19,15 @@
       </div>
 
       <!-- Card Vencidos -->
-      <div class="stat-card bg-red-600">
+     <router-link
+        to="/Membership?filter=expired"
+        class="stat-card bg-red-600 hover:bg-red-700 transition-colors duration-200"
+      >
         <h3 class="text-sm font-semibold uppercase opacity-80">Vencidos</h3>
         <p v-if="loadingStats" class="stat-loading"></p>
         <p v-else class="text-4xl font-bold">{{ stats.expired }}</p>
-      </div>
+      </router-link>
+
 
       <!-- Card Inactivos (Por Pagar) -->
       <div class="stat-card bg-yellow-500">

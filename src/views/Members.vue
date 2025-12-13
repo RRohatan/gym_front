@@ -288,9 +288,17 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-6">
-                <button type="button" @click="cerrarModalPago" class="text-gray-600 px-4 py-2">
-                    Cancelar
-                </button>
+                <button
+        type="button"
+        @click="cerrarModalPago"
+        class="px-5 py-2.5 rounded-lg font-semibold
+               bg-gray-200 text-gray-700
+               hover:bg-gray-300 hover:text-gray-900
+               shadow-sm hover:shadow-md
+               transition-all duration-200"
+    >
+        ✖ Cancelar
+    </button>
                 <button
                     type="submit"
                     class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg transform hover:scale-105 transition"
@@ -517,7 +525,7 @@ const registrarMiembro = async () => {
             confirmButtonText: 'Sí, Pagar y Activar',
             cancelButtonText: 'Luego'
 
-            
+
         }).then((result) => {
             if (result.isConfirmed) {
                 // Abrir modal de pago para este nuevo cliente
@@ -569,6 +577,7 @@ const guardarMembresia = async () => {
         cancelButtonColor: '#6B7280',
         confirmButtonText: 'Sí, Pagar',
         cancelButtonText: 'Luego'
+
     }).then((result) => {
         if (result.isConfirmed) {
             abrirModalPagoDirecto(clienteSeleccionado.value);
