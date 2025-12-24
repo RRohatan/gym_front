@@ -114,7 +114,7 @@ body {
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import api from 'axios' // ✅ Esto ya usa tu baseURL desde .env
+import api from '@/axios' // ✅ Esto ya usa tu baseURL desde .env
 import { useAuthStore } from '@/stores/useAuthStore'
 import Swal from 'sweetalert2'
 
