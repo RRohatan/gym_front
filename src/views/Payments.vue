@@ -78,7 +78,7 @@
         </table>
       </div>
 
-      <!-- Modal (Sin cambios, tu lógica de pago ya es correcta) -->
+      <!-- Modal de registro de pagos -->
       <div v-if="openModal" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50 px-4">
         <!-- ... (Contenido del modal de registro de pago sin cambios) ... -->
         <div class="bg-white rounded-lg p-6 w-full max-w-md max-h-screen overflow-y-auto">
@@ -127,9 +127,16 @@
 
             <!-- Botones -->
             <div class="flex justify-end space-x-3">
-              <button type="button" @click="cerrarModal" class="px-4 py-2 text-gray-600">Cancelar</button>
-              <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Guardar
+              <button type="button" @click="cerrarModal" class="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
+              :disabled="ProcesandoPago"
+              >Cancelar
+              </button>
+              <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="ProcesandoPago">
+
+              <span v-if="ProcesandoPago">Guardando... ⏳</span>
+              <span v-else> Guardar</span>
+
               </button>
             </div>
           </form>
@@ -151,8 +158,10 @@ const miembros = ref([])
 const metodosPago = ref([])
 const openModal = ref(false)
 const busqueda = ref('')
-const totalHistorial = ref(0) // Reemplaza totalHoy
-const loadingHistorial = ref(true) // Loading para el historial
+const totalHistorial = ref(0)
+const loadingHistorial = ref(true)
+
+const ProcesandoPago = ref(false)
 
 // Ref para los filtros de fecha
 const filtros = ref({
@@ -201,11 +210,12 @@ const cargarMetodos = async () => {
   metodosPago.value = data
 }
 
-// Función para registrar el pago (Tu lógica aquí ya es correcta)
 const registrarPago = async () => {
+  if (ProcesandoPago.value) return; // Evitar múltiples envíos
   try {
-    // verifico la membresia del cliente
-    // (Buscamos 'active', 'expired' o 'inactive_unpaid')
+    ProcesandoPago.value = true;
+
+    // Busco la membresía del miembro
     const {data: membership} = await api.get(`/memberships/by-member/${nuevoPago.value.member_id}`);
 
     // verifico si debe algo (outstanding_balance > 0)
@@ -243,6 +253,8 @@ const registrarPago = async () => {
     } else {
       alert(error.response?.data?.message || error.response?.data?.error || 'Error al registrar el pago');
     }
+  }finally {
+    ProcesandoPago.value = false;
   }
 }
 
