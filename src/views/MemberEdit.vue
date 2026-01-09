@@ -5,6 +5,17 @@
     <h2 class="text-xl font-bold mb-4">Editar Miembro</h2>
 
     <form @submit.prevent="updateMember" class="space-y-4">
+
+      <div>
+        <label class="block text-sm font-medium">Identificación</label>
+        <input
+          v-model="form.identification"
+          type="text"
+          class="w-full border rounded px-3 py-2 bg-gray-100"
+          required
+        />
+      </div>
+
       <div>
         <label class="block text-sm font-medium">Nombre</label>
         <input
@@ -12,6 +23,14 @@
           type="text"
           class="w-full border rounded px-3 py-2"
           required
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Fecha de Nacimiento</label>
+        <input
+          v-model="form.birth_date"
+          type="date"
+          class="w-full border rounded px-3 py-2"
         />
       </div>
 
@@ -95,17 +114,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/axios'
+
 
 const route = useRoute()
 const router = useRouter()
 
 const memberId = route.params.id
 const form = ref({
+ identification: '',
   name: '',
+  birth_date: '',
   phone: '',
   email: '',
   peso: null,
@@ -119,8 +141,13 @@ const loading = ref(false)
 const fetchMember = async () => {
   try {
     const { data } = await api.get(`/members/${memberId}`)
+
+    console.log('Datos del miembro obtenidos:', data);
+
     form.value = {
+      identification: data.identification ?? '',
       name: data.name ?? '',
+      birth_date: data.birth_date ?? '',
       phone: data.phone ?? '',
       email: data.email ?? '',
       peso: data.peso ?? null,
