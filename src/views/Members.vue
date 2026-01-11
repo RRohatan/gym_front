@@ -2,67 +2,84 @@
   <div class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
     <Sidebar />
 
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-      <h1 class="text-2xl font-bold mb-4 ml-12 sm:mb-0">👥 Clientes</h1>
-      <div class="flex flex-wrap ml-24 gap-3">
-        <router-link to="/Menu" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-sm">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <h1 class="text-2xl sm:text-3xl font-bold ml-12 sm:ml-0">👥 Clientes</h1>
+      <div class="flex flex-wrap gap-3 ml-12 sm:ml-0">
+        <router-link to="/Menu" class="btn btn-dark">
           🏠 Inicio
         </router-link>
-        <button @click="showRegisterModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm">
+        <button @click="showRegisterModal = true" class="btn btn-success">
           ➕ Agregar Cliente
         </button>
       </div>
     </div>
 
     <div class="mb-6">
-      <input v-model="busqueda" type="text" placeholder="🔍 Buscar por nombre o teléfono" class="w-full border px-4 py-2 rounded shadow-sm text-black" />
+      <input
+        v-model="busqueda"
+        type="text"
+        placeholder="🔍 Buscar por nombre o teléfono..."
+        class="w-full border px-4 py-3 rounded-xl shadow-sm text-black focus:ring-2 focus:ring-blue-500 outline-none text-base"
+      />
     </div>
 
-    <div v-if="loading" class="text-gray-300">Cargando Clientes...</div>
+    <div v-if="loading" class="text-gray-300 text-center mt-10">
+      Cargando Clientes...
+    </div>
+
     <div v-else>
-      <div v-if="members.length === 0" class="text-gray-400">No hay Clientes registrados.</div>
+      <div v-if="members.length === 0" class="text-gray-400 text-center mt-10">No hay Clientes registrados.</div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="member in miembrosFiltrados" :key="member.id"
-     class="rounded-xl shadow-lg overflow-hidden transition hover:scale-[1.01] duration-150"
-     :class="member.is_expired ? 'bg-red-300 text-red-900 border border-red-200' : 'bg-white text-black'">
+        <div
+          v-for="member in miembrosFiltrados"
+          :key="member.id"
+          class="rounded-xl shadow-lg overflow-hidden transition hover:scale-[1.01] duration-150 bg-white text-black"
+          :class="member.is_expired ? 'border-l-4 border-red-500 bg-red-50' : ''"
+        >
           <div class="p-4 flex justify-between items-center">
             <div>
               <h2 class="text-lg font-bold">🧍 {{ member.name }}</h2>
-              <p class="text-sm opacity-80">📞 {{ member.phone }}</p>
-              <p class="text-sm opacity-80">🎂 {{ member.birth_date }}</p>
+              <p class="text-sm opacity-80 text-gray-600">📞 {{ member.phone || 'Sin teléfono' }}</p>
+              <p class="text-sm opacity-80 text-gray-600">🎂 {{ member.birth_date }}</p>
             </div>
-            <button @click="toggleDetalle(member.id)" class="text-blue-600 hover:underline text-sm font-semibold bg-white/20 px-2 py-1 rounded">
+            <button
+              @click="toggleDetalle(member.id)"
+              class="text-xs font-bold px-3 py-1 rounded-full border transition-all h-8 flex items-center select-none"
+              :class="detallesAbiertos.includes(member.id) ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-gray-100 text-gray-600'"
+            >
               {{ detallesAbiertos.includes(member.id) ? "Ocultar" : "Ver más" }}
             </button>
           </div>
 
-          <div v-if="detallesAbiertos.includes(member.id)" class="px-4 pb-4 text-sm space-y-2 border-t border-gray-200/20 pt-2">
-            <p>🆔 {{ member.identification || "Sin cédula" }}</p>
-            <p>📧 {{ member.email || "Sin email registrado" }}</p>
-            <p>⚖️ Peso: {{ member.peso ?? "N/D" }} kg</p>
-            <p>📏 Estatura: {{ member.estatura ?? "N/D" }} m</p>
-            <p>🧬 Sexo: {{ member.sexo || "N/D" }}</p>
-            <p>🩺 Antecedentes: {{ member.medical_history || "Ninguno" }}</p>
+          <div v-if="detallesAbiertos.includes(member.id)" class="px-4 pb-4 text-sm space-y-2 border-t border-gray-200/50 pt-3 bg-gray-50/50">
+            <p><span class="font-bold">🆔 Cédula:</span> {{ member.identification || "Sin cédula" }}</p>
+            <p><span class="font-bold">📧 Email:</span> {{ member.email || "Sin email" }}</p>
+            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+               <p>⚖️ Peso: {{ member.peso ?? "--" }} kg</p>
+               <p>📏 Altura: {{ member.estatura ?? "--" }} m</p>
+               <p>🧬 Sexo: {{ member.sexo || "--" }}</p>
+            </div>
+            <p class="text-xs text-gray-500 italic mt-1">🩺 {{ member.medical_history || "Sin antecedentes" }}</p>
 
-            <div class="pt-2 flex gap-2 flex-wrap">
-              <router-link :to="{ name: 'MemberDetail', params: { id: member.id } }" class="btn-action bg-blue-600">
+            <div class="pt-3 flex gap-2 flex-wrap">
+              <router-link :to="{ name: 'MemberDetail', params: { id: member.id } }" class="btn btn-primary btn-sm">
                 Ver detalle
               </router-link>
 
-              <a v-if="member.phone" :href="`https://wa.me/${formatearTelefono(member.phone)}`" target="_blank" class="btn-action bg-green-500">
+              <a v-if="member.phone" :href="`https://wa.me/${formatearTelefono(member.phone)}`" target="_blank" class="btn btn-success btn-sm">
                 WhatsApp
               </a>
 
-              <router-link :to="{ name: 'MemberEdit', params: { id: member.id } }" class="btn-action bg-yellow-500">
+              <router-link :to="{ name: 'MemberEdit', params: { id: member.id } }" class="btn btn-indigo btn-sm">
                 Editar
               </router-link>
 
-              <button @click="abrirAsignar(member)" class="btn-action bg-purple-600">
+              <button @click="abrirAsignar(member)" class="btn btn-secondary btn-sm text-purple-700 border-purple-200">
                 Membresía
               </button>
 
-              <button @click="abrirPagar(member)" class="btn-action bg-emerald-600">
+              <button @click="abrirPagar(member)" class="btn btn-success btn-sm bg-emerald-600 border-emerald-600">
                 💰 Pagar
               </button>
             </div>
@@ -120,7 +137,6 @@ const showRegisterModal = ref(false);
 const showAssignModal = ref(false);
 const showPaymentModal = ref(false);
 
-// --- Lógica Principal ---
 onMounted(() => {
   cargarMiembros();
   cargarPlanes();
@@ -135,65 +151,61 @@ const cargarMiembros = async () => {
   finally { loading.value = false }
 };
 
+
 const cargarPlanes = async () => {
   try {
     const { data } = await api.get("/membershipPlan");
+
+    // Mapa de traducción
+    const traduccion = {
+        daily: 'Diario',
+        weekly: 'Semanal',
+        biweekly: 'Quincenal',
+        monthly: 'Mensual'
+    };
+
     planes.value = data.map(plan => ({
       ...plan,
-      name: `${plan.membership_type?.name || 'Plan'} - ${plan.frequency} ($${plan.price})`
+      // Creamos el nombre compuesto EN ESPAÑOL
+      name: `${plan.membership_type?.name || 'Plan'} - ${traduccion[plan.frequency] || plan.frequency} ($${parseInt(plan.price).toLocaleString()})`
     }));
   } catch (e) { console.error(e) }
 };
 
-// --- Manejadores de Eventos de Hijos ---
-
-// Cuando se crea un cliente nuevo
+// --- Manejadores de Eventos ---
 const handleMemberSaved = async ({ client, hasPlan }) => {
   showRegisterModal.value = false;
-  await cargarMiembros(); // Recargar lista
-
+  await cargarMiembros();
   if (hasPlan) {
-    // Si asignó plan al registrar, preguntar por pago inmediato
     Swal.fire({
-      title: 'Cliente Creado',
-      text: "¿Deseas registrar el pago ahora?",
-      icon: 'success',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, Pagar',
-      cancelButtonText: 'Luego'
+      title: 'Cliente Creado', text: "¿Deseas registrar el pago ahora?", icon: 'success',
+      showCancelButton: true, confirmButtonText: 'Sí, Pagar', cancelButtonText: 'Luego'
     }).then((result) => {
-      if (result.isConfirmed) {
-        selectedMember.value = client;
-        showPaymentModal.value = true;
-      }
+      if (result.isConfirmed) { selectedMember.value = client; showPaymentModal.value = true; }
     });
   } else {
     Swal.fire('Éxito', 'Cliente registrado correctamente', 'success');
   }
 }
 
-// Cuando se asigna una membresía a un cliente existente
 const handleMemberAssigned = (member) => {
   showAssignModal.value = false;
   Swal.fire({
-      title: 'Membresía Asignada',
-      text: "¿Deseas registrar el pago ahora?",
-      icon: 'success',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, Pagar',
-      cancelButtonText: 'Luego'
+      title: 'Membresía Asignada', text: "¿Deseas registrar el pago ahora?", icon: 'success',
+      showCancelButton: true, confirmButtonText: 'Sí, Pagar', cancelButtonText: 'Luego'
   }).then((result) => {
-    if (result.isConfirmed) {
-      selectedMember.value = member;
-      showPaymentModal.value = true;
-    }
+    if (result.isConfirmed) { selectedMember.value = member; showPaymentModal.value = true; }
   });
 }
 
 // --- Utilidades ---
+// Corregido con if/else para evitar el error de ESLint
 const toggleDetalle = (id) => {
-  if (detallesAbiertos.value.includes(id)) detallesAbiertos.value = detallesAbiertos.value.filter(i => i !== id);
-  else detallesAbiertos.value.push(id);
+  if (detallesAbiertos.value.includes(id)) {
+    detallesAbiertos.value = detallesAbiertos.value.filter(i => i !== id);
+  } else {
+    detallesAbiertos.value.push(id);
+  }
 };
 
 const abrirAsignar = (member) => {
@@ -220,9 +232,3 @@ function formatearTelefono(numero) {
   return limpio;
 }
 </script>
-
-<style scoped>
-.btn-action {
-  @apply hover:opacity-90 text-white px-3 py-1 rounded text-xs flex items-center gap-1 transition-colors;
-}
-</style>

@@ -23,10 +23,12 @@
         </div>
 
         <div class="flex justify-end gap-3 mt-6">
-          <button type="button" @click="$emit('close')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+          <button type="button" @click="$emit('close')"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
             Cancelar
           </button>
-          <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg" :disabled="processing">
+          <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg"
+            :disabled="processing">
             {{ processing ? 'Procesando...' : '✅ Confirmar Pago' }}
           </button>
         </div>
@@ -35,6 +37,7 @@
   </div>
 </template>
 
+// eslint-disable-next-line vue/block-lang
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import api from '@/axios'
@@ -96,7 +99,7 @@ const pagar = async () => {
     Swal.fire({ title: '¡Pago Exitoso!', icon: 'success', timer: 1500, showConfirmButton: false })
     emit('paid')
     emit('close')
-  } catch (error) {
+  } catch {
     Swal.fire("Error", "No se pudo registrar el pago.", "error")
   } finally {
     processing.value = false

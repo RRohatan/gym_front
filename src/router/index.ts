@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import Statistics from '@/views/Statistics.vue'
 import LoginView from "../views/Login.vue";
 
 const router = createRouter({
@@ -95,6 +95,20 @@ const router = createRouter({
       path: "/Products",
       name: "Products",
       component: () => import("@/views/Products.vue"),
+      meta: { requiresAuth: true },
+    },
+
+    {
+    path: '/statistics',
+    name: 'Statistics',
+    component: Statistics,
+    meta: { requiresAuth: true }
+  },
+
+    {
+      path: "/POS",
+      name: "POS",
+      component: () => import("@/views/POS.vue"),
       meta: { requiresAuth: true },
     },
   ],
