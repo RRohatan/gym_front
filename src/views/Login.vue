@@ -60,11 +60,15 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/useAuthStore'
 import api from '@/axios'
+import Swal from 'sweetalert2'
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 const auth = useAuthStore()
+
+// Variable para bloquear el botón mientras carga
+const loading = ref(false)
 
 const handleLogin = async () => {
   try {
@@ -84,8 +88,23 @@ const handleLogin = async () => {
 
     router.push('/Menu')
   } catch (error) {
-    alert('Credenciales incorrectas')
-    console.error(error)
+     console.error('Error de login:', error)
+
+
+    password.value = ''
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Acceso Denegado',
+      text: 'El correo o la contraseña son incorrectos.',
+      confirmButtonText: 'Intentar de nuevo',
+      confirmButtonColor: '#2563EB',
+      heightAuto: false // Evita saltos raros en el diseño
+    })
+
+  } finally {
+    // 3. Reactivamos el botón pase lo que pase
+    loading.value = false
   }
 }
 </script>

@@ -76,6 +76,11 @@
           <h2 class="text-base sm:text-xl font-bold mt-2">Estadísticas</h2>
         </router-link>
 
+        <router-link to="/configuracion" class="menu-card bg-gray-600 hover:bg-gray-700">
+          <div class="text-4xl sm:text-5xl">⚙️</div>
+          <h2 class="text-base sm:text-xl font-bold mt-2">Ajustes</h2>
+        </router-link>
+
         <button @click="logout" class="menu-card bg-red-600 hover:bg-red-700">
           <div class="text-4xl sm:text-5xl">🔒</div>
           <h2 class="text-base sm:text-xl font-bold mt-2">Salir</h2>

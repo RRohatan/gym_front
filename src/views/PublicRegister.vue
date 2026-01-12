@@ -44,11 +44,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-gray-600 text-sm mb-1">Correo</label>
-                <input v-model="form.email" type="email" class="input-field" />
+                <input v-model="form.email" type="email" class="input-field" required/>
               </div>
               <div>
                 <label class="block text-gray-600 text-sm mb-1">Teléfono</label>
-                <input v-model="form.phone" type="tel" class="input-field" />
+                <input v-model="form.phone" type="tel" class="input-field" required/>
               </div>
             </div>
 

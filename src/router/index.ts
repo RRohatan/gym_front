@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Statistics from '@/views/Statistics.vue'
 import LoginView from "../views/Login.vue";
-
+import Configuracion from '../views/Configuracion.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -111,6 +111,13 @@ const router = createRouter({
       component: () => import("@/views/POS.vue"),
       meta: { requiresAuth: true },
     },
+
+    {
+    path: '/configuracion',
+    name: 'Configuracion',
+    component: Configuracion,
+    meta: { requiresAuth: true }
+  },
   ],
 });
 

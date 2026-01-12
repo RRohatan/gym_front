@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import { useAuthStore } from '@/stores/useAuthStore'
-import router from '@/router' // Para redirección en errores
+
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -25,9 +25,14 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 401) {
+      const currentPath = window.location.pathname;
+      if (currentPath === '/' || currentPath === '/login') {
+        // Ya estamos en la página de login, no hacer nada
+        return Promise.reject(error)
+      }
       const auth = useAuthStore()
       auth.logout()
-      router.push('/login') // Redirige al login automáticamente
+      window.location.href = '/login'
     }
     return Promise.reject(error)
   }
