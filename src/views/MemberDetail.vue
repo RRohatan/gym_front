@@ -30,7 +30,7 @@
           <h3 class="text-xl font-semibold text-gray-800 mb-2">🩺 Información Física</h3>
           <p><span class="font-semibold">Edad:</span> {{ calcularEdad(member.birth_date) }} años</p>
           <p><span class="font-semibold">Sexo:</span> {{ member.sexo || '—' }}</p>
-          <p><span class="font-semibold">Estatura:</span> {{ member.estatura ? member.estatura + ' m' : '—' }}</p>
+          <p><span class="font-semibold">Estatura:</span> {{ member.estatura ? (member.estatura > 3 ? (member.estatura / 100).toFixed(2) : member.estatura) + ' m' : '—' }}</p>
           <p><span class="font-semibold">Peso:</span> {{ member.peso ? member.peso + ' kg' : '—' }}</p>
           <p><span class="font-semibold">IMC:</span> {{ calcularIMC(member.peso, member.estatura) }}</p>
           <p><span class="font-semibold">Clasificación según la OMS:</span> {{ clasificarIMC(calcularIMC(member.peso, member.estatura)) }}</p>
@@ -85,7 +85,6 @@ const loading = ref(true)
 
 onMounted(async () => {
   const memberId = route.params.id
-  const token = localStorage.getItem('token')
 
   try {
     const response = await api.get(`/members/${memberId}`)
@@ -103,8 +102,22 @@ const calcularEdad = (fechaNacimiento) => {
 }
 
 const calcularIMC = (peso, estatura) => {
+  // 1. Validamos que existan datos
   if (!peso || !estatura) return '—'
-  const imc = peso / (estatura * estatura)
+
+  // 2. Aseguramos que sean números (por si vienen como texto de la BD)
+  const pesoKg = parseFloat(peso)
+  let alturaMetros = parseFloat(estatura)
+
+  // 3. DETECTOR DE ERRORES:
+  // Si la altura es mayor a 3 (nadie mide 3 metros), asumimos que son CM y lo dividimos por 100
+  if (alturaMetros > 3) {
+    alturaMetros = alturaMetros / 100
+  }
+
+  // 4. Calculamos ahora sí con metros
+  const imc = pesoKg / (alturaMetros * alturaMetros)
+
   return imc.toFixed(2)
 }
 

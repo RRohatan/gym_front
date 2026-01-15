@@ -57,7 +57,7 @@
             <p><span class="font-bold">📧 Email:</span> {{ member.email || "Sin email" }}</p>
             <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
                <p>⚖️ Peso: {{ member.peso ?? "--" }} kg</p>
-               <p>📏 Altura: {{ member.estatura ?? "--" }} m</p>
+              <p>📏 Altura: {{ member.estatura ? (member.estatura > 3 ? (member.estatura/100).toFixed(2) : member.estatura) : "--" }} m</p>
                <p>🧬 Sexo: {{ member.sexo || "--" }}</p>
             </div>
             <p class="text-xs text-gray-500 italic mt-1">🩺 {{ member.medical_history || "Sin antecedentes" }}</p>
