@@ -55,11 +55,25 @@
           <div v-if="detallesAbiertos.includes(member.id)" class="px-4 pb-4 text-sm space-y-2 border-t border-gray-200/50 pt-3 bg-gray-50/50">
             <p><span class="font-bold">🆔 Cédula:</span> {{ member.identification || "Sin cédula" }}</p>
             <p><span class="font-bold">📧 Email:</span> {{ member.email || "Sin email" }}</p>
-            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-               <p>⚖️ Peso: {{ member.peso ?? "--" }} kg</p>
-              <p>📏 Altura: {{ member.estatura ? (member.estatura > 3 ? (member.estatura/100).toFixed(2) : member.estatura) : "--" }} m</p>
-               <p>🧬 Sexo: {{ member.sexo || "--" }}</p>
-            </div>
+           <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+    <p>⚖️ Peso: {{ member.peso ?? "--" }} kg</p>
+
+    <p>📏 Altura: {{ member.estatura ? (member.estatura > 3 ? (member.estatura/100).toFixed(2) : member.estatura) : "--" }} m</p>
+
+    <p>🧬 Sexo: {{ member.sexo || "--" }}</p>
+
+    <p>
+       📊 Estado:
+       <span :class="{
+           'text-green-600 font-bold': member.memberships?.[0]?.status === 'active',
+           'text-red-600 font-bold': member.memberships?.[0]?.status === 'expired',
+           'text-orange-500 font-bold': member.memberships?.[0]?.status === 'pending',
+           'text-gray-400': !member.memberships?.length
+       }">
+           {{ member.memberships?.length ? traducirEstado(member.memberships[0].status) : 'Sin plan' }}
+       </span>
+    </p>
+</div>
             <p class="text-xs text-gray-500 italic mt-1">🩺 {{ member.medical_history || "Sin antecedentes" }}</p>
 
             <div class="pt-3 flex gap-2 flex-wrap">
@@ -230,5 +244,18 @@ function formatearTelefono(numero) {
   let limpio = numero.toString().replace(/\D/g, "");
   if (!limpio.startsWith("57")) limpio = "57" + limpio;
   return limpio;
+}
+
+// ... código existente ...
+
+const traducirEstado = (estado) => {
+  const diccionario = {
+    'active': 'Activa',
+    'expired': 'Vencida',
+    'pending': 'Pendiente',
+    'cancelled': 'Cancelada'
+  }
+  // Si no encuentra la traducción, devuelve el estado original
+  return diccionario[estado] || estado
 }
 </script>

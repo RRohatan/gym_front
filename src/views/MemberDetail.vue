@@ -147,6 +147,7 @@ const traducirEstado = (estado) => {
     case 'active': return 'Activa'
     case 'inactive': return 'Inactiva'
     case 'cancelled': return 'Cancelada'
+    case 'expired': return 'Expirada'
     default: return estado
   }
 }
