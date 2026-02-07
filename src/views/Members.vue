@@ -2,8 +2,6 @@
   <div
     class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
   >
-    <Sidebar />
-
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
       <h1 class="text-2xl sm:text-3xl font-bold ml-12 sm:ml-0">👥 Clientes</h1>
       <div class="flex flex-wrap gap-3 ml-12 sm:ml-0">

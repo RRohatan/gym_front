@@ -2,9 +2,7 @@
   <div
     class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
   >
-    <Sidebar />
-
-    <div class="max-w-7xl mx-auto bg-white text-gray-800 shadow-xl rounded-2xl p-4 sm:p-8">
+    <div class="bg-white text-gray-800 shadow-xl rounded-2xl p-4 sm:p-8">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h1 class="text-xl sm:text-2xl font-bold ml-12 sm:ml-16 flex items-center gap-2">
           🏋️ Membresías
@@ -256,12 +254,11 @@
 </template>
 
 <script setup>
-import api from "@/axios";
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import api from "@/axios";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import Sidebar from "@/views/Sidebar.vue";
 
 dayjs.extend(utc);
 const route = useRoute();

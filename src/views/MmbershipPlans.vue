@@ -1,18 +1,14 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black p-4 sm:p-6">
-    <Sidebar />
-
-    <div class="max-w-5xl mx-auto bg-white p-4 sm:p-8 rounded-2xl shadow-xl">
+  <div
+    class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-black p-4 sm:p-6"
+  >
+    <div class="bg-white p-4 sm:p-8 rounded-2xl shadow-xl">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 class="text-2xl sm:text-3xl ml-7 font-bold text-gray-800">📋 Planes de Membresía</h1>
 
         <div class="flex flex-wrap ml-16 gap-4">
-          <router-link to="/Menu" class="btn btn-dark">
-            🏠 Inicio
-          </router-link>
-          <button @click="openModal = true" class="btn btn-success">
-            ➕ Nuevo Plan
-          </button>
+          <router-link to="/Menu" class="btn btn-dark"> 🏠 Inicio </router-link>
+          <button @click="openModal = true" class="btn btn-success">➕ Nuevo Plan</button>
         </div>
       </div>
 
@@ -30,16 +26,18 @@
             <tr v-for="plan in planes" :key="plan.id" class="hover:bg-gray-50 transition-colors">
               <td class="py-3 px-4 font-medium">{{ plan.membership_type.name }}</td>
               <td class="py-3 px-4">
-                <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs border border-blue-100 font-semibold">
+                <span
+                  class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs border border-blue-100 font-semibold"
+                >
                   {{ traducirFrecuencia(plan.frequency) }}
                 </span>
               </td>
-              <td class="py-3 px-4 font-mono text-green-700 font-bold">${{ Number(plan.price).toLocaleString() }}</td>
+              <td class="py-3 px-4 font-mono text-green-700 font-bold">
+                ${{ Number(plan.price).toLocaleString() }}
+              </td>
 
               <td class="py-3 px-4 flex justify-center gap-2">
-                <button @click="editarPlan(plan)" class="btn btn-indigo btn-sm">
-                  ✏️ Editar
-                </button>
+                <button @click="editarPlan(plan)" class="btn btn-indigo btn-sm">✏️ Editar</button>
                 <button @click="eliminarPlan(plan.id)" class="btn btn-danger btn-sm">
                   🗑️ Eliminar
                 </button>
@@ -49,21 +47,34 @@
         </table>
       </div>
 
-      <div v-if="openModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm">
+      <div
+        v-if="openModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
+      >
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
           <h2 class="text-xl font-bold mb-4 border-b pb-2">Crear Nuevo Plan</h2>
           <form @submit.prevent="crearPlan" class="space-y-4">
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Tipo de Membresía</label>
-              <select v-model="nuevoPlan.membership_type_id" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white" required>
+              <select
+                v-model="nuevoPlan.membership_type_id"
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                required
+              >
                 <option disabled value="">Seleccione un tipo</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">{{ tipo.name }}</option>
+                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">
+                  {{ tipo.name }}
+                </option>
               </select>
             </div>
 
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Frecuencia</label>
-              <select v-model="nuevoPlan.frequency" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white" required>
+              <select
+                v-model="nuevoPlan.frequency"
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                required
+              >
                 <option disabled value="">Seleccione frecuencia</option>
                 <option value="daily">Diario</option>
                 <option value="weekly">Semanal</option>
@@ -74,36 +85,54 @@
 
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Precio</label>
-              <input v-model="nuevoPlan.price" type="number" min="0" step="0.01" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" required />
+              <input
+                v-model="nuevoPlan.price"
+                type="number"
+                min="0"
+                step="0.01"
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              />
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t mt-2">
               <button type="button" @click="openModal = false" class="btn btn-secondary">
                 Cancelar
               </button>
-              <button type="submit" class="btn btn-primary">
-                💾 Guardar
-              </button>
+              <button type="submit" class="btn btn-primary">💾 Guardar</button>
             </div>
           </form>
         </div>
       </div>
 
-      <div v-if="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm">
+      <div
+        v-if="editModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
+      >
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
           <h2 class="text-xl font-bold mb-4 border-b pb-2">Editar Plan</h2>
           <form @submit.prevent="actualizarPlan" class="space-y-4">
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Tipo de Membresía</label>
-              <select v-model="planEditando.membership_type_id" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white" required>
+              <select
+                v-model="planEditando.membership_type_id"
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                required
+              >
                 <option disabled value="">Seleccione un tipo</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">{{ tipo.name }}</option>
+                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">
+                  {{ tipo.name }}
+                </option>
               </select>
             </div>
 
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Frecuencia</label>
-              <select v-model="planEditando.frequency" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white" required>
+              <select
+                v-model="planEditando.frequency"
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                required
+              >
                 <option disabled value="">Seleccione frecuencia</option>
                 <option value="daily">Diario</option>
                 <option value="weekly">Semanal</option>
@@ -114,16 +143,21 @@
 
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Precio</label>
-              <input v-model="planEditando.price" type="number" min="0" step="0.01" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" required />
+              <input
+                v-model="planEditando.price"
+                type="number"
+                min="0"
+                step="0.01"
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              />
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t mt-2">
               <button type="button" @click="cerrarModalEdicion" class="btn btn-secondary">
                 Cancelar
               </button>
-              <button type="submit" class="btn btn-primary">
-                💾 Actualizar
-              </button>
+              <button type="submit" class="btn btn-primary">💾 Actualizar</button>
             </div>
           </form>
         </div>
@@ -135,7 +169,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/axios";
-import Sidebar from "@/views/Sidebar.vue";
 
 const planes = ref([]);
 const tipos = ref([]);
@@ -151,8 +184,14 @@ const traducirFrecuencia = (freq) => {
   return mapa[freq] || freq;
 };
 
-const cargarPlanes = async () => { const { data } = await api.get("/membershipPlan"); planes.value = data; };
-const cargarTipos = async () => { const { data } = await api.get("/membershipType"); tipos.value = data; };
+const cargarPlanes = async () => {
+  const { data } = await api.get("/membershipPlan");
+  planes.value = data;
+};
+const cargarTipos = async () => {
+  const { data } = await api.get("/membershipType");
+  tipos.value = data;
+};
 
 const crearPlan = async () => {
   try {
@@ -164,11 +203,18 @@ const crearPlan = async () => {
     openModal.value = false;
     nuevoPlan.value = { membership_type_id: "", frequency: "", price: "" };
     await cargarPlanes();
-  } catch (error) { console.error("Error:", error); }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 };
 
 const editarPlan = (plan) => {
-  planEditando.value = { id: plan.id, membership_type_id: plan.membership_type_id, frequency: plan.frequency, price: plan.price };
+  planEditando.value = {
+    id: plan.id,
+    membership_type_id: plan.membership_type_id,
+    frequency: plan.frequency,
+    price: plan.price,
+  };
   editModal.value = true;
 };
 
@@ -183,21 +229,35 @@ const actualizarPlan = async () => {
     planEditando.value = { id: null, membership_type_id: "", frequency: "", price: "" };
     alert("Plan actualizado correctamente");
     await cargarPlanes();
-  } catch (error) { console.error("Error:", error); }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 };
 
 function eliminarPlan(id) {
   if (confirm("¿Seguro que deseas eliminar este plan?")) {
-    api.delete(`/membershipPlan/${id}`).then(() => {
-      planes.value = planes.value.filter(plan => plan.id !== id);
-      alert("Plan eliminado correctamente.");
-    }).catch(() => alert("Error al eliminar el plan."));
+    api
+      .delete(`/membershipPlan/${id}`)
+      .then(() => {
+        planes.value = planes.value.filter((plan) => plan.id !== id);
+        alert("Plan eliminado correctamente.");
+      })
+      .catch(() => alert("Error al eliminar el plan."));
   }
 }
 
-const cerrarModalEdicion = () => { editModal.value = false; planEditando.value = { id: null, membership_type_id: "", frequency: "", price: "" }; };
+const cerrarModalEdicion = () => {
+  editModal.value = false;
+  planEditando.value = { id: null, membership_type_id: "", frequency: "", price: "" };
+};
 
 onMounted(async () => {
-  try { await Promise.all([cargarPlanes(), cargarTipos()]); } catch (error) { console.error("Error:", error); } finally { loading.value = false; }
+  try {
+    await Promise.all([cargarPlanes(), cargarTipos()]);
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
