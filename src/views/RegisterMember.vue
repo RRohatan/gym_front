@@ -55,102 +55,73 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '@/axios'
-import dayjs from 'dayjs'
-import Swal from 'sweetalert2'
+import { ref, onMounted } from "vue";
+import api from "@/axios";
+
+import Swal from "sweetalert2";
 
 const form = ref({
-  name: '',
-  email: '',
-  phone: '',
-  birth_date: ''
-})
+  name: "",
+  email: "",
+  phone: "",
+  birth_date: "",
+});
 
 const membership = ref({
-  plan_id: '',
-  start_date: '',
-  end_date: '',
-  status: 'active'
-})
+  plan_id: "",
+  start_date: "",
+  end_date: "",
+  status: "active",
+});
 
-const planes = ref([])
-const successMessage = ref('')
-const errorMessage = ref('')
+const planes = ref([]);
+const successMessage = ref("");
+const errorMessage = ref("");
 
 onMounted(async () => {
   try {
-    const response = await api.get('/membershipPlan')
-    planes.value = response.data
+    const response = await api.get("/membershipPlan");
+    planes.value = response.data;
   } catch (err) {
-  } catch (err) {
-    console.error('Error al cargar los planes', err)
-    Swal.fire('Error', 'No se pudieron cargar los planes.', 'error')
+    console.error("Error al cargar los planes", err);
+    Swal.fire("Error", "No se pudieron cargar los planes.", "error");
   }
-})
-
-const traducir = (freq) => {
-  const map = {
-    daily: 'Diario',
-    weekly: 'Semanal',
-    biweekly: 'Quincenal',
-    monthly: 'Mensual'
-  }
-  return map[freq] || freq
-}
-
-const calcularFechaFin = () => {
-  const plan = planes.value.find(p => p.id === membership.value.plan_id)
-  if (plan && membership.value.start_date) {
-    const inicio = dayjs(membership.value.start_date)
-    let fin = inicio
-
-    switch (plan.frequency) {
-      case 'daily': fin = inicio.add(1, 'day'); break
-      case 'weekly': fin = inicio.add(1, 'week'); break
-      case 'biweekly': fin = inicio.add(2, 'week'); break
-      case 'monthly': fin = inicio.add(1, 'month'); break
-    }
-
-    membership.value.end_date = fin.format('YYYY-MM-DD')
-  }
-}
+});
 
 const registerMember = async () => {
   try {
     // Registrar miembro
-    const res = await api.post('/members', form.value)
-    const member = res.data
+    const res = await api.post("/members", form.value);
+    const member = res.data;
 
     // Si se eligió un plan, registrar membresía
     if (membership.value.plan_id && membership.value.start_date && membership.value.end_date) {
-      await api.post('/memberships', {
+      await api.post("/memberships", {
         member_id: member.id,
         plan_id: membership.value.plan_id,
         start_date: membership.value.start_date,
         end_date: membership.value.end_date,
-        status: membership.value.status
-      })
+        status: membership.value.status,
+      });
     }
 
-    successMessage.value = '✅ Miembro registrado exitosamente.'
-    errorMessage.value = ''
-    form.value = { name: '', email: '', phone: '', birth_date: '' }
-    membership.value = { plan_id: '', start_date: '', end_date: '', status: 'active' }
-
+    successMessage.value = "✅ Miembro registrado exitosamente.";
+    errorMessage.value = "";
+    form.value = { name: "", email: "", phone: "", birth_date: "" };
+    membership.value = { plan_id: "", start_date: "", end_date: "", status: "active" };
   } catch (error) {
-    successMessage.value = ''
+    successMessage.value = "";
     if (error.response && error.response.status === 422) {
-      const errors = error.response.data.errors
+      const errors = error.response.data.errors;
       if (errors.email) {
-        errorMessage.value = '❗Este correo electrónico ya está registrado.'
+        errorMessage.value = "❗Este correo electrónico ya está registrado.";
       } else {
-        errorMessage.value = '❗Verifica los datos del formulario.'
+        errorMessage.value = "❗Verifica los datos del formulario.";
       }
     } else {
-      errorMessage.value = '❌ Error inesperado al registrar el miembro.'
+      errorMessage.value = "❌ Error inesperado al registrar el miembro.";
     }
-    console.error(error)
+    console.error(error);
   }
-}
+};
 </script>
