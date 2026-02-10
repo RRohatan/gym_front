@@ -5,7 +5,7 @@
     <div class="">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 class="text-2xl font-bold ml-12 sm:ml-0">📦 Movimientos de Inventario</h1>
-        <router-link to="/Menu" class="btn btn-dark">🏠 Inicio</router-link>
+        <router-link to="/Products" class="btn btn-dark">📦 Inventario</router-link>
       </div>
 
       <div class="bg-gray-800 p-1 rounded-xl inline-flex mb-6 shadow-lg border border-gray-700">
@@ -63,7 +63,7 @@
                 <td class="p-3 text-gray-500">{{ formatDate(v.created_at) }}</td>
                 <td class="p-3 font-bold">{{ v.product?.name || "Producto eliminado" }}</td>
                 <td class="p-3 text-center bg-gray-50 rounded font-mono">{{ v.quantity }}</td>
-                <td class="p-3 text-right">{{ formatCurrency(v.price) }}</td>
+                <td class="p-3 text-right">{{ formatCurrency(v.total / v.quantity) }}</td>
                 <td class="p-3 text-right font-bold text-green-600">
                   {{ formatCurrency(v.total) }}
                 </td>
@@ -165,6 +165,22 @@
           </div>
 
           <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1"
+              >Nuevo Precio de Venta (Opcional)</label
+            >
+            <input
+              v-model.number="form.new_price"
+              type="number"
+              min="0"
+              class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-green-500 font-mono text-lg"
+              placeholder="Dejar vacío para mantener el actual"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Si ingresa un valor, se actualizará el precio de venta del producto.
+            </p>
+          </div>
+
+          <div>
             <label class="block text-sm font-bold text-gray-700 mb-1">Proveedor (Opcional)</label>
             <input
               v-model="form.supplier"
@@ -190,6 +206,7 @@
 import { ref, onMounted, computed } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 
 const tab = ref("ventas");
 const ventas = ref([]);
@@ -202,6 +219,7 @@ const form = ref({
   quantity: "",
   total_cost: "",
   supplier: "",
+  new_price: "", // Added new_price
 });
 
 onMounted(() => {
@@ -213,8 +231,8 @@ onMounted(() => {
 // CARGAS DE DATOS
 const cargarVentas = async () => {
   try {
-    const { data } = await api.get("/supplement-sales"); // Necesitas este endpoint
-    ventas.value = data;
+    const { data } = await api.get("/supplementSale");
+    ventas.value = data.data; // La API devuelve { data: [...] }
   } catch (e) {
     console.error(e);
   }
@@ -222,7 +240,7 @@ const cargarVentas = async () => {
 
 const cargarCompras = async () => {
   try {
-    const { data } = await api.get("/product-purchases"); // Necesitas este endpoint
+    const { data } = await api.get("/product-purchases"); // Ahora sí existe
     compras.value = data;
   } catch (e) {
     console.error(e);
@@ -236,19 +254,29 @@ const cargarProductos = async () => {
 
 // ACCIONES
 const abrirModalCompra = () => {
-  form.value = { product_id: "", quantity: "", total_cost: "", supplier: "" };
+  form.value = { product_id: "", quantity: "", total_cost: "", supplier: "", new_price: "" };
   showModal.value = true;
 };
 
 const registrarCompra = async () => {
   try {
     await api.post("/product-purchases", form.value); // Endpoint de guardado
-    alert("Compra registrada y stock actualizado.");
+    Swal.fire({
+      icon: "success",
+      title: "Compra Registrada",
+      text: "El stock ha sido actualizado correctamente.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
     showModal.value = false;
     cargarCompras();
     cargarProductos(); // Para actualizar stocks en el select
   } catch (error) {
-    alert("Error al registrar compra.");
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Hubo un error al registrar la compra.",
+    });
     console.error(error);
   }
 };

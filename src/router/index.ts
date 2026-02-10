@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Statistics from '@/views/Statistics.vue'
+import Statistics from "@/views/Statistics.vue";
 import LoginView from "../views/Login.vue";
-import Configuracion from '../views/Configuracion.vue'
+import Configuracion from "../views/Configuracion.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -99,11 +99,11 @@ const router = createRouter({
     },
 
     {
-    path: '/statistics',
-    name: 'Statistics',
-    component: Statistics,
-    meta: { requiresAuth: true }
-  },
+      path: "/statistics",
+      name: "Statistics",
+      component: Statistics,
+      meta: { requiresAuth: true },
+    },
 
     {
       path: "/POS",
@@ -111,13 +111,19 @@ const router = createRouter({
       component: () => import("@/views/POS.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/inventory-log",
+      name: "InventoryLog",
+      component: () => import("@/views/InventoryLog.vue"),
+      meta: { requiresAuth: true },
+    },
 
     {
-    path: '/configuracion',
-    name: 'Configuracion',
-    component: Configuracion,
-    meta: { requiresAuth: true }
-  },
+      path: "/configuracion",
+      name: "Configuracion",
+      component: Configuracion,
+      meta: { requiresAuth: true },
+    },
   ],
 });
 

@@ -14,6 +14,12 @@
         >
           ➕ Agregar
         </button>
+        <router-link
+          to="/inventory-log"
+          class="btn btn-warning flex-1 md:flex-none justify-center text-sm"
+        >
+          📋 Movimientos
+        </router-link>
       </div>
     </div>
 
@@ -137,6 +143,7 @@
 // (Mismo script, solo copia y pega si lo borraste)
 import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
+import Swal from "sweetalert2";
 const productos = ref([]);
 const loading = ref(true);
 const busqueda = ref("");
@@ -155,6 +162,7 @@ const cargarProductos = async () => {
     productos.value = data;
   } catch (e) {
     console.error(e);
+    Swal.fire("Error", "No se pudieron cargar los productos.", "error");
   } finally {
     loading.value = false;
   }
@@ -166,9 +174,18 @@ const guardarProducto = async () => {
       await api.put(`/supplementProduct/${productoForm.value.id}`, payload);
     else await api.post("/supplementProduct", payload);
     cerrarModalRegistro();
+    cerrarModalRegistro();
     cargarProductos();
+    Swal.fire({
+      icon: "success",
+      title: "Guardado",
+      text: "El producto ha sido guardado correctamente.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   } catch (e) {
     console.error(e);
+    Swal.fire("Error", "Hubo un error al guardar el producto.", "error");
   }
 };
 const editarProducto = (producto) => {
@@ -177,14 +194,27 @@ const editarProducto = (producto) => {
   modalRegistro.value = true;
 };
 const eliminarProducto = async (id) => {
-  if (confirm("¿Eliminar?")) {
-    try {
-      await api.delete(`/supplementProduct/${id}`);
-      cargarProductos();
-    } catch (e) {
-      console.error(e);
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "El producto será eliminado permanentemente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/supplementProduct/${id}`);
+        await cargarProductos();
+        Swal.fire("Eliminado", "El producto ha sido eliminado.", "success");
+      } catch (e) {
+        console.error(e);
+        Swal.fire("Error", "No se pudo eliminar el producto.", "error");
+      }
     }
-  }
+  });
 };
 const productosFiltrados = computed(() => {
   const q = busqueda.value.toLowerCase();

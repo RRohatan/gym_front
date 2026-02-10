@@ -211,6 +211,7 @@ const cargarMiembros = async () => {
     members.value = data;
   } catch (e) {
     console.error(e);
+    Swal.fire("Error", "No se pudieron cargar los clientes.", "error");
   } finally {
     loading.value = false;
   }
@@ -235,6 +236,7 @@ const cargarPlanes = async () => {
     }));
   } catch (e) {
     console.error(e);
+    Swal.fire("Error", "No se pudieron cargar los planes.", "error");
   }
 };
 

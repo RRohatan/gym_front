@@ -177,6 +177,7 @@
 import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 // --- ESTADO ---
 const pagos = ref([]);
 const miembros = ref([]);
@@ -207,19 +208,67 @@ const cargarHistorial = async () => {
     totalHistorial.value = data.total_ingresos;
   } catch (error) {
     console.error(error);
+
+    // Manejo de errores de red
+    if (!error.response) {
+      if (!navigator.onLine) {
+        Swal.fire({
+          icon: "error",
+          title: "Sin conexión a internet",
+          text: "No se pudo cargar el historial. Verifica tu conexión.",
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          text: "No se pudo conectar con el servidor para cargar el historial.",
+          confirmButtonColor: "#d33",
+        });
+      }
+    }
+
     pagos.value = [];
+    totalHistorial.value = 0;
   } finally {
     loadingHistorial.value = false;
   }
 };
 
 const cargarMiembros = async () => {
-  const { data } = await api.get("/members");
-  miembros.value = data;
+  try {
+    const { data } = await api.get("/members");
+    miembros.value = data;
+  } catch (error) {
+    console.error("Error cargando miembros:", error);
+    // Los errores de red ya se manejan globalmente en axios.js
+    // Solo registramos en consola para debugging
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "warning",
+      title: "Error cargando lista de miembros",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+  }
 };
 const cargarMetodos = async () => {
-  const { data } = await api.get("/payment_methods");
-  metodosPago.value = data;
+  try {
+    const { data } = await api.get("/payment_methods");
+    metodosPago.value = data;
+  } catch (error) {
+    console.error("Error cargando métodos de pago:", error);
+    // Los errores de red ya se manejan globalmente en axios.js
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "warning",
+      title: "Error cargando métodos de pago",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+  }
 };
 
 const registrarPago = async () => {
@@ -233,7 +282,12 @@ const registrarPago = async () => {
     );
 
     if (membership.outstanding_balance <= 0) {
-      alert("ESTE CLIENTE NO TIENE SALDO PENDIENTE");
+      Swal.fire({
+        icon: "info",
+        title: "Sin saldo pendiente",
+        text: "Este cliente no tiene saldo pendiente.",
+        confirmButtonColor: "#3085d6",
+      });
       return;
     }
 
@@ -242,7 +296,7 @@ const registrarPago = async () => {
       member_id: nuevoPago.value.member_id,
       amount: nuevoPago.value.amount,
       payment_method_id: nuevoPago.value.payment_method_id,
-      membership_id: membership.id, // <--- ¡ESTA ES LA LÍNEA QUE FALTA!
+      membership_id: membership.id,
     });
 
     // 3. Verificamos si se reactivó (opcional, para feedback visual)
@@ -258,15 +312,85 @@ const registrarPago = async () => {
       updateMembership.status === "active" &&
       (membership.status === "expired" || membership.status === "inactive_unpaid")
     ) {
-      alert("Pago registrado. Membresía reactivada exitosamente.");
+      Swal.fire({
+        icon: "success",
+        title: "¡Pago registrado!",
+        text: "Membresía reactivada exitosamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } else {
-      alert("Pago registrado exitosamente.");
+      Swal.fire({
+        icon: "success",
+        title: "¡Pago registrado!",
+        text: "El pago se registró exitosamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   } catch (error) {
-    if (error.response && error.response.status === 404) {
-      alert("Error: Este miembro no tiene una membresía asociada.");
+    // Manejo de errores de red
+    if (!error.response) {
+      // Sin respuesta del servidor - error de red
+      if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
+        Swal.fire({
+          icon: "warning",
+          title: "Tiempo de espera agotado",
+          html: `<p>El pago tardó demasiado tiempo en procesarse.</p>
+                 <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
+          confirmButtonColor: "#3085d6",
+        });
+      } else if (!navigator.onLine) {
+        Swal.fire({
+          icon: "error",
+          title: "Sin conexión a internet",
+          html: `<p>No se pudo procesar el pago porque no hay conexión a internet.</p>
+                 <p class="text-sm mt-2">Por favor, verifica tu conexión y vuelve a intentar.</p>`,
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          html: `<p>No se pudo conectar con el servidor para procesar el pago.</p>
+                 <p class="text-sm mt-2">Verifica tu conexión e intenta nuevamente.</p>`,
+          confirmButtonColor: "#d33",
+        });
+      }
     } else {
-      alert(error.response?.data?.message || "Error al registrar el pago");
+      // Errores HTTP con respuesta
+      const status = error.response.status;
+
+      if (status === 404) {
+        Swal.fire({
+          icon: "error",
+          title: "Membresía no encontrada",
+          text: "Este miembro no tiene una membresía asociada.",
+          confirmButtonColor: "#d33",
+        });
+      } else if (status === 422) {
+        Swal.fire({
+          icon: "warning",
+          title: "Datos inválidos",
+          text: error.response.data?.message || "Los datos del pago no son válidos.",
+          confirmButtonColor: "#f39c12",
+        });
+      } else if (status >= 500) {
+        Swal.fire({
+          icon: "error",
+          title: "Error del servidor",
+          html: `<p>Ocurrió un error en el servidor al procesar el pago.</p>
+                 <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al registrar pago",
+          text: error.response?.data?.message || "No se pudo registrar el pago.",
+          confirmButtonColor: "#d33",
+        });
+      }
     }
   } finally {
     ProcesandoPago.value = false;

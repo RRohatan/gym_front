@@ -169,6 +169,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/axios";
+import Swal from "sweetalert2";
 
 const planes = ref([]);
 const tipos = ref([]);
@@ -227,24 +228,58 @@ const actualizarPlan = async () => {
     });
     editModal.value = false;
     planEditando.value = { id: null, membership_type_id: "", frequency: "", price: "" };
-    alert("Plan actualizado correctamente");
+    Swal.fire({
+      icon: "success",
+      title: "Actualizado",
+      text: "Plan actualizado correctamente",
+      timer: 1500,
+      showConfirmButton: false,
+    });
     await cargarPlanes();
   } catch (error) {
     console.error("Error:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Hubo un error al actualizar el plan.",
+    });
   }
 };
 
-function eliminarPlan(id) {
-  if (confirm("¿Seguro que deseas eliminar este plan?")) {
-    api
-      .delete(`/membershipPlan/${id}`)
-      .then(() => {
-        planes.value = planes.value.filter((plan) => plan.id !== id);
-        alert("Plan eliminado correctamente.");
-      })
-      .catch(() => alert("Error al eliminar el plan."));
-  }
-}
+const eliminarPlan = (id) => {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "No podrás revertir esto.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminarlo",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      api
+        .delete(`/membershipPlan/${id}`)
+        .then(() => {
+          planes.value = planes.value.filter((plan) => plan.id !== id);
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "El plan ha sido eliminado.",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Hubo un error al eliminar el plan.",
+          });
+        });
+    }
+  });
+};
 
 const cerrarModalEdicion = () => {
   editModal.value = false;

@@ -261,6 +261,8 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
+import Swal from "sweetalert2";
+
 const route = useRoute();
 
 // Estado
@@ -373,11 +375,21 @@ const asignarMembresia = async () => {
     });
     cerrarModal();
     filtrarMembresias("inactive_unpaid");
-    alert("Membresía asignada correctamente.");
+    Swal.fire({
+      icon: "success",
+      title: "Éxito",
+      text: "Membresía asignada correctamente.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
   } catch (error) {
     console.error(error);
     const msg = error.response?.data?.error || "Error al asignar membresía";
-    alert(msg);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: msg,
+    });
   }
 };
 
@@ -415,9 +427,19 @@ const guardarCambios = async () => {
     });
     showEditModal.value = false;
     await cargarMembresias();
-    alert("Actualizado");
+    Swal.fire({
+      icon: "success",
+      title: "Actualizado",
+      text: "La membresía ha sido actualizada correctamente.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   } catch (e) {
-    alert("Error al guardar");
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Hubo un error al guardar los cambios.",
+    });
   }
 };
 

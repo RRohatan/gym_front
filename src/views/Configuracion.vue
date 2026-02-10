@@ -72,6 +72,51 @@
             </p>
           </div>
 
+          <!-- SECCIÓN CÓDIGO QR -->
+          <div class="border-t pt-6" v-if="qrImageUrl">
+            <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+              🏁 Código QR de Registro
+            </h3>
+            <p class="text-sm text-gray-500 mb-4">
+              Imprime este código y colócalo en la recepción. Los clientes podrán escanearlo para
+              registrarse ellos mismos.
+            </p>
+
+            <div
+              class="flex flex-col sm:flex-row items-center gap-6 bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300"
+            >
+              <div class="bg-white p-2 rounded shadow-sm">
+                <img
+                  :src="qrImageUrl"
+                  alt="Código QR de Registro"
+                  class="w-40 h-40 object-contain"
+                />
+              </div>
+
+              <div class="flex flex-col gap-3 w-full sm:w-auto">
+                <button
+                  @click="descargarImagen"
+                  class="btn btn-dark flex items-center justify-center gap-2 text-sm"
+                >
+                  📥 Descargar Imagen
+                </button>
+                <button
+                  @click="imprimirQR"
+                  class="btn btn-primary flex items-center justify-center gap-2 text-sm"
+                >
+                  🖨️ Imprimir / Guardar PDF
+                </button>
+                <a
+                  :href="registrationUrl"
+                  target="_blank"
+                  class="text-blue-600 underline text-sm text-center mt-2"
+                >
+                  Probar enlace de registro
+                </a>
+              </div>
+            </div>
+          </div>
+
           <div class="pt-6 border-t flex justify-end">
             <button
               type="submit"
@@ -102,9 +147,26 @@ const form = ref({
   url_grupo_whatsapp: "",
 });
 
+const qrImageUrl = ref("");
+const registrationUrl = ref("");
+
 // Cargar la configuración actual al entrar
 onMounted(async () => {
   try {
+    // 1. Obtener ID del gimnasio del usuario logueado
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      // Asumiendo que el usuario tiene gimnasio_id
+      const gimnasioId = user.gimnasio_id;
+
+      if (gimnasioId) {
+        const baseUrl = window.location.origin;
+        registrationUrl.value = `${baseUrl}/public-register/${gimnasioId}`;
+        // Generar QR usando API confiable
+        qrImageUrl.value = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(registrationUrl.value)}&margin=10`;
+      }
+    }
     // Usamos el endpoint que ya tienes en GimnasioController@show
     const { data } = await api.get("/gimnasio/config");
 
@@ -139,6 +201,62 @@ const guardarConfiguracion = async () => {
   } finally {
     guardando.value = false;
   }
+};
+// Descargar imagen forzando descarga
+const descargarImagen = async () => {
+  if (!qrImageUrl.value) return;
+  try {
+    const response = await fetch(qrImageUrl.value);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "qr-registro-gimnasio.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error al descargar imagen:", error);
+    // Fallback
+    window.open(qrImageUrl.value, "_blank");
+  }
+};
+
+// Imprimir QR (que permite guardar como PDF)
+const imprimirQR = () => {
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) return alert("Por favor, permite ventanas emergentes.");
+
+  const htmlContent = `
+    <html>
+      <head>
+        <title>Código QR de Registro</title>
+        <style>
+          body { font-family: sans-serif; text-align: center; padding: 50px; }
+          .container { border: 2px dashed #333; display: inline-block; padding: 40px; border-radius: 20px; }
+          h1 { color: #2563EB; margin-bottom: 10px; }
+          p { color: #666; font-size: 18px; margin-bottom: 30px; }
+          img { width: 300px; height: 300px; }
+          .footer { margin-top: 20px; font-size: 12px; color: #999; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>¡Regístrate Aquí!</h1>
+          <p>Escanea este código para crear tu cuenta en el gimnasio.</p>
+          <img src="${qrImageUrl.value}" />
+          <div class="footer">CosmoGym - Registro de Clientes</div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); window.onafterprint = function(){ window.close(); } };
+        <\/script>
+      </body>
+    </html>
+  `;
+
+  printWindow.document.write(htmlContent);
+  printWindow.document.close();
 };
 </script>
 

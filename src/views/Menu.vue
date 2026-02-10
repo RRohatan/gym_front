@@ -238,6 +238,7 @@ import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "vue-router";
 import api from "@/axios";
+import Swal from "sweetalert2";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -252,6 +253,14 @@ onMounted(async () => {
     stats.value = data;
   } catch (error) {
     console.error("Error cargando stats:", error);
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "error",
+      title: "Error cargando estadísticas",
+      showConfirmButton: false,
+      timer: 3000,
+    });
   }
 });
 

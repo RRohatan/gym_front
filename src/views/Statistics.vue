@@ -34,6 +34,30 @@
             <p v-else class="text-gray-500 text-center mt-10">No hay datos de membresías.</p>
           </div>
         </div>
+
+        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col text-gray-800">
+          <h3 class="font-bold text-lg mb-4 flex items-center gap-2 border-b pb-2">
+            🥤 Ventas Productos (Últimos 7 días)
+          </h3>
+          <div class="flex-1 relative min-h-[300px]">
+            <Bar v-if="productSalesData" :data="productSalesData" :options="barOptions" />
+            <p v-else class="text-gray-500 text-center mt-10">No hay ventas recientes.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col text-gray-800">
+          <h3 class="font-bold text-lg mb-4 flex items-center gap-2 border-b pb-2">
+            🏆 Top Productos Más Vendidos
+          </h3>
+          <div class="flex-1 relative min-h-[300px]">
+            <Bar
+              v-if="topProductsData"
+              :data="topProductsData"
+              :options="{ ...barOptions, indexAxis: 'y' }"
+            />
+            <p v-else class="text-gray-500 text-center mt-10">No hay datos de productos.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -43,6 +67,7 @@
 import { ref, onMounted } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 
 // --- CHART.JS IMPORTS ---
 import {
@@ -62,6 +87,8 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tool
 const loading = ref(true);
 const incomeData = ref(null);
 const pieData = ref(null);
+const productSalesData = ref(null);
+const topProductsData = ref(null);
 
 const barOptions = {
   responsive: true,
@@ -96,8 +123,34 @@ onMounted(async () => {
     );
 
     procesarDatosIngresos(historyData.historial, start);
+
+    procesarDatosIngresos(historyData.historial, start);
   } catch (error) {
-    console.error("Error cargando estadísticas:", error);
+    console.error("Error cargando estadísticas principales:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No se pudieron cargar las estadísticas de ingresos/membresías.",
+    });
+  }
+
+  // 3. Cargar Ventas de Productos (Independiente)
+  try {
+    const end = dayjs().format("YYYY-MM-DD");
+    const start = dayjs().subtract(6, "days").format("YYYY-MM-DD");
+    const { data: salesResponse } = await api.get("/supplementSale");
+    procesarVentasProductos(salesResponse.data, start);
+  } catch (error) {
+    console.error("Error cargando ventas de productos:", error);
+    // No bloqueamos la UI, solo mostramos error en consola o un toast sutil
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "warning",
+      title: "No se pudieron cargar las ventas de productos",
+      showConfirmButton: false,
+      timer: 3000,
+    });
   } finally {
     loading.value = false;
   }
@@ -130,6 +183,71 @@ const procesarDatosIngresos = (historial, startDate) => {
     labels: dias,
     datasets: [
       { label: "Ingresos ($)", backgroundColor: "#2563EB", borderRadius: 5, data: montos },
+    ],
+  };
+};
+
+const procesarVentasProductos = (sales, startDate) => {
+  // 1. Gráfica de Ventas Diarias (Últimos 7 días)
+  const ventasPorFecha = {};
+  // 2. Top Productos (Global o en rango, usaremos Global para este ejemplo o rango si prefieres)
+  const productosVendidos = {};
+
+  const startObj = dayjs(startDate);
+
+  sales.forEach((sale) => {
+    const saleDate = dayjs(sale.created_at);
+
+    // Solo contar si está en el rango de los últimos 7 días para la gráfica de tiempo
+    if (saleDate.isAfter(startObj.subtract(1, "day"))) {
+      // Restamos 1 para asegurar incluir el día inicial
+      const fechaLocal = saleDate.format("YYYY-MM-DD");
+      if (!ventasPorFecha[fechaLocal]) ventasPorFecha[fechaLocal] = 0;
+      ventasPorFecha[fechaLocal] += Number(sale.total);
+    }
+
+    // Contar productos para el Top (podemos hacerlo histórico o semanal, haré histórico para mas data)
+    const productName = sale.product?.name || "Desconocido";
+    if (!productosVendidos[productName]) productosVendidos[productName] = 0;
+    productosVendidos[productName] += Number(sale.quantity);
+  });
+
+  // --- PREPARAR DATOS VENTAS DIARIAS ---
+  const dias = [];
+  const montos = [];
+
+  for (let i = 0; i < 7; i++) {
+    const fechaObj = dayjs(startDate).add(i, "day");
+    const fechaKey = fechaObj.format("YYYY-MM-DD");
+    const label = fechaObj
+      .toDate()
+      .toLocaleDateString("es-CO", { weekday: "short", day: "numeric" });
+
+    dias.push(label);
+    montos.push(ventasPorFecha[fechaKey] || 0);
+  }
+
+  productSalesData.value = {
+    labels: dias,
+    datasets: [
+      { label: "Ventas Productos ($)", backgroundColor: "#10B981", borderRadius: 5, data: montos },
+    ],
+  };
+
+  // --- PREPARAR DATOS TOP PRODUCTOS ---
+  // Ordenar y tomar los top 5
+  const topOrdenados = Object.entries(productosVendidos)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
+
+  topProductsData.value = {
+    labels: topOrdenados.map(([name]) => name),
+    datasets: [
+      {
+        label: "Unidades Vendidas",
+        backgroundColor: ["#F59E0B", "#EF4444", "#3B82F6", "#10B981", "#8B5CF6"],
+        data: topOrdenados.map(([, cant]) => cant),
+      },
     ],
   };
 };

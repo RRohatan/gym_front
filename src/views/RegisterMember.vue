@@ -1,7 +1,8 @@
 <template>
   <!-- Fondo oscuro que ocupa toda la pantalla -->
-  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
-
+  <div
+    class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4"
+  >
     <!-- Caja del formulario blanca -->
     <div class="w-full max-w-xl bg-white p-6 rounded-xl shadow-lg">
       <h2 class="text-2xl font-bold mb-6 text-gray-800">Registrar nuevo miembro</h2>
@@ -14,7 +15,12 @@
 
         <div>
           <label class="block font-medium text-gray-700 mb-1">Email</label>
-          <input v-model="form.email" type="email" class="w-full border px-4 py-2 rounded" required />
+          <input
+            v-model="form.email"
+            type="email"
+            class="w-full border px-4 py-2 rounded"
+            required
+          />
         </div>
 
         <div>
@@ -30,13 +36,18 @@
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
           Registrar miembro
         </button>
-
       </form>
 
-      <div v-if="successMessage" class="mt-4 p-3 rounded bg-green-100 text-green-800 border border-green-300">
+      <div
+        v-if="successMessage"
+        class="mt-4 p-3 rounded bg-green-100 text-green-800 border border-green-300"
+      >
         {{ successMessage }}
       </div>
-      <div v-if="errorMessage" class="mt-4 p-3 rounded bg-red-100 text-red-800 border border-red-300">
+      <div
+        v-if="errorMessage"
+        class="mt-4 p-3 rounded bg-red-100 text-red-800 border border-red-300"
+      >
         {{ errorMessage }}
       </div>
     </div>
@@ -45,8 +56,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import api from '@/axios'
 import dayjs from 'dayjs'
+import Swal from 'sweetalert2'
 
 const form = ref({
   name: '',
@@ -71,7 +84,9 @@ onMounted(async () => {
     const response = await api.get('/membershipPlan')
     planes.value = response.data
   } catch (err) {
+  } catch (err) {
     console.error('Error al cargar los planes', err)
+    Swal.fire('Error', 'No se pudieron cargar los planes.', 'error')
   }
 })
 
@@ -140,5 +155,3 @@ const registerMember = async () => {
   }
 }
 </script>
-
-

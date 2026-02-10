@@ -174,6 +174,25 @@ const fetchCashboxes = async () => {
     todayCashbox.value = cashboxes.value.find((cb) => cb.date.substring(0, 10) === hoy);
   } catch (error) {
     console.error(error);
+
+    // Manejo de errores de red
+    if (!error.response) {
+      if (!navigator.onLine) {
+        Swal.fire({
+          icon: "error",
+          title: "Sin conexión a internet",
+          text: "No se pudo cargar la información de caja. Verifica tu conexión.",
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          text: "No se pudo conectar con el servidor para cargar la caja.",
+          confirmButtonColor: "#d33",
+        });
+      }
+    }
   } finally {
     loading.value = false;
   }
@@ -188,10 +207,36 @@ const abrirCaja = async () => {
     todayCashbox.value = data;
     nuevoSaldo.value = "";
     Swal.fire("Éxito", "Caja abierta", "success");
-  } catch (err) {
-    if (err.response?.status === 422)
+  } catch (error) {
+    // Manejo de errores de red
+    if (!error.response) {
+      if (!navigator.onLine) {
+        Swal.fire({
+          icon: "error",
+          title: "Sin conexión a internet",
+          text: "No se pudo abrir la caja. Verifica tu conexión e intenta nuevamente.",
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          text: "No se pudo conectar con el servidor para abrir la caja.",
+          confirmButtonColor: "#d33",
+        });
+      }
+    } else if (error.response.status === 422) {
       Swal.fire("Aviso", "Ya existe caja hoy", "warning").then(() => fetchCashboxes());
-    else Swal.fire("Error", "No se pudo abrir", "error");
+    } else if (error.response.status >= 500) {
+      Swal.fire({
+        icon: "error",
+        title: "Error del servidor",
+        text: "Ocurrió un error en el servidor. Intenta nuevamente más tarde.",
+        confirmButtonColor: "#d33",
+      });
+    } else {
+      Swal.fire("Error", "No se pudo abrir la caja", "error");
+    }
   }
 };
 const abrirModalGasto = () => {
@@ -208,8 +253,27 @@ const guardarGasto = async () => {
     }
     showExpenseModal.value = false;
     Swal.fire("Listo", "Gasto visual registrado", "success");
-  } catch (e) {
-    Swal.fire("Error", "Fallo", "error");
+  } catch (error) {
+    // Manejo de errores de red
+    if (!error.response) {
+      if (!navigator.onLine) {
+        Swal.fire({
+          icon: "error",
+          title: "Sin conexión a internet",
+          text: "No se pudo registrar el gasto. Verifica tu conexión.",
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          text: "No se pudo conectar con el servidor para registrar el gasto.",
+          confirmButtonColor: "#d33",
+        });
+      }
+    } else {
+      Swal.fire("Error", "No se pudo registrar el gasto", "error");
+    }
   }
 };
 const confirmarCierre = () => {
