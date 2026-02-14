@@ -2,21 +2,21 @@
   <div
     class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
   >
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-      <h1 class="text-2xl font-bold ml-12 md:ml-0">📦 Inventario</h1>
-      <div class="flex gap-2 w-full md:w-auto">
-        <router-link to="/Menu" class="btn btn-dark flex-1 md:flex-none justify-center">
-          🏠 <span class="hidden sm:inline">Inicio</span>
-        </router-link>
-        <button
-          @click="abrirModalRegistro"
-          class="btn btn-success flex-1 md:flex-none justify-center text-sm"
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <h1 class="text-2xl font-bold">📦 Inventario</h1>
+      <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+        <router-link
+          to="/Menu"
+          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
         >
+          🏠 Inicio
+        </router-link>
+        <button @click="abrirModalRegistro" class="btn btn-success flex-1 sm:flex-none text-sm">
           ➕ Agregar
         </button>
         <router-link
           to="/inventory-log"
-          class="btn btn-warning flex-1 md:flex-none justify-center text-sm"
+          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
         >
           📋 Movimientos
         </router-link>

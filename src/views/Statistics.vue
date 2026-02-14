@@ -4,10 +4,15 @@
   >
     <div class="">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <h1 class="text-2xl sm:text-3xl font-bold ml-12 sm:ml-0 flex items-center gap-2">
+        <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-2">
           📈 Estadísticas y Reportes
         </h1>
-        <router-link to="/Menu" class="btn btn-dark"> 🏠 Volver al Inicio </router-link>
+        <router-link
+          to="/Menu"
+          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
+        >
+          🏠 Volver al Inicio
+        </router-link>
       </div>
 
       <div v-if="loading" class="text-center py-20">

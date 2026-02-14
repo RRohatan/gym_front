@@ -4,8 +4,13 @@
   >
     <div class="">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 class="text-2xl font-bold ml-12 sm:ml-0">📦 Movimientos de Inventario</h1>
-        <router-link to="/Products" class="btn btn-dark">📦 Inventario</router-link>
+        <h1 class="text-2xl font-bold">📦 Movimientos de Inventario</h1>
+        <router-link
+          to="/Products"
+          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
+        >
+          📦 Inventario
+        </router-link>
       </div>
 
       <div class="bg-gray-800 p-1 rounded-xl inline-flex mb-6 shadow-lg border border-gray-700">

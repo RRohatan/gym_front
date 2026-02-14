@@ -3,11 +3,16 @@
     class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
   >
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-      <h1 class="text-2xl sm:text-3xl font-bold ml-12 sm:ml-0">👥 Clientes</h1>
-      <div class="flex flex-wrap gap-3 ml-12 sm:ml-0">
-        <router-link to="/Menu" class="btn btn-dark"> 🏠 Inicio </router-link>
-        <button @click="showRegisterModal = true" class="btn btn-success">
-          ➕ Agregar Cliente
+      <h1 class="text-2xl sm:text-3xl font-bold">👥 Clientes</h1>
+      <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+        <router-link
+          to="/Menu"
+          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
+        >
+          🏠 Inicio
+        </router-link>
+        <button @click="showRegisterModal = true" class="btn btn-success flex-1 sm:flex-none">
+          ➕ Agregar
         </button>
       </div>
     </div>
