@@ -1,26 +1,19 @@
 <template>
   <div
-    class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+    class="page-layout"
   >
-    <div class="bg-white text-gray-800 rounded-2xl shadow-xl p-4 sm:p-8 space-y-6">
+    <div class="page-card space-y-6">
       <div
         class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-4"
       >
-        <h2 class="text-2xl font-bold">📦 Caja Diaria</h2>
-
+        <div>
+          <h2 class="page-title">Caja Diaria</h2>
+          <p class="page-subtitle">Control de apertura y cierre</p>
+        </div>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link
-            to="/Menu"
-            class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-gray-800 bg-transparent text-gray-800 hover:bg-gray-100 transition-all font-semibold text-center"
-          >
-            🏠 Inicio
-          </router-link>
-          <button @click="abrirModalGasto" class="btn btn-danger-solid flex-1 sm:flex-none text-sm">
-            💸 Gasto
-          </button>
-          <button @click="confirmarCierre" class="btn btn-dark flex-1 sm:flex-none text-sm">
-            🔒 Cerrar
-          </button>
+          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
+          <button @click="abrirModalGasto" class="btn btn-danger-solid flex-1 sm:flex-none">Registrar gasto</button>
+          <button @click="confirmarCierre" class="btn btn-dark flex-1 sm:flex-none">Cerrar caja</button>
         </div>
       </div>
 

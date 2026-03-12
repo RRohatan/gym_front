@@ -1,52 +1,48 @@
 <template>
-  <div
-    class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
-  >
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-      <h1 class="text-2xl sm:text-3xl font-bold">👥 Clientes</h1>
-      <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-        <router-link
-          to="/Menu"
-          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
-        >
-          🏠 Inicio
-        </router-link>
-        <button @click="showRegisterModal = true" class="btn btn-success flex-1 sm:flex-none">
-          ➕ Agregar
-        </button>
+  <div class="page-layout">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Clientes</h1>
+          <p class="text-sm text-slate-400 mt-0.5">Gestión de clientes y membresías</p>
+        </div>
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+          <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none">Inicio</router-link>
+          <button @click="showRegisterModal = true" class="btn btn-success flex-1 sm:flex-none">Nuevo cliente</button>
+        </div>
       </div>
-    </div>
 
-    <div class="mb-6">
-      <input
-        v-model="busqueda"
-        type="text"
-        placeholder="🔍 Buscar por nombre o teléfono..."
-        class="w-full border px-4 py-3 rounded-xl shadow-sm text-black focus:ring-2 focus:ring-blue-500 outline-none text-base"
-      />
-    </div>
+      <div class="mb-6">
+        <input
+          v-model="busqueda"
+          type="text"
+          placeholder="Buscar por nombre o teléfono..."
+          class="field-input"
+        />
+      </div>
 
-    <div v-if="loading" class="text-gray-300 text-center mt-10">Cargando Clientes...</div>
+    <div v-if="loading" class="text-gray-400 text-center mt-10">Cargando Clientes...</div>
 
     <div v-else>
       <div v-if="members.length === 0" class="text-gray-400 text-center mt-10">
         No hay Clientes registrados.
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
           v-for="member in miembrosFiltrados"
           :key="member.id"
-          class="rounded-xl shadow-lg overflow-hidden transition hover:scale-[1.01] duration-150 bg-white text-black"
-          :class="member.is_expired ? 'border-l-4 border-red-500 bg-red-50' : ''"
+          class="rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-white text-black"
+          :class="member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80'"
+          style="box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);"
         >
           <div class="p-4 flex justify-between items-center">
             <div>
-              <h2 class="text-lg font-bold">🧍 {{ member.name }}</h2>
-              <p class="text-sm opacity-80 text-gray-600">
-                📞 {{ member.phone || "Sin teléfono" }}
-              </p>
-              <p class="text-sm opacity-80 text-gray-600">🎂 {{ member.birth_date }}</p>
+              <h2 class="text-base font-bold text-gray-900">{{ member.name }}</h2>
+              <p class="text-sm text-gray-500 mt-0.5">{{ member.phone || "Sin teléfono" }}</p>
+              <p class="text-sm text-gray-500">{{ member.birth_date }}</p>
             </div>
             <button
               @click="toggleDetalle(member.id)"
@@ -65,48 +61,22 @@
             v-if="detallesAbiertos.includes(member.id)"
             class="px-4 pb-4 text-sm space-y-2 border-t border-gray-200/50 pt-3 bg-gray-50/50"
           >
-            <p>
-              <span class="font-bold">🆔 Cédula:</span> {{ member.identification || "Sin cédula" }}
-            </p>
-            <p><span class="font-bold">📧 Email:</span> {{ member.email || "Sin email" }}</p>
-            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-              <p>⚖️ Peso: {{ member.peso ?? "--" }} kg</p>
-
-              <p>
-                📏 Altura:
-                {{
-                  member.estatura
-                    ? member.estatura > 3
-                      ? (member.estatura / 100).toFixed(2)
-                      : member.estatura
-                    : "--"
-                }}
-                m
-              </p>
-
-              <p>🧬 Sexo: {{ member.sexo || "--" }}</p>
-
-              <p>
-                📊 Estado:
-                <span
-                  :class="{
-                    'text-green-600 font-bold': member.memberships?.[0]?.status === 'active',
-                    'text-red-600 font-bold': member.memberships?.[0]?.status === 'expired',
-                    'text-orange-500 font-bold': member.memberships?.[0]?.status === 'pending',
-                    'text-gray-400': !member.memberships?.length,
-                  }"
-                >
-                  {{
-                    member.memberships?.length
-                      ? traducirEstado(member.memberships[0].status)
-                      : "Sin plan"
-                  }}
-                </span>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+              <p><span class="text-gray-400">Cédula</span><br/><span class="font-medium">{{ member.identification || "—" }}</span></p>
+              <p><span class="text-gray-400">Email</span><br/><span class="font-medium">{{ member.email || "—" }}</span></p>
+              <p><span class="text-gray-400">Peso</span><br/><span class="font-medium">{{ member.peso ?? "—" }} kg</span></p>
+              <p><span class="text-gray-400">Altura</span><br/><span class="font-medium">{{ member.estatura ? (member.estatura > 3 ? (member.estatura/100).toFixed(2) : member.estatura) : "—" }} m</span></p>
+              <p><span class="text-gray-400">Sexo</span><br/><span class="font-medium">{{ member.sexo || "—" }}</span></p>
+              <p><span class="text-gray-400">Estado</span><br/>
+                <span class="badge" :class="{
+                  'badge-green':  member.memberships?.[0]?.status === 'active',
+                  'badge-red':    member.memberships?.[0]?.status === 'expired',
+                  'badge-yellow': member.memberships?.[0]?.status === 'pending',
+                  'badge-gray':   !member.memberships?.length,
+                }">{{ member.memberships?.length ? traducirEstado(member.memberships[0].status) : "Sin plan" }}</span>
               </p>
             </div>
-            <p class="text-xs text-gray-500 italic mt-1">
-              🩺 {{ member.medical_history || "Sin antecedentes" }}
-            </p>
+            <p class="text-xs text-gray-400 italic mt-1">{{ member.medical_history || "Sin antecedentes médicos" }}</p>
 
             <div class="pt-3 flex gap-2 flex-wrap">
               <router-link
@@ -135,26 +105,21 @@
               <button
                 @click="abrirAsignar(member)"
                 class="btn btn-sm"
-                :class="
-                  member.memberships?.[0]?.status === 'expired'
-                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                    : 'btn-secondary text-purple-700 border-purple-200'
-                "
+                :class="member.memberships?.[0]?.status === 'expired' ? 'btn-orange' : 'btn-indigo'"
               >
-                {{ member.memberships?.[0]?.status === "expired" ? "🔄 Renovar" : "Membresía" }}
+                {{ member.memberships?.[0]?.status === "expired" ? "Renovar" : "Membresía" }}
               </button>
 
-              <button
-                @click="abrirPagar(member)"
-                class="btn btn-success btn-sm bg-emerald-600 border-emerald-600"
-              >
-                💰 Pagar
+              <button @click="abrirPagar(member)" class="btn btn-success btn-sm">
+                Pagar
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    </div><!-- /max-w-7xl -->
 
     <MemberRegisterModal
       :show="showRegisterModal"

@@ -1,7 +1,7 @@
 <template>
   <!-- Fondo oscuro que ocupa toda la pantalla -->
   <div
-    class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4"
+    class="page-layout flex items-center justify-center"
   >
     <!-- Caja del formulario blanca -->
     <div class="w-full max-w-xl bg-white p-6 rounded-xl shadow-lg">
@@ -33,17 +33,22 @@
           <input v-model="form.birth_date" type="date" class="w-full border px-4 py-2 rounded" />
         </div>
 
+        <!-- Huella dactilar (opcional) -->
+        <FingerprintEnroll
+          :member-id="null"
+          :has-fingerprint="false"
+          @captured="(t) => capturedTemplate = t"
+        />
+
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
           Registrar miembro
         </button>
       </form>
 
-      <div
-        v-if="successMessage"
-        class="mt-4 p-3 rounded bg-green-100 text-green-800 border border-green-300"
-      >
+      <div v-if="successMessage" class="mt-4 p-3 rounded bg-green-100 text-green-800 border border-green-300">
         {{ successMessage }}
       </div>
+
       <div
         v-if="errorMessage"
         class="mt-4 p-3 rounded bg-red-100 text-red-800 border border-red-300"
@@ -57,8 +62,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/axios";
-
 import Swal from "sweetalert2";
+import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
 
 const form = ref({
   name: "",
@@ -77,6 +82,7 @@ const membership = ref({
 const planes = ref([]);
 const successMessage = ref("");
 const errorMessage = ref("");
+const capturedTemplate = ref("");
 
 onMounted(async () => {
   try {
@@ -105,8 +111,14 @@ const registerMember = async () => {
       });
     }
 
+    // Si se capturó una huella, guardarla ahora que tenemos el ID
+    if (capturedTemplate.value) {
+      await api.post(`/members/${member.id}/fingerprint`, { fingerprint_data: capturedTemplate.value });
+    }
+
     successMessage.value = "✅ Miembro registrado exitosamente.";
     errorMessage.value = "";
+    capturedTemplate.value = "";
     form.value = { name: "", email: "", phone: "", birth_date: "" };
     membership.value = { plan_id: "", start_date: "", end_date: "", status: "active" };
   } catch (error) {

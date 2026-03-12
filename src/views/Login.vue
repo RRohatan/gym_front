@@ -1,61 +1,97 @@
 <template>
-  <div
-    class="w-screen h-screen bg-cover bg-center bg-no-repeat flex flex-col md:flex-row"
-    style="background-image: url('/img/fondo_sin_letra.png')"
-  >
-    <!-- Marca CosmoGym con animación -->
-    <div class="flex justify-center items-center md:flex-1 h-32 md:h-auto">
-      <h1 class="text-white text-4xl md:text-6xl font-extrabold tracking-wider animate-logo">
-        COSMOGYM
-      </h1>
-    </div>
+  <div class="auth-layout">
 
-    <!-- Formulario -->
-    <div class="flex justify-center items-center flex-1 px-4 pb-10 md:pb-0">
-      <div class="bg-white shadow-lg rounded-2xl p-6 md:p-10 w-full max-w-sm">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar Sesión</h2>
-
-        <form @submit.prevent="handleLogin">
-          <div class="mb-4">
-            <label class="block text-gray-600 text-sm mb-1">Correo</label>
-            <input
-              v-model="email"
-              type="email"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none text-black focus:ring-2 focus:ring-blue-400"
-              required
-            />
+    <!-- Panel izquierdo: imagen + branding -->
+    <div class="auth-brand-panel">
+      <div class="auth-brand-overlay" />
+      <div class="auth-brand-content">
+        <div class="auth-brand-badge">
+          <span class="auth-brand-badge-dot" />
+          Sistema de Gestión
+        </div>
+        <h1 class="auth-brand-logo">COSMO<span>GYM</span></h1>
+        <p class="auth-brand-tagline">Transforma tu cuerpo,<br />transforma tu vida.</p>
+        <div class="auth-brand-stats">
+          <div>
+            <span class="auth-stat-num">500+</span>
+            <span class="auth-stat-label">Miembros</span>
           </div>
-
-          <div class="mb-6">
-            <label class="block text-gray-600 text-sm mb-1">Contraseña</label>
-            <input
-              v-model="password"
-              type="password"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none text-black focus:ring-2 focus:ring-blue-400"
-              required
-            />
+          <div class="auth-stat-divider" />
+          <div>
+            <span class="auth-stat-num">10+</span>
+            <span class="auth-stat-label">Planes</span>
           </div>
-
-          <button
-            type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-200"
-          >
-            Entrar
-          </button>
-        </form>
-
-        <div class="mt-4 text-center">
-          <span class="text-sm text-gray-600">¿No tienes cuenta?</span>
-          <router-link to="/register" class="text-blue-600 hover:underline ml-1">
-            Regístrate
-          </router-link>
+          <div class="auth-stat-divider" />
+          <div>
+            <span class="auth-stat-num">24/7</span>
+            <span class="auth-stat-label">Soporte</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Panel derecho: formulario -->
+    <div class="auth-form-panel">
+      <div class="auth-form-card">
+
+        <div class="auth-mobile-logo">COSMO<span>GYM</span></div>
+        <h2 class="auth-form-title">Bienvenido de nuevo</h2>
+        <p class="auth-form-subtitle">Ingresa tus credenciales para continuar</p>
+
+        <form @submit.prevent="handleLogin" class="space-y-4">
+
+          <div class="auth-field">
+            <label class="auth-label">Correo electrónico</label>
+            <div class="auth-input-wrap">
+              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              <input v-model="email" type="email" class="auth-input" placeholder="tu@correo.com" required />
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label">Contraseña</label>
+            <div class="auth-input-wrap">
+              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              <input v-model="password" :type="showPassword ? 'text' : 'password'" class="auth-input pr-11" placeholder="••••••••" required />
+              <button type="button" class="auth-eye-btn" @click="showPassword = !showPassword" tabindex="-1">
+                <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" :disabled="loading" class="auth-submit-btn">
+              <svg v-if="loading" class="animate-spin mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              {{ loading ? 'Ingresando...' : 'Iniciar Sesión' }}
+            </button>
+          </div>
+        </form>
+
+        <p class="auth-footer-text">
+          ¿No tienes cuenta?
+          <router-link to="/register" class="auth-footer-link">Regístrate aquí</router-link>
+        </p>
+
+      </div>
+    </div>
+
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -64,67 +100,36 @@ import Swal from 'sweetalert2'
 
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
+const loading = ref(false)
 const router = useRouter()
 const auth = useAuthStore()
 
-// Variable para bloquear el botón mientras carga
-const loading = ref(false)
-
 const handleLogin = async () => {
+  loading.value = true
   try {
     const response = await api.post('/login', {
       email: email.value,
-      password: password.value
+      password: password.value,
     })
-
     const { access_token, user } = response.data
-
-    // Guardar token y usuario con gimnasio en el store y localStorage
     auth.setToken(access_token)
     auth.setUser(user)
-
     localStorage.setItem('token', access_token)
     localStorage.setItem('user', JSON.stringify(user))
-
     router.push('/Menu')
-  } catch (error) {
-     console.error('Error de login:', error)
-
-
+  } catch {
     password.value = ''
-
     Swal.fire({
       icon: 'error',
       title: 'Acceso Denegado',
       text: 'El correo o la contraseña son incorrectos.',
       confirmButtonText: 'Intentar de nuevo',
-      confirmButtonColor: '#2563EB',
-      heightAuto: false // Evita saltos raros en el diseño
+      confirmButtonColor: '#dc2626',
+      heightAuto: false,
     })
-
   } finally {
-    // 3. Reactivamos el botón pase lo que pase
     loading.value = false
   }
 }
 </script>
-
-<style scoped>
-@keyframes fadeScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-logo {
-  animation: fadeScale 1.2s ease-out forwards;
-  text-shadow: 0 2px 10px rgba(255, 0, 0, 0.4);
-}
-</style>
-
-

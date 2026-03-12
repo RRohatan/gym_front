@@ -119,6 +119,20 @@ const router = createRouter({
     },
 
     {
+      path: "/access-logs",
+      name: "AccessLogs",
+      component: () => import("@/views/AccessLogs.vue"),
+      meta: { requiresAuth: true },
+    },
+
+    {
+      path: "/kiosko",
+      name: "FingerprintKiosk",
+      component: () => import("@/views/FingerprintKiosk.vue"),
+      // Sin requiresAuth — el kiosco corre sin sesión de admin
+    },
+
+    {
       path: "/configuracion",
       name: "Configuracion",
       component: Configuracion,

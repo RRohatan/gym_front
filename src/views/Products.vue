@@ -1,38 +1,24 @@
 <template>
-  <div
-    class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
-  >
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-      <h1 class="text-2xl font-bold">📦 Inventario</h1>
-      <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-        <router-link
-          to="/Menu"
-          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
-        >
-          🏠 Inicio
-        </router-link>
-        <button @click="abrirModalRegistro" class="btn btn-success flex-1 sm:flex-none text-sm">
-          ➕ Agregar
-        </button>
-        <router-link
-          to="/inventory-log"
-          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
-        >
-          📋 Movimientos
-        </router-link>
+  <div class="page-layout">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Inventario</h1>
+          <p class="text-sm text-slate-400 mt-0.5">Gestión de productos y stock</p>
+        </div>
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+          <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none">Inicio</router-link>
+          <button @click="abrirModalRegistro" class="btn btn-success flex-1 sm:flex-none">Agregar producto</button>
+          <router-link to="/inventory-log" class="btn btn-secondary flex-1 sm:flex-none">Movimientos</router-link>
+        </div>
       </div>
-    </div>
 
-    <div class="mb-6">
-      <input
-        v-model="busqueda"
-        type="text"
-        placeholder="🔍 Buscar producto..."
-        class="w-full border px-4 py-3 rounded-xl shadow-sm text-black focus:ring-2 focus:ring-blue-500 outline-none text-base"
-      />
-    </div>
+      <div class="mb-6">
+        <input v-model="busqueda" type="text" placeholder="Buscar producto..." class="field-input" />
+      </div>
 
-    <div v-if="loading" class="text-gray-300 text-center mt-10">Cargando...</div>
+    <div v-if="loading" class="text-gray-400 text-center mt-10">Cargando...</div>
     <div v-else>
       <div v-if="productosFiltrados.length === 0" class="text-gray-400 text-center mt-10">
         No encontrado.
@@ -74,6 +60,8 @@
         </div>
       </div>
     </div>
+
+    </div><!-- /max-w-7xl -->
 
     <div
       v-if="modalRegistro"
@@ -223,16 +211,3 @@ const productosFiltrados = computed(() => {
 onMounted(() => cargarProductos());
 </script>
 
-<style scoped>
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
-}
-</style>

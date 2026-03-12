@@ -1,20 +1,16 @@
 <template>
   <div
-    class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+    class="page-layout"
   >
-    <div class="bg-white text-gray-800 shadow-xl rounded-2xl p-4 sm:p-8">
+    <div class="page-card">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold">💰 Historial de Pagos</h1>
+        <div>
+          <h1 class="page-title">Historial de Pagos</h1>
+          <p class="page-subtitle">Consulta y registra pagos</p>
+        </div>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link
-            to="/Menu"
-            class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-gray-800 bg-transparent text-gray-800 hover:bg-gray-100 transition-all font-semibold text-center"
-          >
-            🏠 Inicio
-          </router-link>
-          <button @click="openModal = true" class="btn btn-success flex-1 sm:flex-none">
-            ➕ Registrar
-          </button>
+          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
+          <button @click="openModal = true" class="btn btn-success flex-1 sm:flex-none">Registrar pago</button>
         </div>
       </div>
 

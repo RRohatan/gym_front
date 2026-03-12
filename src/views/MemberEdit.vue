@@ -1,32 +1,15 @@
 <template>
   <div
-    class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+    class="page-layout"
   >
     <div class="max-w-3xl mx-auto">
       <!-- Header -->
       <div class="mb-8 flex items-center justify-between">
         <div>
-          <h2 class="text-2xl font-bold text-white">Editar Cliente</h2>
-          <p class="mt-1 text-sm text-gray-300">
-            Actualiza la información personal y médica del cliente.
-          </p>
+          <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Editar Cliente</h2>
+          <p class="mt-1 text-sm text-slate-400">Actualiza la información del cliente.</p>
         </div>
-        <router-link
-          :to="{ name: 'Members' }"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="-ml-1 mr-2 h-5 w-5 text-gray-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
+        <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
           Volver
         </router-link>
       </div>
@@ -226,40 +209,24 @@
             </div>
           </div>
 
+          <!-- Section: Huella Dactilar -->
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">
+              Huella Dactilar
+            </h3>
+            <FingerprintEnroll
+              :member-id="Number(memberId)"
+              :has-fingerprint="!!memberHasFingerprint"
+              @enrolled="memberHasFingerprint = true"
+            />
+          </div>
+
           <!-- Actions -->
           <div class="pt-5 border-t border-gray-200 flex justify-end gap-3">
-            <router-link
-              :to="{ name: 'Members' }"
-              class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
               Cancelar
             </router-link>
-            <button
-              type="submit"
-              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              :disabled="loading"
-            >
-              <svg
-                v-if="loading"
-                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+            <button type="submit" class="btn btn-primary" :disabled="loading">
               {{ loading ? "Guardando..." : "Guardar Cambios" }}
             </button>
           </div>
@@ -274,6 +241,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/axios";
 import Swal from "sweetalert2";
+import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -292,6 +260,7 @@ const form = ref({
 });
 
 const loading = ref(false);
+const memberHasFingerprint = ref(false);
 
 const fetchMember = async () => {
   try {
@@ -309,6 +278,7 @@ const fetchMember = async () => {
       sexo: data.sexo ?? "",
       medical_history: data.medical_history ?? "",
     };
+    memberHasFingerprint.value = !!data.fingerprint_data;
   } catch (error: any) {
     console.error("Error al obtener miembro:", error);
     Swal.fire({

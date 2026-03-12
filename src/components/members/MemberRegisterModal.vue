@@ -51,6 +51,14 @@
           </select>
         </div>
 
+        <!-- Huella dactilar (opcional) -->
+        <FingerprintEnroll
+          :member-id="null"
+          :has-fingerprint="false"
+          @captured="(t) => capturedTemplate = t"
+          class="mb-4"
+        />
+
         <div class="flex justify-end gap-3">
           <button type="button" @click="$emit('close')" class="text-gray-600 px-4 py-2">Cancelar</button>
           <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold" :disabled="loading">
@@ -66,6 +74,7 @@
 import { ref, reactive } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
+import FingerprintEnroll from '@/components/FingerprintEnroll.vue'
 
 const props = defineProps({
   show: Boolean,
@@ -74,6 +83,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'saved'])
 const loading = ref(false)
+const capturedTemplate = ref('')
 
 const form = reactive({
   name: "", identification: "", email: "", phone: "", birth_date: "",
@@ -84,6 +94,12 @@ const registrar = async () => {
   loading.value = true
   try {
     const { data: nuevoCliente } = await api.post("/members", form)
+
+    // Si se capturó huella, guardarla ahora que tenemos el ID
+    if (capturedTemplate.value) {
+      await api.post(`/members/${nuevoCliente.id}/fingerprint`, { fingerprint_data: capturedTemplate.value })
+      capturedTemplate.value = ''
+    }
 
     // Emitimos el evento 'saved' con el cliente creado y si seleccionó plan
     emit('saved', { client: nuevoCliente, hasPlan: !!form.plan_id })

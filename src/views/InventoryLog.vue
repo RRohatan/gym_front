@@ -1,16 +1,12 @@
 <template>
-  <div
-    class="p-4 sm:p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
-  >
-    <div class="">
+  <div class="page-layout">
+    <div class="max-w-7xl mx-auto">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 class="text-2xl font-bold">📦 Movimientos de Inventario</h1>
-        <router-link
-          to="/Products"
-          class="flex-1 sm:flex-none px-4 py-2 rounded-lg border-2 border-white bg-transparent text-white hover:bg-white/10 transition-all font-semibold text-center"
-        >
-          📦 Inventario
-        </router-link>
+        <div>
+        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Movimientos de Inventario</h1>
+        <p class="text-sm text-slate-400 mt-0.5">Historial de ventas y compras</p>
+      </div>
+        <router-link to="/Products" class="btn btn-dark">Inventario</router-link>
       </div>
 
       <div class="bg-gray-800 p-1 rounded-xl inline-flex mb-6 shadow-lg border border-gray-700">

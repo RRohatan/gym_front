@@ -1,8 +1,8 @@
 <template>
-  <div class="p-6 min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-    <div class="max-w-3xl mx-auto bg-white text-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
+  <div class="page-layout">
+    <div class="max-w-3xl mx-auto page-card space-y-6">
       <!-- Título -->
-      <h2 class="text-3xl font-bold text-gray-900 mb-4 border-b pb-2">👤 Detalle del cliente</h2>
+      <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-3 tracking-tight">Detalle del cliente</h2>
 
       <!-- Cargando -->
       <div v-if="loading" class="text-gray-500">Cargando datos del cliente...</div>
@@ -81,12 +81,7 @@
       <div v-else class="text-red-500">Cliente no encontrado.</div>
 
       <!-- Botón volver -->
-      <router-link
-        to="/members"
-        class="inline-block mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow"
-      >
-        ← Volver a Clientes
-      </router-link>
+      <router-link to="/members" class="btn btn-secondary w-fit mt-2">Volver a Clientes</router-link>
     </div>
   </div>
 </template>
