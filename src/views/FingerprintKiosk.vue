@@ -67,7 +67,7 @@ import { useFingerprint } from '@/composables/useFingerprint'
 
 const route  = useRoute()
 const router = useRouter()
-const { connected, busy, statusMsg, identify, connect } = useFingerprint()
+const { connected, busy, statusMsg, identify } = useFingerprint()
 
 // El gimnasio_id viene por query param: /kiosko?gimnasio=1
 const gimnasioId = computed(() => Number(route.query.gimnasio) || null)
@@ -183,12 +183,7 @@ async function startIdentify() {
   scheduleReset(isOverheat ? OVERHEAT_DELAY : RESET_DELAY)
 }
 
-onMounted(async () => {
-  try {
-    await connect()
-  } catch {
-    state.value  = 'unknown'
-    errMsg.value = 'No se pudo conectar con el servicio del lector.'
-  }
+onMounted(() => {
+  // La conexión con el lector se inicializa automáticamente dentro de useFingerprint
 })
 </script>

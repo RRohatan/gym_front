@@ -57,6 +57,8 @@ export function useFingerprint() {
     sdk.onDeviceDisconnected = () => { connected.value = false }
 
     sdk.onCommunicationFailed = () => {
+      sdk = null
+      connected.value = false
       emitAndResolve({ event: 'error', message: 'Error de comunicación con el lector. ¿Está DpHostW.exe corriendo?' })
     }
 
@@ -122,24 +124,38 @@ export function useFingerprint() {
           return
         }
 
-        // ── IDENTIFY (1:N contra templates descargados) ───────────────────
+        // ── IDENTIFY (matching local via servicio Python con dpfj.dll) ───
         if (mode === 'identify') {
           setStatus('Verificando...')
           try {
-            const resp = await fetch(`${identifyApiUrl}/access/fingerprint/match`, {
+            // 1. Matching local usando dpfj.dll en la PC del gimnasio
+            const matchResp = await fetch('http://127.0.0.1:3002/match', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ sample: sampleData, candidates: identifyCandidates }),
             })
-            const data = await resp.json()
+            const matchData = await matchResp.json()
 
-            if (!resp.ok || !data.member_id) {
+            if (!matchResp.ok || !matchData.member_id) {
               emitAndResolve({ event: 'identified', success: false, message: 'Huella no reconocida' })
               return
             }
 
-            const member = identifyCandidates.find(c => String(c.id) === String(data.member_id))?.member
-            emitAndResolve({ event: 'identified', success: true, message: data.message ?? 'Acceso permitido', member })
+            // 2. Registrar acceso en el backend
+            const logResp = await fetch(`${identifyApiUrl}/access/fingerprint`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({ member_id: matchData.member_id }),
+            })
+            const logData = await logResp.json()
+
+            const member = identifyCandidates.find(c => String(c.id) === String(matchData.member_id))?.member
+            emitAndResolve({
+              event: 'identified',
+              success: logData.success ?? false,
+              message: logData.message ?? 'Acceso permitido',
+              member: logData.member ?? member,
+            })
           } catch (e: any) {
             emitAndResolve({ event: 'error', message: e.message ?? 'Error al identificar' })
           }
