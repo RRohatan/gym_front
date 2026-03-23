@@ -184,12 +184,12 @@ export function useFingerprint() {
     return new Promise(resolve => { resolveAction = resolve })
   }
 
-  async function enroll(memberId: number, apiUrl: string, token: string): Promise<FingerprintEvent> {
+  async function enroll(memberId: number | null, apiUrl: string, token: string): Promise<FingerprintEvent> {
     createSdk()
     busy.value = true
     mode = 'enroll'
     samples = []
-    enrollTarget = { memberId, apiUrl, token }
+    enrollTarget = memberId ? { memberId, apiUrl, token } : null
     setStatus('Coloca tu dedo en el lector (4 veces)...')
     await sdk.startAcquisition(Fingerprint.SampleFormat.Raw)
     return new Promise(resolve => { resolveAction = resolve })

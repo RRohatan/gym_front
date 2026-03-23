@@ -70,7 +70,7 @@ const emit = defineEmits<{
 }>()
 
 const auth = useAuthStore()
-const { busy, statusMsg, enroll, capture } = useFingerprint()
+const { busy, statusMsg, enroll } = useFingerprint()
 
 const result   = ref<{ success: boolean; message: string } | null>(null)
 const captured = ref(false)
@@ -80,15 +80,15 @@ async function startEnroll() {
 
   try {
     if (props.memberId) {
-      // Modo edición: guardar directamente en la API
+      // Modo edición: guardar directamente en la API tras 4 muestras
       const ev = await enroll(props.memberId, import.meta.env.VITE_API_URL, auth.token as string)
       if (ev.event === 'enrolled') {
         result.value = { success: ev.success, message: ev.message }
         if (ev.success) emit('enrolled')
       }
     } else {
-      // Modo creación: solo capturar y emitir el template
-      const ev = await capture()
+      // Modo creación: acumular 4 muestras y emitir template (se guardará al registrar)
+      const ev = await enroll(null, '', '')
       if (ev.event === 'captured') {
         if (ev.success && (ev as any).template) {
           captured.value = true
