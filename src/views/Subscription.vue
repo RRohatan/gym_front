@@ -1,0 +1,260 @@
+<template>
+  <div class="page-layout">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Suscripción</h1>
+          <p class="text-sm text-slate-400 mt-0.5">Gestiona tu plan y funcionalidades</p>
+        </div>
+        <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
+      </div>
+
+      <div v-if="loading" class="text-center py-16">
+        <p class="text-blue-600 font-bold animate-pulse">Cargando suscripción...</p>
+      </div>
+
+      <div v-else class="space-y-6">
+
+        <!-- Sin suscripción -->
+        <div v-if="!subscription" class="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+          <p class="text-amber-700 font-semibold text-lg mb-1">No tienes una suscripción activa</p>
+          <p class="text-amber-600 text-sm">Elige un plan para comenzar.</p>
+        </div>
+
+        <!-- Suscripción activa -->
+        <div v-else class="bg-white rounded-2xl shadow-xl p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Plan actual</span>
+              <h2 class="text-3xl font-black text-gray-900 capitalize mt-1">{{ subscription.plan?.name }}</h2>
+            </div>
+            <span
+              class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+              :class="statusBadge"
+            >{{ statusLabel }}</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 my-6">
+            <div class="bg-slate-50 rounded-xl p-4">
+              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Inicio</p>
+              <p class="text-sm font-bold text-gray-800">{{ formatDate(subscription.started_at) }}</p>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-4">
+              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Vence</p>
+              <p class="text-sm font-bold text-gray-800">{{ formatDate(subscription.expired_at) }}</p>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-4">
+              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Días restantes</p>
+              <p class="text-sm font-bold" :class="daysLeft <= 5 ? 'text-red-600' : 'text-emerald-600'">
+                {{ daysLeft >= 0 ? daysLeft : 0 }} días
+              </p>
+            </div>
+          </div>
+
+          <!-- Features -->
+          <div class="border-t pt-4">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Funcionalidades incluidas</p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="feature in subscription.plan?.features"
+                :key="feature.id"
+                class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold"
+              >
+                <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+                {{ featureLabel(feature) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t">
+            <button @click="showPlans = true" class="btn btn-primary flex-1">
+              Cambiar plan
+            </button>
+            <button
+              v-if="!subscription.canceled_at"
+              @click="confirmCancel"
+              class="btn flex-1 border border-red-300 text-red-600 hover:bg-red-50 bg-white"
+            >
+              Cancelar suscripción
+            </button>
+            <div v-else class="flex-1 text-center text-sm text-slate-400 self-center">
+              Cancelada — acceso hasta vencimiento
+            </div>
+          </div>
+        </div>
+
+        <!-- Planes disponibles -->
+        <div v-if="!subscription || showPlans">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">
+            {{ subscription ? 'Cambiar a otro plan' : 'Elige un plan' }}
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div
+              v-for="plan in plans"
+              :key="plan.id"
+              class="bg-white rounded-2xl shadow border-2 p-5 flex flex-col gap-4 transition cursor-pointer"
+              :class="subscription?.plan?.id === plan.id
+                ? 'border-blue-500 ring-2 ring-blue-200'
+                : 'border-transparent hover:border-blue-300'"
+            >
+              <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Plan</p>
+                <h4 class="text-xl font-black text-gray-900 capitalize">{{ plan.name }}</h4>
+                <p class="text-2xl font-black text-blue-600 mt-1">
+                  {{ formatPrice(plan.price) }}
+                  <span class="text-xs font-semibold text-slate-400">/ {{ plan.periodicity_type === 'year' ? 'año' : 'mes' }}</span>
+                </p>
+              </div>
+
+              <ul class="space-y-1.5 flex-1">
+                <li
+                  v-for="feature in plan.features"
+                  :key="feature.id"
+                  class="flex items-center gap-2 text-xs text-gray-700"
+                >
+                  <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  {{ featureLabel(feature) }}
+                </li>
+              </ul>
+
+              <button
+                v-if="subscription?.plan?.id !== plan.id"
+                @click="selectPlan(plan)"
+                :disabled="saving"
+                class="btn btn-primary text-sm py-2"
+              >
+                {{ subscription ? 'Cambiar a este' : 'Suscribirme' }}
+              </button>
+              <div v-else class="text-center text-xs font-bold text-blue-600 py-2">Plan actual</div>
+            </div>
+          </div>
+
+          <button v-if="showPlans" @click="showPlans = false" class="mt-4 text-sm text-slate-400 hover:text-slate-600">
+            Cancelar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import api from '@/axios'
+import Swal from 'sweetalert2'
+import dayjs from 'dayjs'
+
+const loading  = ref(true)
+const saving   = ref(false)
+const showPlans = ref(false)
+
+const subscription = ref<any>(null)
+const plans        = ref<any[]>([])
+
+const featureNames: Record<string, string> = {
+  'members':           'Miembros',
+  'fingerprint-access':'Acceso biométrico',
+  'supplement-pos':    'Módulo POS',
+  'email-alerts':      'Alertas por correo',
+}
+
+function featureLabel(feature: any) {
+  const base = featureNames[feature.name] ?? feature.name
+  if (feature.pivot?.charges && Number(feature.pivot.charges) < 999000) {
+    return `${base} (hasta ${feature.pivot.charges})`
+  }
+  return base
+}
+
+function formatDate(date: string | null) {
+  return date ? dayjs(date).format('DD/MM/YYYY') : '—'
+}
+
+function formatPrice(price: number) {
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(price)
+}
+
+const daysLeft = computed(() => {
+  if (!subscription.value?.expired_at) return 0
+  return dayjs(subscription.value.expired_at).diff(dayjs(), 'day')
+})
+
+const statusBadge = computed(() => {
+  if (!subscription.value) return ''
+  if (subscription.value.canceled_at) return 'bg-red-100 text-red-700'
+  if (daysLeft.value <= 5) return 'bg-amber-100 text-amber-700'
+  return 'bg-emerald-100 text-emerald-700'
+})
+
+const statusLabel = computed(() => {
+  if (!subscription.value) return ''
+  if (subscription.value.canceled_at) return 'Cancelada'
+  if (daysLeft.value < 0) return 'Vencida'
+  if (daysLeft.value <= 5) return 'Por vencer'
+  return 'Activa'
+})
+
+async function load() {
+  const [subRes, plansRes] = await Promise.all([
+    api.get('/subscription').catch(() => ({ data: { subscription: null } })),
+    api.get('/subscription-plans'),
+  ])
+  subscription.value = subRes.data.subscription
+  plans.value        = plansRes.data
+}
+
+async function selectPlan(plan: any) {
+  saving.value = true
+  try {
+    if (subscription.value) {
+      await api.put('/subscription/switch', { plan_id: plan.id })
+    } else {
+      await api.post('/subscription', { plan_id: plan.id })
+    }
+    await load()
+    showPlans.value = false
+    Swal.fire({ icon: 'success', title: '¡Listo!', text: `Plan ${plan.name} activado.`, timer: 2000, showConfirmButton: false })
+  } catch (e: any) {
+    Swal.fire('Error', e.response?.data?.error ?? 'No se pudo cambiar el plan.', 'error')
+  } finally {
+    saving.value = false
+  }
+}
+
+async function confirmCancel() {
+  const result = await Swal.fire({
+    title: '¿Cancelar suscripción?',
+    text: 'Seguirás teniendo acceso hasta que venza el plan.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc2626',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, cancelar',
+  })
+  if (!result.isConfirmed) return
+
+  try {
+    await api.delete('/subscription')
+    await load()
+    Swal.fire({ icon: 'info', title: 'Cancelada', text: 'Tu acceso se mantiene hasta el vencimiento.', timer: 2500, showConfirmButton: false })
+  } catch (e: any) {
+    Swal.fire('Error', e.response?.data?.error ?? 'No se pudo cancelar.', 'error')
+  }
+}
+
+onMounted(async () => {
+  try {
+    await load()
+  } finally {
+    loading.value = false
+  }
+})
+</script>

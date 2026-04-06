@@ -175,6 +175,16 @@
           <span class="text-sm font-semibold">Estadísticas</span>
         </router-link>
 
+        <router-link to="/subscription" class="menu-card group">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105"
+            style="background: rgba(16,185,129,0.18); border: 1px solid rgba(16,185,129,0.28);">
+            <svg class="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+            </svg>
+          </div>
+          <span class="text-sm font-semibold">Suscripción</span>
+        </router-link>
+
         <router-link to="/configuracion" class="menu-card group">
           <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105"
             style="background: rgba(148,163,184,0.14); border: 1px solid rgba(148,163,184,0.2);">
@@ -258,6 +268,6 @@ const logout = () => {
 
 const goToKiosk = () => {
   const gimnasioId = user?.gimnasio_id;
-  router.push({ name: "FingerprintKiosk", query: { gimnasio: gimnasioId } });
+  router.push({ name: "FingerprintKiosk", query: { gym: gimnasioId } });
 };
 </script>

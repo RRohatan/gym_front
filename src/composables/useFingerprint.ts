@@ -206,7 +206,7 @@ export function useFingerprint() {
 
       if (!membersData.length) {
         busy.value = false
-        return { event: 'identified', success: false, message: 'No hay huellas registradas en este gimnasio' }
+        return { event: 'identified', success: false, message: 'No hay huellas registradas en esta empresa' }
       }
 
       identifyCandidates = membersData.map(m => ({ id: String(m.id), template: m.fingerprint_data, member: m }))

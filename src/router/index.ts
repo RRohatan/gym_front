@@ -138,6 +138,12 @@ const router = createRouter({
       component: Configuracion,
       meta: { requiresAuth: true },
     },
+    {
+      path: "/subscription",
+      name: "Subscription",
+      component: () => import("@/views/Subscription.vue"),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 

@@ -69,8 +69,8 @@ const route  = useRoute()
 const router = useRouter()
 const { connected, busy, statusMsg, identify } = useFingerprint()
 
-// El gimnasio_id viene por query param: /kiosko?gimnasio=1
-const gimnasioId = computed(() => Number(route.query.gimnasio) || null)
+// El gym_id viene por query param: /kiosko?gym=1
+const gimnasioId = computed(() => Number(route.query.gym) || null)
 
 type State = 'idle' | 'scanning' | 'success' | 'expired' | 'unknown'
 
@@ -129,7 +129,7 @@ async function startIdentify() {
 
   if (!gimnasioId.value) {
     state.value  = 'unknown'
-    errMsg.value = 'Falta el parámetro ?gimnasio=ID en la URL.'
+    errMsg.value = 'Falta el parámetro ?gym=ID en la URL.'
     return
   }
 

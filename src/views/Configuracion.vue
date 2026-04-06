@@ -156,7 +156,6 @@ onMounted(async () => {
     const userStr = localStorage.getItem("user");
     if (userStr) {
       const user = JSON.parse(userStr);
-      // Asumiendo que el usuario tiene gimnasio_id
       const gimnasioId = user.gimnasio_id;
 
       if (gimnasioId) {

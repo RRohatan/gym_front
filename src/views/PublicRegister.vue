@@ -140,7 +140,7 @@ import Swal from 'sweetalert2'
 // --- INICIO DE CORRECCIÓN DE TIPOS ---
 
 // 1. Definir los tipos de datos que esperamos de la API
-interface GimnasioInfo {
+interface CompanyInfo {
   id: number;
   nombre: string;
 }
@@ -164,7 +164,7 @@ interface Plan {
 const route = useRoute()
 const gimnasioId = ref(route.params.gimnasioId as string) // Especificar que es string
 
-const gimnasio = ref<GimnasioInfo>({ id: 0, nombre: '' }) // Aplicar tipo
+const gimnasio = ref<CompanyInfo>({ id: 0, nombre: '' }) // Aplicar tipo
 const planes = ref<Plan[]>([]) // Aplicar tipo (Array de Plan)
 const loading = ref(true)
 const errorMessage = ref('')
@@ -195,7 +195,7 @@ onMounted(async () => {
   }
   try {
     // Definir el tipo de la respuesta esperada
-    const { data } = await api.get<{ gimnasio: GimnasioInfo, planes: Plan[] }>(`/public/plans/${gimnasioId.value}`)
+    const { data } = await api.get<{ gimnasio: CompanyInfo, planes: Plan[] }>(`/public/plans/${gimnasioId.value}`)
     gimnasio.value = data.gimnasio
     planes.value = data.planes
   } catch (error) {
