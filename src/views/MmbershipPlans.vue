@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="plan in planes" :key="plan.id" class="hover:bg-gray-50 transition-colors">
+            <tr v-for="plan in planesPaginados" :key="plan.id" class="hover:bg-gray-50 transition-colors">
               <td class="py-3 px-4 font-medium">{{ plan.membership_type.name }}</td>
               <td class="py-3 px-4">
                 <span
@@ -47,6 +47,21 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación -->
+      <div v-if="totalPlanesPages > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+        <span>Página {{ currentPagePlanes }} de {{ totalPlanesPages }}</span>
+        <div class="flex gap-1">
+          <button @click="currentPagePlanes--" :disabled="currentPagePlanes === 1"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            ← Anterior
+          </button>
+          <button @click="currentPagePlanes++" :disabled="currentPagePlanes === totalPlanesPages"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            Siguiente →
+          </button>
+        </div>
       </div>
 
       <div
@@ -169,11 +184,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
 
 const planes = ref([]);
+const currentPagePlanes = ref(1);
+const PER_PAGE = 10;
+const totalPlanesPages = computed(() => Math.ceil(planes.value.length / PER_PAGE));
+const planesPaginados = computed(() => {
+  const start = (currentPagePlanes.value - 1) * PER_PAGE;
+  return planes.value.slice(start, start + PER_PAGE);
+});
 const tipos = ref([]);
 const openModal = ref(false);
 const editModal = ref(false);

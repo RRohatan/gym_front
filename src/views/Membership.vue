@@ -69,12 +69,12 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
-            <tr v-if="membresiasFiltradas.length === 0">
+            <tr v-if="membresias.length === 0">
               <td colspan="6" class="py-10 text-center text-gray-400">
                 No se encontraron resultados.
               </td>
             </tr>
-            <tr v-for="m in membresiasFiltradas" :key="m.id" class="hover:bg-gray-50 transition">
+            <tr v-for="m in membresias" :key="m.id" class="hover:bg-gray-50 transition">
               <td class="py-3 px-4 font-bold text-gray-700">{{ m.member?.name }}</td>
 
               <td class="py-3 px-4">
@@ -96,7 +96,7 @@
                     'bg-red-100 text-red-700 border-red-200': m.status === 'expired',
                     'bg-yellow-100 text-yellow-700 border-yellow-200':
                       m.status === 'inactive_unpaid',
-                    'bg-gray-100 text-gray-600': m.status === 'cancelled',
+                    'bg-gray-100 text-gray-500 border-gray-200': m.status === 'cancelled' || m.status === 'inactive',
                   }"
                 >
                   {{ traducirEstado(m.status) }}
@@ -131,6 +131,36 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación -->
+      <div v-if="lastPage > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+        <span>Página {{ currentPage }} de {{ lastPage }} ({{ totalItems }} registros)</span>
+        <div class="flex gap-1">
+          <button
+            @click="cambiarPagina(currentPage - 1)"
+            :disabled="currentPage === 1"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            ← Anterior
+          </button>
+          <button
+            v-for="page in paginasVisibles"
+            :key="page"
+            @click="cambiarPagina(page)"
+            class="px-3 py-1 rounded border"
+            :class="page === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-200 bg-white hover:bg-gray-50'"
+          >
+            {{ page }}
+          </button>
+          <button
+            @click="cambiarPagina(currentPage + 1)"
+            :disabled="currentPage === lastPage"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Siguiente →
+          </button>
+        </div>
       </div>
 
       <div
@@ -245,7 +275,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import api from "@/axios";
 import dayjs from "dayjs";
@@ -271,14 +301,21 @@ const form = ref({ member_id: "", plan_id: "", end_date: "", status: "inactive_u
 const busqueda = ref("");
 const miembroSeleccionado = ref(false);
 
-// Computed
-const membresiasFiltradas = computed(() => {
-  const term = busquedaMembresia.value.toLowerCase();
-  return term
-    ? membresias.value.filter((m) => m.member?.name?.toLowerCase().includes(term))
-    : membresias.value;
+// Paginación
+const currentPage = ref(1);
+const lastPage = ref(1);
+const totalItems = ref(0);
+
+const paginasVisibles = computed(() => {
+  const delta = 2;
+  const pages = [];
+  for (let i = Math.max(1, currentPage.value - delta); i <= Math.min(lastPage.value, currentPage.value + delta); i++) {
+    pages.push(i);
+  }
+  return pages;
 });
 
+// Búsqueda en modal de asignar (solo local)
 const miembrosFiltrados = computed(() => {
   const term = busqueda.value.toLowerCase();
   return term
@@ -288,20 +325,41 @@ const miembrosFiltrados = computed(() => {
     : [];
 });
 
+// Watcher para búsqueda server-side con debounce
+let searchTimeout = null;
+watch(busquedaMembresia, () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage.value = 1;
+    cargarMembresias();
+  }, 350);
+});
+
 // Cargas de Datos
 const cargarMembresias = async () => {
   loading.value = true;
   try {
     const params = new URLSearchParams();
     if (statusFilter.value) params.append("status", statusFilter.value);
+    if (busquedaMembresia.value) params.append("search", busquedaMembresia.value);
+    params.append("page", currentPage.value);
     const { data } = await api.get(`/memberships?${params.toString()}`);
-    membresias.value = data;
+    membresias.value = data.data;
+    currentPage.value = data.current_page;
+    lastPage.value = data.last_page;
+    totalItems.value = data.total;
   } catch (error) {
     console.error(error);
     membresias.value = [];
   } finally {
     loading.value = false;
   }
+};
+
+const cambiarPagina = (page) => {
+  if (page < 1 || page > lastPage.value) return;
+  currentPage.value = page;
+  cargarMembresias();
 };
 
 const cargarMiembros = async () => {
@@ -333,6 +391,7 @@ const cargarPlanes = async () => {
 // Acciones Filtro
 const filtrarMembresias = (status) => {
   statusFilter.value = status;
+  currentPage.value = 1;
   if (status === "active") tituloFiltro.value = "Solo Activas";
   else if (status === "inactive_unpaid") tituloFiltro.value = "Por Pagar";
   else if (status === "expiring_soon") tituloFiltro.value = "Vencen Pronto";
@@ -454,6 +513,7 @@ const traducirEstado = (s) => {
     expired: "Vencida",
     inactive_unpaid: "Por Pagar",
     cancelled: "Cancelada",
+    inactive: "Inactiva",
   };
   return map[s] || s;
 };

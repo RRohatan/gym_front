@@ -60,7 +60,7 @@
                   No hay ventas registradas aún.
                 </td>
               </tr>
-              <tr v-for="v in ventas" :key="v.id" class="hover:bg-gray-50">
+              <tr v-for="v in ventasPaginadas" :key="v.id" class="hover:bg-gray-50">
                 <td class="p-3 text-gray-500">{{ formatDate(v.created_at) }}</td>
                 <td class="p-3 font-bold">{{ v.product?.name || "Producto eliminado" }}</td>
                 <td class="p-3 text-center bg-gray-50 rounded font-mono">{{ v.quantity }}</td>
@@ -72,6 +72,21 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Paginación ventas -->
+        <div v-if="totalPagesVentas > 1" class="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-sm text-gray-600">
+          <span>Página {{ currentPageVentas }} de {{ totalPagesVentas }}</span>
+          <div class="flex gap-1">
+            <button @click="currentPageVentas--" :disabled="currentPageVentas === 1"
+              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+              ← Anterior
+            </button>
+            <button @click="currentPageVentas++" :disabled="currentPageVentas === totalPagesVentas"
+              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+              Siguiente →
+            </button>
+          </div>
         </div>
       </div>
 
@@ -103,7 +118,7 @@
                   No has registrado compras de reabastecimiento.
                 </td>
               </tr>
-              <tr v-for="c in compras" :key="c.id" class="hover:bg-gray-50">
+              <tr v-for="c in comprasPaginadas" :key="c.id" class="hover:bg-gray-50">
                 <td class="p-3 text-gray-500">{{ formatDate(c.purchase_date) }}</td>
                 <td class="p-3 font-bold">{{ c.product?.name }}</td>
                 <td class="p-3 text-center font-bold text-green-700">+{{ c.quantity }}</td>
@@ -112,6 +127,21 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Paginación compras -->
+        <div v-if="totalPagesCompras > 1" class="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-sm text-gray-600">
+          <span>Página {{ currentPageCompras }} de {{ totalPagesCompras }}</span>
+          <div class="flex gap-1">
+            <button @click="currentPageCompras--" :disabled="currentPageCompras === 1"
+              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+              ← Anterior
+            </button>
+            <button @click="currentPageCompras++" :disabled="currentPageCompras === totalPagesCompras"
+              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+              Siguiente →
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -212,6 +242,19 @@ import Swal from "sweetalert2";
 const tab = ref("ventas");
 const ventas = ref([]);
 const compras = ref([]);
+const PER_PAGE = 10;
+const currentPageVentas = ref(1);
+const currentPageCompras = ref(1);
+const totalPagesVentas = computed(() => Math.ceil(ventas.value.length / PER_PAGE));
+const totalPagesCompras = computed(() => Math.ceil(compras.value.length / PER_PAGE));
+const ventasPaginadas = computed(() => {
+  const start = (currentPageVentas.value - 1) * PER_PAGE;
+  return ventas.value.slice(start, start + PER_PAGE);
+});
+const comprasPaginadas = computed(() => {
+  const start = (currentPageCompras.value - 1) * PER_PAGE;
+  return compras.value.slice(start, start + PER_PAGE);
+});
 const productos = ref([]);
 const showModal = ref(false);
 

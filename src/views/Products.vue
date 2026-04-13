@@ -24,9 +24,9 @@
         No encontrado.
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
         <div
-          v-for="producto in productosFiltrados"
+          v-for="producto in productosPaginados"
           :key="producto.id"
           class="bg-white text-black rounded-xl shadow-lg overflow-hidden flex flex-col justify-between"
         >
@@ -57,6 +57,21 @@
               🗑️ Eliminar
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div v-if="totalProductos > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+        <span>Página {{ currentPageProductos }} de {{ totalProductos }}</span>
+        <div class="flex gap-1">
+          <button @click="currentPageProductos--" :disabled="currentPageProductos === 1"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            ← Anterior
+          </button>
+          <button @click="currentPageProductos++" :disabled="currentPageProductos === totalProductos"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            Siguiente →
+          </button>
         </div>
       </div>
     </div>
@@ -129,10 +144,12 @@
 
 <script setup>
 // (Mismo script, solo copia y pega si lo borraste)
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
 const productos = ref([]);
+const currentPageProductos = ref(1);
+const PER_PAGE = 10;
 const loading = ref(true);
 const busqueda = ref("");
 const modalRegistro = ref(false);
@@ -208,6 +225,12 @@ const productosFiltrados = computed(() => {
   const q = busqueda.value.toLowerCase();
   return productos.value.filter((p) => (p.name || "").toLowerCase().includes(q));
 });
+const totalProductos = computed(() => Math.ceil(productosFiltrados.value.length / PER_PAGE));
+const productosPaginados = computed(() => {
+  const start = (currentPageProductos.value - 1) * PER_PAGE;
+  return productosFiltrados.value.slice(start, start + PER_PAGE);
+});
+watch(busqueda, () => { currentPageProductos.value = 1; });
 onMounted(() => cargarProductos());
 </script>
 

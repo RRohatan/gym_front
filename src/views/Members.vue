@@ -32,12 +32,26 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
-          v-for="member in miembrosFiltrados"
+          v-for="member in miembrosPaginados"
           :key="member.id"
-          class="rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-white text-black"
+          class="relative rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-white text-black"
           :class="member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80'"
           style="box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);"
         >
+          <!-- Barra de estado superior -->
+          <div
+            v-if="member.memberships?.[0]?.status === 'expired'"
+            class="w-full text-center text-xs font-bold py-1 bg-red-400 text-white tracking-wide"
+          >
+            ⏰ Membresía Vencida
+          </div>
+          <div
+            v-else-if="member.memberships?.[0]?.status === 'inactive_unpaid'"
+            class="w-full text-center text-xs font-bold py-1 bg-yellow-400 text-white tracking-wide"
+          >
+            💳 Pendiente de Pago
+          </div>
+
           <div class="p-4 flex justify-between items-center">
             <div>
               <h2 class="text-base font-bold text-gray-900">{{ member.name }}</h2>
@@ -117,6 +131,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Paginación -->
+      <div v-if="totalMiembrosPages > 1" class="flex items-center justify-between mt-6 text-sm text-gray-600">
+        <span>Página {{ currentPageMiembros }} de {{ totalMiembrosPages }} ({{ miembrosFiltrados.length }} clientes)</span>
+        <div class="flex gap-1">
+          <button @click="currentPageMiembros--" :disabled="currentPageMiembros === 1"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            ← Anterior
+          </button>
+          <button @click="currentPageMiembros++" :disabled="currentPageMiembros === totalMiembrosPages"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            Siguiente →
+          </button>
+        </div>
+      </div>
     </div>
 
     </div><!-- /max-w-7xl -->
@@ -146,7 +175,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import api from "@/axios";
 import Sidebar from "@/views/Sidebar.vue";
 import Swal from "sweetalert2";
@@ -277,6 +306,14 @@ const miembrosFiltrados = computed(() => {
     (m) => m.name.toLowerCase().includes(term) || (m.phone || "").includes(term),
   );
 });
+const currentPageMiembros = ref(1);
+const PER_PAGE = 10;
+const totalMiembrosPages = computed(() => Math.ceil(miembrosFiltrados.value.length / PER_PAGE));
+const miembrosPaginados = computed(() => {
+  const start = (currentPageMiembros.value - 1) * PER_PAGE;
+  return miembrosFiltrados.value.slice(start, start + PER_PAGE);
+});
+watch(busqueda, () => { currentPageMiembros.value = 1; });
 
 function formatearTelefono(numero) {
   if (!numero) return "";

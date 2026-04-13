@@ -72,7 +72,7 @@
             <tr v-if="pagos.length === 0">
               <td colspan="4" class="py-10 text-center text-gray-500 italic">Sin resultados.</td>
             </tr>
-            <tr v-for="pago in pagos" :key="pago.id" class="hover:bg-gray-50 transition-colors">
+            <tr v-for="pago in pagosPaginados" :key="pago.id" class="hover:bg-gray-50 transition-colors">
               <td class="py-3 px-4 font-medium text-gray-900">
                 {{ pago.paymentable?.member?.name || "—" }}
               </td>
@@ -88,6 +88,21 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación -->
+      <div v-if="totalPagesPagos > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+        <span>Página {{ currentPagePagos }} de {{ totalPagesPagos }}</span>
+        <div class="flex gap-1">
+          <button @click="currentPagePagos--" :disabled="currentPagePagos === 1"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            ← Anterior
+          </button>
+          <button @click="currentPagePagos++" :disabled="currentPagePagos === totalPagesPagos"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            Siguiente →
+          </button>
+        </div>
       </div>
 
       <div
@@ -176,6 +191,13 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 // --- ESTADO ---
 const pagos = ref([]);
+const currentPagePagos = ref(1);
+const PER_PAGE = 10;
+const totalPagesPagos = computed(() => Math.ceil(pagos.value.length / PER_PAGE));
+const pagosPaginados = computed(() => {
+  const start = (currentPagePagos.value - 1) * PER_PAGE;
+  return pagos.value.slice(start, start + PER_PAGE);
+});
 const miembros = ref([]);
 const metodosPago = ref([]);
 const openModal = ref(false);
@@ -202,6 +224,7 @@ const cargarHistorial = async () => {
     const { data } = await api.get(`/payments/history?${params.toString()}`);
     pagos.value = data.historial;
     totalHistorial.value = data.total_ingresos;
+    currentPagePagos.value = 1;
   } catch (error) {
     console.error(error);
 
