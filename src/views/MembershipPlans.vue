@@ -1,185 +1,146 @@
 <template>
-  <div
-    class="page-layout"
-  >
-    <div class="page-card">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <div>
-          <h1 class="page-title">Planes de Membresía</h1>
-          <p class="page-subtitle">Gestiona los planes disponibles</p>
-        </div>
-        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
-          <button @click="openModal = true" class="btn btn-success flex-1 sm:flex-none">Nuevo plan</button>
-        </div>
-      </div>
+  <div class="page-layout">
+    <BaseCard title="Planes de Membresía" subtitle="Gestiona los planes disponibles" class="space-y-6">
+      <template #actions>
+        <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">
+          Inicio
+        </router-link>
+        <BaseButton variant="success" class="flex-1 sm:flex-none" @click="openModal = true">
+          Nuevo plan
+        </BaseButton>
+      </template>
 
-      <div class="overflow-x-auto rounded-lg border border-gray-100">
+      <div class="table-wrap">
         <table class="min-w-full text-left text-sm">
-          <thead class="bg-gray-100 text-gray-700 uppercase text-xs font-bold">
+          <thead class="table-head">
             <tr>
-              <th class="py-3 px-4">Tipo</th>
-              <th class="py-3 px-4">Frecuencia</th>
-              <th class="py-3 px-4">Precio</th>
-              <th class="py-3 px-4 text-center">Acciones</th>
+              <th>Tipo</th>
+              <th>Frecuencia</th>
+              <th>Precio</th>
+              <th class="!text-center">Acciones</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
-            <tr v-for="plan in planesPaginados" :key="plan.id" class="hover:bg-gray-50 transition-colors">
-              <td class="py-3 px-4 font-medium">{{ plan.membership_type.name }}</td>
-              <td class="py-3 px-4">
-                <span
-                  class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs border border-blue-100 font-semibold"
-                >
-                  {{ traducirFrecuencia(plan.frequency) }}
-                </span>
+          <tbody>
+            <tr v-for="plan in planesPaginados" :key="plan.id" class="table-row">
+              <td class="font-medium">{{ plan.membership_type.name }}</td>
+              <td>
+                <BaseBadge color="blue">{{ traducirFrecuencia(plan.frequency) }}</BaseBadge>
               </td>
-              <td class="py-3 px-4 font-mono text-green-700 font-bold">
+              <td class="font-mono text-emerald-700 font-semibold">
                 ${{ Number(plan.price).toLocaleString() }}
               </td>
-
-              <td class="py-3 px-4 flex justify-center gap-2">
-                <button @click="editarPlan(plan)" class="btn btn-indigo btn-sm">✏️ Editar</button>
-                <button @click="eliminarPlan(plan.id)" class="btn btn-danger btn-sm">
-                  🗑️ Eliminar
-                </button>
+              <td>
+                <div class="flex justify-center gap-2">
+                  <BaseButton variant="indigo" size="sm" @click="editarPlan(plan)">
+                    ✏️ Editar
+                  </BaseButton>
+                  <BaseButton variant="danger" size="sm" @click="eliminarPlan(plan.id)">
+                    🗑️ Eliminar
+                  </BaseButton>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Paginación -->
-      <div v-if="totalPlanesPages > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+      <div
+        v-if="totalPlanesPages > 1"
+        class="flex items-center justify-between text-sm text-gray-600"
+      >
         <span>Página {{ currentPagePlanes }} de {{ totalPlanesPages }}</span>
         <div class="flex gap-1">
-          <button @click="currentPagePlanes--" :disabled="currentPagePlanes === 1"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          <BaseButton
+            variant="secondary"
+            size="sm"
+            :disabled="currentPagePlanes === 1"
+            @click="currentPagePlanes--"
+          >
             ← Anterior
-          </button>
-          <button @click="currentPagePlanes++" :disabled="currentPagePlanes === totalPlanesPages"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          </BaseButton>
+          <BaseButton
+            variant="secondary"
+            size="sm"
+            :disabled="currentPagePlanes === totalPlanesPages"
+            @click="currentPagePlanes++"
+          >
             Siguiente →
-          </button>
+          </BaseButton>
         </div>
       </div>
+    </BaseCard>
 
-      <div
-        v-if="openModal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
-      >
-        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-          <h2 class="text-xl font-bold mb-4 border-b pb-2">Crear Nuevo Plan</h2>
-          <form @submit.prevent="crearPlan" class="space-y-4">
-            <div>
-              <label class="block text-sm mb-1 font-bold text-gray-700">Tipo de Membresía</label>
-              <select
-                v-model="nuevoPlan.membership_type_id"
-                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                required
-              >
-                <option disabled value="">Seleccione un tipo</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">
-                  {{ tipo.name }}
-                </option>
-              </select>
-            </div>
+    <BaseModal v-model="openModal" title="Crear Nuevo Plan" size="md">
+      <form id="create-plan-form" class="space-y-4" @submit.prevent="crearPlan">
+        <BaseSelect
+          v-model="nuevoPlan.membership_type_id"
+          label="Tipo de Membresía"
+          placeholder="Seleccione un tipo"
+          :options="tipos.map((t) => ({ value: t.id, label: t.name }))"
+          required
+        />
 
-            <div>
-              <label class="block text-sm mb-1 font-bold text-gray-700">Frecuencia</label>
-              <select
-                v-model="nuevoPlan.frequency"
-                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                required
-              >
-                <option disabled value="">Seleccione frecuencia</option>
-                <option value="daily">Diario</option>
-                <option value="weekly">Semanal</option>
-                <option value="biweekly">Quincenal</option>
-                <option value="monthly">Mensual</option>
-              </select>
-            </div>
+        <BaseSelect
+          v-model="nuevoPlan.frequency"
+          label="Frecuencia"
+          placeholder="Seleccione frecuencia"
+          :options="FREQUENCY_OPTIONS"
+          required
+        />
 
-            <div>
-              <label class="block text-sm mb-1 font-bold text-gray-700">Precio</label>
-              <input
-                v-model="nuevoPlan.price"
-                type="number"
-                min="0"
-                step="0.01"
-                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                required
-              />
-            </div>
+        <BaseInput
+          v-model="nuevoPlan.price"
+          label="Precio"
+          type="number"
+          min="0"
+          step="0.01"
+          required
+        />
+      </form>
 
-            <div class="flex justify-end gap-3 pt-4 border-t mt-2">
-              <button type="button" @click="openModal = false" class="btn btn-secondary">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">💾 Guardar</button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <template #footer>
+        <BaseButton variant="secondary" @click="openModal = false">Cancelar</BaseButton>
+        <BaseButton variant="primary" type="submit" form="create-plan-form">
+          💾 Guardar
+        </BaseButton>
+      </template>
+    </BaseModal>
 
-      <div
-        v-if="editModal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
-      >
-        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-          <h2 class="text-xl font-bold mb-4 border-b pb-2">Editar Plan</h2>
-          <form @submit.prevent="actualizarPlan" class="space-y-4">
-            <div>
-              <label class="block text-sm mb-1 font-bold text-gray-700">Tipo de Membresía</label>
-              <select
-                v-model="planEditando.membership_type_id"
-                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                required
-              >
-                <option disabled value="">Seleccione un tipo</option>
-                <option v-for="tipo in tipos" :key="tipo.id" :value="tipo.id">
-                  {{ tipo.name }}
-                </option>
-              </select>
-            </div>
+    <BaseModal v-model="editModal" title="Editar Plan" size="md" @close="cerrarModalEdicion">
+      <form id="edit-plan-form" class="space-y-4" @submit.prevent="actualizarPlan">
+        <BaseSelect
+          v-model="planEditando.membership_type_id"
+          label="Tipo de Membresía"
+          placeholder="Seleccione un tipo"
+          :options="tipos.map((t) => ({ value: t.id, label: t.name }))"
+          required
+        />
 
-            <div>
-              <label class="block text-sm mb-1 font-bold text-gray-700">Frecuencia</label>
-              <select
-                v-model="planEditando.frequency"
-                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                required
-              >
-                <option disabled value="">Seleccione frecuencia</option>
-                <option value="daily">Diario</option>
-                <option value="weekly">Semanal</option>
-                <option value="biweekly">Quincenal</option>
-                <option value="monthly">Mensual</option>
-              </select>
-            </div>
+        <BaseSelect
+          v-model="planEditando.frequency"
+          label="Frecuencia"
+          placeholder="Seleccione frecuencia"
+          :options="FREQUENCY_OPTIONS"
+          required
+        />
 
-            <div>
-              <label class="block text-sm mb-1 font-bold text-gray-700">Precio</label>
-              <input
-                v-model="planEditando.price"
-                type="number"
-                min="0"
-                step="0.01"
-                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                required
-              />
-            </div>
+        <BaseInput
+          v-model="planEditando.price"
+          label="Precio"
+          type="number"
+          min="0"
+          step="0.01"
+          required
+        />
+      </form>
 
-            <div class="flex justify-end gap-3 pt-4 border-t mt-2">
-              <button type="button" @click="cerrarModalEdicion" class="btn btn-secondary">
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary">💾 Actualizar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      <template #footer>
+        <BaseButton variant="secondary" @click="cerrarModalEdicion">Cancelar</BaseButton>
+        <BaseButton variant="primary" type="submit" form="edit-plan-form">
+          💾 Actualizar
+        </BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
@@ -187,6 +148,16 @@
 import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
+import { BaseButton, BaseInput, BaseSelect, BaseCard, BaseBadge, BaseModal } from "@/components/ui";
+import { SWAL_COLORS } from "@/lib/colors";
+
+// Opciones compartidas para los selects de frecuencia.
+const FREQUENCY_OPTIONS = [
+  { value: "daily", label: "Diario" },
+  { value: "weekly", label: "Semanal" },
+  { value: "biweekly", label: "Quincenal" },
+  { value: "monthly", label: "Mensual" },
+];
 
 const planes = ref([]);
 const currentPagePlanes = ref(1);
@@ -276,8 +247,8 @@ const eliminarPlan = (id) => {
     text: "No podrás revertir esto.",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
+    confirmButtonColor: SWAL_COLORS.info,
+    cancelButtonColor: SWAL_COLORS.danger,
     confirmButtonText: "Sí, eliminarlo",
     cancelButtonText: "Cancelar",
   }).then((result) => {
