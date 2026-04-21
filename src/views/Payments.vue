@@ -1,186 +1,170 @@
 <template>
-  <div
-    class="page-layout"
-  >
-    <div class="page-card">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 class="page-title">Historial de Pagos</h1>
-          <p class="page-subtitle">Consulta y registra pagos</p>
-        </div>
-        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
-          <button @click="openModal = true" class="btn btn-success flex-1 sm:flex-none">Registrar pago</button>
-        </div>
-      </div>
+  <div class="page-layout">
+    <BaseCard title="Historial de Pagos" subtitle="Consulta y registra pagos" class="space-y-6">
+      <template #actions>
+        <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">
+          Inicio
+        </router-link>
+        <BaseButton variant="success" class="flex-1 sm:flex-none" @click="openModal = true">
+          Registrar pago
+        </BaseButton>
+      </template>
 
       <div
-        class="bg-gray-50 p-4 rounded-xl mb-6 flex flex-col sm:flex-row items-end gap-3 border border-gray-100"
+        class="bg-gray-50 p-4 rounded-xl flex flex-col sm:flex-row items-end gap-3 border border-gray-100"
       >
-        <div class="w-full sm:w-auto">
-          <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Desde</label>
-          <input
-            type="date"
-            v-model="filtros.startDate"
-            class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm"
-          />
-        </div>
-        <div class="w-full sm:w-auto">
-          <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Hasta</label>
-          <input
-            type="date"
-            v-model="filtros.endDate"
-            class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm"
-          />
-        </div>
-
-        <button
+        <BaseInput
+          v-model="filtros.startDate"
+          type="date"
+          label="Desde"
+          class="w-full sm:w-auto"
+        />
+        <BaseInput
+          v-model="filtros.endDate"
+          type="date"
+          label="Hasta"
+          class="w-full sm:w-auto"
+        />
+        <BaseButton
+          variant="primary"
+          :loading="loadingHistorial"
+          class="w-full sm:w-auto"
           @click="cargarHistorial"
-          class="btn btn-primary w-full sm:w-auto justify-center"
-          :disabled="loadingHistorial"
         >
-          {{ loadingHistorial ? "⏳" : "🔍 Consultar" }}
-        </button>
+          🔍 Consultar
+        </BaseButton>
       </div>
 
       <div
-        class="bg-green-50 border-l-4 border-green-500 text-green-800 p-4 mb-6 rounded-r-lg shadow-sm flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left"
+        class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 rounded-r-lg shadow-sm flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left"
       >
         <span class="text-sm sm:text-lg font-semibold">💰 Total en rango:</span>
         <span
-          class="text-xl sm:text-2xl font-bold bg-white px-4 py-1 rounded shadow-sm border border-green-100 w-full sm:w-auto"
+          class="text-xl sm:text-2xl font-semibold bg-white px-4 py-1 rounded shadow-sm border border-emerald-100 w-full sm:w-auto"
         >
           {{ formatCurrency(totalHistorial) }}
         </span>
       </div>
 
-      <div class="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
+      <div class="table-wrap">
         <div v-if="loadingHistorial" class="text-center py-10">
           <p class="text-gray-500 animate-pulse">Cargando...</p>
         </div>
 
         <table v-else class="min-w-[600px] w-full bg-white text-sm">
-          <thead class="bg-gray-100 text-gray-700 uppercase text-xs font-bold">
+          <thead class="table-head">
             <tr>
-              <th class="py-3 px-4 text-left">Cliente</th>
-              <th class="py-3 px-4 text-left">Monto</th>
-              <th class="py-3 px-4 text-left">Método</th>
-              <th class="py-3 px-4 text-left">Fecha</th>
+              <th>Cliente</th>
+              <th>Monto</th>
+              <th>Método</th>
+              <th>Fecha</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
+          <tbody>
             <tr v-if="pagos.length === 0">
-              <td colspan="4" class="py-10 text-center text-gray-500 italic">Sin resultados.</td>
+              <td colspan="4" class="py-10 text-center text-gray-500 italic">
+                Sin resultados.
+              </td>
             </tr>
-            <tr v-for="pago in pagosPaginados" :key="pago.id" class="hover:bg-gray-50 transition-colors">
-              <td class="py-3 px-4 font-medium text-gray-900">
+            <tr v-for="pago in pagosPaginados" :key="pago.id" class="table-row">
+              <td class="font-medium text-gray-900">
                 {{ pago.paymentable?.member?.name || "—" }}
               </td>
-              <td class="py-3 px-4 text-green-600 font-bold">{{ formatCurrency(pago.amount) }}</td>
-              <td class="py-3 px-4">
-                <span
-                  class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs border border-gray-200 whitespace-nowrap"
-                >
-                  {{ pago.payment_method?.name }}
-                </span>
+              <td class="text-emerald-600 font-semibold">
+                {{ formatCurrency(pago.amount) }}
               </td>
-              <td class="py-3 px-4 text-gray-500 text-xs">{{ formatDate(pago.paid_at) }}</td>
+              <td>
+                <BaseBadge color="gray">{{ pago.payment_method?.name }}</BaseBadge>
+              </td>
+              <td class="text-gray-500 text-xs">{{ formatDate(pago.paid_at) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Paginación -->
-      <div v-if="totalPagesPagos > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+      <div
+        v-if="totalPagesPagos > 1"
+        class="flex items-center justify-between text-sm text-gray-600"
+      >
         <span>Página {{ currentPagePagos }} de {{ totalPagesPagos }}</span>
         <div class="flex gap-1">
-          <button @click="currentPagePagos--" :disabled="currentPagePagos === 1"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          <BaseButton
+            variant="secondary"
+            size="sm"
+            :disabled="currentPagePagos === 1"
+            @click="currentPagePagos--"
+          >
             ← Anterior
-          </button>
-          <button @click="currentPagePagos++" :disabled="currentPagePagos === totalPagesPagos"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          </BaseButton>
+          <BaseButton
+            variant="secondary"
+            size="sm"
+            :disabled="currentPagePagos === totalPagesPagos"
+            @click="currentPagePagos++"
+          >
             Siguiente →
-          </button>
+          </BaseButton>
         </div>
       </div>
+    </BaseCard>
 
-      <div
-        v-if="openModal"
-        class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 backdrop-blur-sm"
-      >
-        <div
-          class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto"
+    <BaseModal v-model="openModal" title="Registrar Pago" size="sm" @close="limpiarFormulario">
+      <form id="payment-form" class="space-y-4" @submit.prevent="registrarPago">
+        <div class="relative">
+          <BaseInput
+            v-model="busqueda"
+            label="Cliente"
+            placeholder="Buscar nombre..."
+            autocomplete="off"
+          />
+          <ul
+            v-if="miembrosFiltrados.length > 0"
+            class="border border-gray-200 rounded-lg bg-white mt-1 max-h-32 overflow-y-auto shadow-lg absolute left-0 right-0 z-10 text-xs"
+          >
+            <li
+              v-for="miembro in miembrosFiltrados"
+              :key="miembro.id"
+              class="px-3 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-0"
+              @click="seleccionarMiembro(miembro)"
+            >
+              {{ miembro.name }}
+            </li>
+          </ul>
+        </div>
+
+        <BaseInput
+          v-model="nuevoPago.amount"
+          label="Monto"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0"
+          required
+        />
+
+        <BaseSelect
+          v-model="nuevoPago.payment_method_id"
+          label="Método"
+          placeholder="Seleccionar..."
+          :options="metodosPago.map((m) => ({ value: m.id, label: m.name }))"
+          required
+        />
+      </form>
+
+      <template #footer>
+        <BaseButton variant="secondary" :disabled="ProcesandoPago" @click="cerrarModal">
+          Cancelar
+        </BaseButton>
+        <BaseButton
+          variant="primary"
+          type="submit"
+          form="payment-form"
+          :loading="ProcesandoPago"
         >
-          <h2 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">Registrar Pago</h2>
-
-          <form @submit.prevent="registrarPago" class="space-y-4">
-            <div>
-              <label class="block mb-1 text-xs font-bold text-gray-700 uppercase">Cliente</label>
-              <input
-                v-model="busqueda"
-                type="text"
-                placeholder="Buscar nombre..."
-                class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-                autocomplete="off"
-              />
-              <ul
-                v-if="miembrosFiltrados.length > 0"
-                class="border rounded-lg bg-white mt-1 max-h-32 overflow-y-auto shadow-lg absolute w-64 z-10"
-              >
-                <li
-                  v-for="miembro in miembrosFiltrados"
-                  :key="miembro.id"
-                  @click="seleccionarMiembro(miembro)"
-                  class="px-3 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-0 text-xs"
-                >
-                  {{ miembro.name }}
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <label class="block mb-1 text-xs font-bold text-gray-700 uppercase">Monto</label>
-              <input
-                v-model="nuevoPago.amount"
-                placeholder="0"
-                type="number"
-                min="0"
-                step="0.01"
-                required
-                class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-lg"
-              />
-            </div>
-
-            <div>
-              <label class="block mb-1 text-xs font-bold text-gray-700 uppercase">Método</label>
-              <select
-                v-model="nuevoPago.payment_method_id"
-                required
-                class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-              >
-                <option disabled value="">Seleccionar...</option>
-                <option v-for="m in metodosPago" :key="m.id" :value="m.id">{{ m.name }}</option>
-              </select>
-            </div>
-
-            <div class="flex justify-end gap-2 pt-4 border-t mt-2">
-              <button
-                type="button"
-                @click="cerrarModal"
-                class="btn btn-secondary flex-1"
-                :disabled="ProcesandoPago"
-              >
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-primary flex-1" :disabled="ProcesandoPago">
-                {{ ProcesandoPago ? "💾..." : "Guardar" }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+          Guardar
+        </BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
@@ -189,6 +173,8 @@ import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import { BaseButton, BaseInput, BaseSelect, BaseCard, BaseBadge, BaseModal } from "@/components/ui";
+import { SWAL_COLORS } from "@/lib/colors";
 // --- ESTADO ---
 const pagos = ref([]);
 const currentPagePagos = ref(1);
@@ -235,14 +221,14 @@ const cargarHistorial = async () => {
           icon: "error",
           title: "Sin conexión a internet",
           text: "No se pudo cargar el historial. Verifica tu conexión.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error de conexión",
           text: "No se pudo conectar con el servidor para cargar el historial.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     }
@@ -305,7 +291,7 @@ const registrarPago = async () => {
         icon: "info",
         title: "Sin saldo pendiente",
         text: "Este cliente no tiene saldo pendiente.",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: SWAL_COLORS.info,
       });
       return;
     }
@@ -357,7 +343,7 @@ const registrarPago = async () => {
           title: "Tiempo de espera agotado",
           html: `<p>El pago tardó demasiado tiempo en procesarse.</p>
                  <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
-          confirmButtonColor: "#3085d6",
+          confirmButtonColor: SWAL_COLORS.info,
         });
       } else if (!navigator.onLine) {
         Swal.fire({
@@ -365,7 +351,7 @@ const registrarPago = async () => {
           title: "Sin conexión a internet",
           html: `<p>No se pudo procesar el pago porque no hay conexión a internet.</p>
                  <p class="text-sm mt-2">Por favor, verifica tu conexión y vuelve a intentar.</p>`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
@@ -373,7 +359,7 @@ const registrarPago = async () => {
           title: "Error de conexión",
           html: `<p>No se pudo conectar con el servidor para procesar el pago.</p>
                  <p class="text-sm mt-2">Verifica tu conexión e intenta nuevamente.</p>`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     } else {
@@ -385,14 +371,14 @@ const registrarPago = async () => {
           icon: "error",
           title: "Membresía no encontrada",
           text: "Este miembro no tiene una membresía asociada.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else if (status === 422) {
         Swal.fire({
           icon: "warning",
           title: "Datos inválidos",
           text: error.response.data?.message || "Los datos del pago no son válidos.",
-          confirmButtonColor: "#f39c12",
+          confirmButtonColor: SWAL_COLORS.warning,
         });
       } else if (status >= 500) {
         Swal.fire({
@@ -400,14 +386,14 @@ const registrarPago = async () => {
           title: "Error del servidor",
           html: `<p>Ocurrió un error en el servidor al procesar el pago.</p>
                  <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error al registrar pago",
           text: error.response?.data?.message || "No se pudo registrar el pago.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     }
