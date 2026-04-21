@@ -1,245 +1,211 @@
 <template>
-  <div class="page-layout">
-    <div class="max-w-3xl mx-auto">
-      <BaseCard title="Editar Cliente" subtitle="Actualiza la información del cliente.">
-        <template #actions>
-          <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
-            ← Volver
-          </router-link>
-        </template>
-
-        <form class="space-y-6" @submit.prevent="updateMember">
-          <!-- Section: Personal Info -->
-          <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">
-              Información Personal
-            </h3>
-            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-              <div class="sm:col-span-1">
-                <label for="identification" class="block text-sm font-medium text-gray-700"
-                  >Identificación</label
-                >
-                <div class="mt-1">
-                  <input
-                    id="identification"
-                    v-model="form.identification"
-                    type="text"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50"
-                  />
-                </div>
-              </div>
-
-              <div class="sm:col-span-1">
-                <label for="name" class="block text-sm font-medium text-gray-700"
-                  >Nombre Completo</label
-                >
-                <div class="mt-1">
-                  <input
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div class="sm:col-span-1">
-                <label for="birth_date" class="block text-sm font-medium text-gray-700"
-                  >Fecha de Nacimiento</label
-                >
-                <div class="mt-1">
-                  <input
-                    id="birth_date"
-                    v-model="form.birth_date"
-                    type="date"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div class="sm:col-span-1">
-                <BaseSelect
-                  id="sexo"
-                  v-model="form.sexo"
-                  label="Sexo"
-                  placeholder="Selecciona una opción"
-                  :options="SEXO_OPTIONS"
-                />
-              </div>
-            </div>
+  <div class="register-overlay">
+    <div class="register-panel">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-gray-100">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
           </div>
-
-          <!-- Section: Contact Info -->
           <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">Contacto</h3>
-            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-              <div class="sm:col-span-1">
-                <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      class="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    id="phone"
-                    v-model="form.phone"
-                    type="text"
-                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="+1 (555) 987-6543"
-                  />
-                </div>
-              </div>
-
-              <div class="sm:col-span-1">
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      class="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                      />
-                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
-                  </div>
-                  <input
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="ejemplo@correo.com"
-                  />
-                </div>
-              </div>
-            </div>
+            <h1 class="text-xl font-bold text-gray-900 tracking-tight leading-tight">
+              Editar Cliente
+            </h1>
+            <p class="text-xs text-gray-500 mt-0.5">
+              Actualiza la información del cliente.
+            </p>
           </div>
+        </div>
+        <router-link
+          :to="{ name: 'Members' }"
+          class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label="Cerrar"
+        >
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </router-link>
+      </div>
 
-          <!-- Section: Physical Info -->
-          <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">
-              Datos Físicos & Médicos
-            </h3>
-            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-              <div>
-                <label for="peso" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <input
-                    id="peso"
-                    v-model="form.peso"
-                    type="number"
-                    step="0.01"
-                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="0.00"
-                  />
-                  <div
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-                  >
-                    <span class="text-gray-500 sm:text-sm">kg</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label for="estatura" class="block text-sm font-medium text-gray-700"
-                  >Estatura (cm)</label
-                >
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <input
-                    id="estatura"
-                    v-model="form.estatura"
-                    type="number"
-                    step="1"
-                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="0"
-                  />
-                  <div
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-                  >
-                    <span class="text-gray-500 sm:text-sm">cm</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sm:col-span-2">
-                <label for="medical_history" class="block text-sm font-medium text-gray-700"
-                  >Antecedentes Médicos</label
-                >
-                <div class="mt-1">
-                  <textarea
-                    id="medical_history"
-                    v-model="form.medical_history"
-                    rows="3"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    placeholder="Alergias, lesiones previas, condiciones crónicas..."
-                  ></textarea>
-                </div>
-              </div>
+      <!-- Body scrollable -->
+      <div class="flex-1 overflow-y-auto px-6 sm:px-8 py-7">
+        <form id="edit-form" class="space-y-8" @submit.prevent="updateMember">
+          <!-- ===== Información personal ===== -->
+          <section>
+            <div class="section-header">
+              <span class="section-bar bg-primary-600" />
+              <h2 class="section-title text-primary-700">Información Personal</h2>
             </div>
-          </div>
 
-          <!-- Section: Huella Dactilar -->
-          <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">
-              Huella Dactilar
-            </h3>
-            <FingerprintEnroll
-              :member-id="Number(memberId)"
-              :has-fingerprint="!!memberHasFingerprint"
-              @enrolled="memberHasFingerprint = true"
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <BaseInput
+                v-model="form.name"
+                label="Nombre Completo"
+                type="text"
+                placeholder="Ej. Juan Pérez"
+                required
+                :error="errors.name"
+              />
+              <BaseInput
+                v-model="form.identification"
+                label="Cédula / ID"
+                type="text"
+                placeholder="12345678"
+                :error="errors.identification"
+              />
+              <BaseInput
+                v-model="form.email"
+                label="Email"
+                type="email"
+                placeholder="juan@ejemplo.com"
+                :error="errors.email"
+              />
+              <BaseInput
+                v-model="form.phone"
+                label="Teléfono"
+                type="tel"
+                placeholder="+57 300 123 4567"
+                :error="errors.phone"
+              />
+              <BaseInput
+                v-model="form.birth_date"
+                label="Fecha de Nacimiento"
+                type="date"
+                :error="errors.birth_date"
+              />
+              <BaseSelect
+                v-model="form.sexo"
+                label="Sexo"
+                :options="sexoOptions"
+                :error="errors.sexo"
+              />
+            </div>
+          </section>
+
+          <!-- ===== Biometría ===== -->
+          <section class="p-5 sm:p-6 bg-gray-50 rounded-xl border border-gray-100">
+            <div class="section-header">
+              <span class="section-bar bg-success-600" />
+              <h2 class="section-title text-success-700">Biometría</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <BaseInput
+                v-model.number="form.estatura"
+                label="Estatura"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="1.70"
+                :error="errors.estatura"
+              >
+                <template #suffix>
+                  <span class="text-xs font-semibold text-success-700">m</span>
+                </template>
+              </BaseInput>
+
+              <BaseInput
+                v-model.number="form.peso"
+                label="Peso"
+                type="number"
+                step="0.1"
+                min="0"
+                placeholder="70.5"
+                :error="errors.peso"
+              >
+                <template #suffix>
+                  <span class="text-xs font-semibold text-success-700">kg</span>
+                </template>
+              </BaseInput>
+            </div>
+          </section>
+
+          <!-- ===== Antecedentes médicos ===== -->
+          <section>
+            <div class="section-header">
+              <span class="section-bar bg-danger-500" />
+              <h2 class="section-title text-danger-600">Antecedentes Médicos</h2>
+              <span class="ml-auto optional-tag">Opcional</span>
+            </div>
+            <textarea
+              v-model="form.medical_history"
+              rows="3"
+              class="field-input resize-none"
+              placeholder="Detalle alergias, lesiones previas o condiciones crónicas relevantes..."
             />
-          </div>
+            <p v-if="errors.medical_history" class="text-xs text-red-600 mt-1">
+              {{ errors.medical_history }}
+            </p>
+          </section>
 
-          <div class="pt-5 border-t border-gray-200 flex justify-end gap-3">
-            <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
-              Cancelar
-            </router-link>
-            <BaseButton type="submit" variant="primary" :loading="loading" :disabled="loading">
-              Guardar Cambios
-            </BaseButton>
+          <!-- ===== Huella dactilar ===== -->
+          <section class="pt-6 border-t border-gray-100">
+            <div class="section-header">
+              <span class="section-bar bg-primary-600" />
+              <h2 class="section-title text-primary-700">Huella Dactilar</h2>
+              <span class="ml-auto optional-tag">Opcional</span>
+            </div>
+            <div class="rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 p-4">
+              <FingerprintEnroll
+                :member-id="Number(memberId)"
+                :has-fingerprint="memberHasFingerprint"
+                @enrolled="memberHasFingerprint = true"
+              />
+            </div>
+          </section>
+
+          <div
+            v-if="errorMessage"
+            class="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700"
+          >
+            {{ errorMessage }}
           </div>
         </form>
-      </BaseCard>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 sm:px-8 py-5 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
+        <BaseButton variant="secondary" @click="router.push({ name: 'Members' })">
+          Cancelar
+        </BaseButton>
+        <BaseButton
+          type="submit"
+          form="edit-form"
+          variant="primary"
+          size="lg"
+          :loading="loading"
+          :disabled="loading"
+        >
+          Guardar Cambios
+        </BaseButton>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
+<script setup>
+import { reactive, ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/axios";
-import { BaseSelect, BaseButton, BaseCard } from "@/components/ui";
-
-const SEXO_OPTIONS = [
-  { value: "masculino", label: "Masculino" },
-  { value: "femenino", label: "Femenino" },
-  { value: "no binario", label: "No binario" },
-  { value: "prefiere no decirlo", label: "Prefiero no decirlo" },
-  { value: "otro", label: "Otro" },
-];
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
+import { BaseInput, BaseSelect, BaseButton } from "@/components/ui";
+import { SWAL_COLORS } from "@/lib/colors";
 
 const route = useRoute();
 const router = useRouter();
-
 const memberId = route.params.id;
-const form = ref({
+
+const sexoOptions = [
+  { value: "masculino", label: "Masculino" },
+  { value: "femenino", label: "Femenino" },
+  { value: "no binario", label: "No binario" },
+  { value: "otro", label: "Otro" },
+];
+
+const form = reactive({
   identification: "",
   name: "",
   birth_date: "",
@@ -247,19 +213,19 @@ const form = ref({
   email: "",
   peso: null,
   estatura: null,
-  sexo: "",
+  sexo: "masculino",
   medical_history: "",
 });
 
+const errors = ref({});
+const errorMessage = ref("");
 const loading = ref(false);
 const memberHasFingerprint = ref(false);
 
 const fetchMember = async () => {
   try {
     const { data } = await api.get(`/members/${memberId}`);
-    console.log("Datos del miembro obtenidos:", data);
-
-    form.value = {
+    Object.assign(form, {
       identification: data.identification ?? "",
       name: data.name ?? "",
       birth_date: data.birth_date ?? "",
@@ -267,44 +233,51 @@ const fetchMember = async () => {
       email: data.email ?? "",
       peso: data.peso ?? null,
       estatura: data.estatura ?? null,
-      sexo: data.sexo ?? "",
+      sexo: data.sexo || "masculino",
       medical_history: data.medical_history ?? "",
-    };
+    });
     memberHasFingerprint.value = !!data.fingerprint_data;
-  } catch (error: any) {
-    console.error("Error al obtener miembro:", error);
+  } catch {
     Swal.fire({
       icon: "error",
       title: "Error",
       text: "No se pudo cargar la información del cliente.",
-      confirmButtonText: "Volver",
-    }).then(() => {
-      router.push({ name: "Members" });
-    });
+      confirmButtonColor: SWAL_COLORS.danger,
+    }).then(() => router.push({ name: "Members" }));
   }
 };
 
 const updateMember = async () => {
   loading.value = true;
+  errorMessage.value = "";
+  errors.value = {};
+
   try {
-    await api.put(`/members/${memberId}`, form.value);
+    await api.put(`/members/${memberId}`, form);
 
     await Swal.fire({
       icon: "success",
       title: "¡Actualizado!",
       text: "Cliente actualizado correctamente.",
-      timer: 2000,
+      timer: 1800,
       showConfirmButton: false,
+      confirmButtonColor: SWAL_COLORS.success,
     });
 
     router.push({ name: "Members" });
-  } catch (error: any) {
-    console.error("Error al actualizar miembro:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Hubo un error al guardar los cambios. " + (error.response?.data?.message || ""),
-    });
+  } catch (error) {
+    if (error.response?.status === 422) {
+      const backendErrors = error.response.data.errors || {};
+      const mapped = {};
+      for (const [field, msgs] of Object.entries(backendErrors)) {
+        mapped[field] = Array.isArray(msgs) ? msgs[0] : String(msgs);
+      }
+      errors.value = mapped;
+      errorMessage.value = "Verifica los datos resaltados e intenta nuevamente.";
+    } else {
+      errorMessage.value =
+        error.response?.data?.message || "Error inesperado al actualizar el cliente.";
+    }
   } finally {
     loading.value = false;
   }
@@ -312,3 +285,61 @@ const updateMember = async () => {
 
 onMounted(fetchMember);
 </script>
+
+<style scoped>
+.register-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(17, 24, 39, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow-y: auto;
+}
+
+.register-panel {
+  width: 100%;
+  max-width: 64rem;
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid rgb(229 231 235);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-bar {
+  display: block;
+  width: 4px;
+  height: 1.25rem;
+  border-radius: 9999px;
+}
+
+.section-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.optional-tag {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgb(156 163 175);
+}
+</style>
