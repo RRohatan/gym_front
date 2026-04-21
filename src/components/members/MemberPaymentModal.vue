@@ -55,6 +55,7 @@
 import { ref, watch, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
+import { SWAL_COLORS } from "@/lib/colors";
 
 const props = defineProps({
   show: Boolean,
@@ -111,14 +112,14 @@ watch(
               icon: "error",
               title: "Sin conexión a internet",
               text: "No se pudo verificar el saldo. Verifica tu conexión.",
-              confirmButtonColor: "#d33",
+              confirmButtonColor: SWAL_COLORS.danger,
             });
           } else {
             Swal.fire({
               icon: "error",
               title: "Error de conexión",
               text: "No se pudo conectar con el servidor para verificar el saldo.",
-              confirmButtonColor: "#d33",
+              confirmButtonColor: SWAL_COLORS.danger,
             });
           }
         } else if (error.response.status === 404) {
@@ -160,7 +161,7 @@ const pagar = async () => {
           title: "Tiempo de espera agotado",
           html: `<p>El pago tardó demasiado tiempo en procesarse.</p>
                  <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
-          confirmButtonColor: "#3085d6",
+          confirmButtonColor: SWAL_COLORS.info,
         });
       } else if (!navigator.onLine) {
         Swal.fire({
@@ -168,7 +169,7 @@ const pagar = async () => {
           title: "Sin conexión a internet",
           html: `<p>No se pudo procesar el pago porque no hay conexión a internet.</p>
                  <p class="text-sm mt-2">Por favor, verifica tu conexión y vuelve a intentar.</p>`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
@@ -176,7 +177,7 @@ const pagar = async () => {
           title: "Error de conexión",
           html: `<p>No se pudo conectar con el servidor para procesar el pago.</p>
                  <p class="text-sm mt-2">Verifica tu conexión e intenta nuevamente.</p>`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     } else {
@@ -188,14 +189,14 @@ const pagar = async () => {
           icon: "error",
           title: "Membresía no encontrada",
           text: "No se encontró la membresía asociada a este cliente.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else if (status === 422) {
         Swal.fire({
           icon: "warning",
           title: "Datos inválidos",
           text: error.response.data?.message || "Los datos del pago no son válidos.",
-          confirmButtonColor: "#f39c12",
+          confirmButtonColor: SWAL_COLORS.warning,
         });
       } else if (status >= 500) {
         Swal.fire({
@@ -203,14 +204,14 @@ const pagar = async () => {
           title: "Error del servidor",
           html: `<p>Ocurrió un error en el servidor al procesar el pago.</p>
                  <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error al procesar pago",
           text: error.response?.data?.message || "No se pudo registrar el pago.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     }
