@@ -1,27 +1,20 @@
 <template>
   <div class="page-layout">
     <div class="max-w-3xl mx-auto">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Configuración</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Personalización del gimnasio</p>
-        </div>
-        <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 text-gray-800 animate-fade-in-up">
-        <div class="border-b pb-4 mb-6">
-          <h2 class="text-xl font-bold text-blue-900">Personalización de Bienvenida</h2>
-          <p class="text-sm text-gray-500">
-            Esta información se enviará automáticamente por correo a los nuevos clientes.
-          </p>
-        </div>
+      <BaseCard
+        title="Personalización de Bienvenida"
+        subtitle="Esta información se enviará automáticamente por correo a los nuevos clientes."
+        class="animate-fade-in-up"
+      >
+        <template #actions>
+          <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
+        </template>
 
         <div v-if="loading" class="text-center py-10">
-          <p class="text-blue-600 font-bold animate-pulse">Cargando configuración...</p>
+          <p class="text-primary-600 font-bold animate-pulse">Cargando configuración...</p>
         </div>
 
-        <form v-else @submit.prevent="guardarConfiguracion" class="space-y-6">
+        <form v-else class="space-y-6" @submit.prevent="guardarConfiguracion">
           <div>
             <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
               🕒 Horarios de Atención
@@ -93,22 +86,16 @@
               </div>
 
               <div class="flex flex-col gap-3 w-full sm:w-auto">
-                <button
-                  @click="descargarImagen"
-                  class="btn btn-dark flex items-center justify-center gap-2 text-sm"
-                >
+                <BaseButton variant="dark" size="sm" @click="descargarImagen">
                   📥 Descargar Imagen
-                </button>
-                <button
-                  @click="imprimirQR"
-                  class="btn btn-primary flex items-center justify-center gap-2 text-sm"
-                >
+                </BaseButton>
+                <BaseButton variant="primary" size="sm" @click="imprimirQR">
                   🖨️ Imprimir / Guardar PDF
-                </button>
+                </BaseButton>
                 <a
                   :href="registrationUrl"
                   target="_blank"
-                  class="text-blue-600 underline text-sm text-center mt-2"
+                  class="text-primary-600 underline text-sm text-center mt-2"
                 >
                   Probar enlace de registro
                 </a>
@@ -117,17 +104,18 @@
           </div>
 
           <div class="pt-6 border-t flex justify-end">
-            <button
+            <BaseButton
               type="submit"
-              class="btn btn-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center gap-2"
+              variant="primary"
+              size="lg"
+              :loading="guardando"
               :disabled="guardando"
             >
-              <span v-if="guardando" class="animate-spin">🔄</span>
-              {{ guardando ? "Guardando..." : "💾 Guardar Cambios" }}
-            </button>
+              💾 Guardar Cambios
+            </BaseButton>
           </div>
         </form>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -136,6 +124,8 @@
 import { ref, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
+import { SWAL_COLORS } from "@/lib/colors";
+import { BaseButton, BaseCard } from "@/components/ui";
 
 const loading = ref(true);
 const guardando = ref(false);
@@ -191,7 +181,7 @@ const guardarConfiguracion = async () => {
       title: "¡Guardado!",
       text: "La configuración de bienvenida ha sido actualizada.",
       icon: "success",
-      confirmButtonColor: "#2563EB",
+      confirmButtonColor: SWAL_COLORS.primary,
     });
   } catch (error) {
     console.error(error);
