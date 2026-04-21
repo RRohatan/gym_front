@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Swal from "sweetalert2";
+import { SWAL_COLORS } from "@/lib/colors";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -46,7 +47,7 @@ api.interceptors.response.use(
           icon: "warning",
           title: "Tiempo de espera agotado",
           text: "La solicitud tardó demasiado tiempo. Por favor, verifica tu conexión e intenta nuevamente.",
-          confirmButtonColor: "#3085d6",
+          confirmButtonColor: SWAL_COLORS.info,
         });
       } else if (!navigator.onLine) {
         // Sin conexión a internet
@@ -54,7 +55,7 @@ api.interceptors.response.use(
           icon: "error",
           title: "Sin conexión a internet",
           text: "No hay conexión a internet. Por favor, verifica tu conexión y vuelve a intentar.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         // Otro error de red (servidor no disponible, DNS, etc.)
@@ -62,7 +63,7 @@ api.interceptors.response.use(
           icon: "error",
           title: "Error de conexión",
           text: "No se pudo conectar con el servidor. Por favor, verifica tu conexión e intenta nuevamente.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
       return Promise.reject(error);
@@ -77,7 +78,7 @@ api.interceptors.response.use(
         icon: "error",
         title: "Error del servidor",
         text: "Ocurrió un error en el servidor. Por favor, intenta nuevamente más tarde.",
-        confirmButtonColor: "#d33",
+        confirmButtonColor: SWAL_COLORS.danger,
       });
     } else if (status === 403) {
       // Prohibido
@@ -85,7 +86,7 @@ api.interceptors.response.use(
         icon: "warning",
         title: "Acceso denegado",
         text: "No tienes permisos para realizar esta acción.",
-        confirmButtonColor: "#f39c12",
+        confirmButtonColor: SWAL_COLORS.warning,
       });
     } else if (status === 404) {
       // No encontrado
@@ -93,7 +94,7 @@ api.interceptors.response.use(
         icon: "info",
         title: "No encontrado",
         text: "El recurso solicitado no fue encontrado.",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: SWAL_COLORS.info,
       });
     }
 
