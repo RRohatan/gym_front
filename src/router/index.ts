@@ -1,14 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Statistics from "@/views/Statistics.vue";
-import LoginView from "../views/Login.vue";
-import Configuracion from "../views/Configuracion.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
       name: "Login",
-      component: LoginView,
+      component: () => import("@/views/Login.vue"),
     },
     {
       path: "/register",
@@ -58,7 +56,7 @@ const router = createRouter({
     {
       path: "/MembershipPlans",
       name: "MembershipPlans",
-      component: () => import("@/views/MmbershipPlans.vue"),
+      component: () => import("@/views/MembershipPlans.vue"),
       meta: { requiresAuth: true },
     },
 
@@ -78,7 +76,7 @@ const router = createRouter({
 
     {
       path: "/CashBox",
-      name: "CashBosx",
+      name: "CashBox",
       component: () => import("@/views/CashBox.vue"),
       meta: { requiresAuth: true },
     },
@@ -101,7 +99,7 @@ const router = createRouter({
     {
       path: "/statistics",
       name: "Statistics",
-      component: Statistics,
+      component: () => import("@/views/Statistics.vue"),
       meta: { requiresAuth: true },
     },
 
@@ -135,7 +133,7 @@ const router = createRouter({
     {
       path: "/configuracion",
       name: "Configuracion",
-      component: Configuracion,
+      component: () => import("@/views/Configuracion.vue"),
       meta: { requiresAuth: true },
     },
     {
