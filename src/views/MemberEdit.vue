@@ -1,22 +1,14 @@
 <template>
-  <div
-    class="page-layout"
-  >
+  <div class="page-layout">
     <div class="max-w-3xl mx-auto">
-      <!-- Header -->
-      <div class="mb-8 flex items-center justify-between">
-        <div>
-          <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Editar Cliente</h2>
-          <p class="mt-1 text-sm text-slate-400">Actualiza la información del cliente.</p>
-        </div>
-        <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
-          Volver
-        </router-link>
-      </div>
+      <BaseCard title="Editar Cliente" subtitle="Actualiza la información del cliente.">
+        <template #actions>
+          <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
+            ← Volver
+          </router-link>
+        </template>
 
-      <!-- Card -->
-      <div class="bg-white shadow-xl rounded-2xl overflow-hidden text-gray-900">
-        <form @submit.prevent="updateMember" class="p-6 sm:p-8 space-y-6">
+        <form class="space-y-6" @submit.prevent="updateMember">
           <!-- Section: Personal Info -->
           <div>
             <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">
@@ -68,21 +60,13 @@
               </div>
 
               <div class="sm:col-span-1">
-                <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo</label>
-                <div class="mt-1">
-                  <select
-                    id="sexo"
-                    v-model="form.sexo"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  >
-                    <option disabled value="">Selecciona una opción</option>
-                    <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
-                    <option value="no binario">No binario</option>
-                    <option value="prefiere no decirlo">Prefiero no decirlo</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
+                <BaseSelect
+                  id="sexo"
+                  v-model="form.sexo"
+                  label="Sexo"
+                  placeholder="Selecciona una opción"
+                  :options="SEXO_OPTIONS"
+                />
               </div>
             </div>
           </div>
@@ -221,17 +205,16 @@
             />
           </div>
 
-          <!-- Actions -->
           <div class="pt-5 border-t border-gray-200 flex justify-end gap-3">
             <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
               Cancelar
             </router-link>
-            <button type="submit" class="btn btn-primary" :disabled="loading">
-              {{ loading ? "Guardando..." : "Guardar Cambios" }}
-            </button>
+            <BaseButton type="submit" variant="primary" :loading="loading" :disabled="loading">
+              Guardar Cambios
+            </BaseButton>
           </div>
         </form>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -240,6 +223,15 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/axios";
+import { BaseSelect, BaseButton, BaseCard } from "@/components/ui";
+
+const SEXO_OPTIONS = [
+  { value: "masculino", label: "Masculino" },
+  { value: "femenino", label: "Femenino" },
+  { value: "no binario", label: "No binario" },
+  { value: "prefiere no decirlo", label: "Prefiero no decirlo" },
+  { value: "otro", label: "Otro" },
+];
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
 
