@@ -8,8 +8,11 @@
             <div
               class="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center shrink-0"
             >
-              <svg class="w-6 h-6 text-primary-700" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M15 12a4 4 0 100-8 4 4 0 000 8zm-8 9a7 7 0 0114 0H7zm13-9v2h2v2h-2v2h-2v-2h-2v-2h2v-2h2z" />
+              <svg class="w-5 h-5 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <line x1="19" y1="8" x2="19" y2="14" />
+                <line x1="22" y1="11" x2="16" y2="11" />
               </svg>
             </div>
             <div>
