@@ -35,8 +35,10 @@
           v-for="member in miembrosPaginados"
           :key="member.id"
           class="relative rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-white text-black"
-          :class="member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80'"
-          style="box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);"
+          :class="[
+            'shadow-card',
+            member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80',
+          ]"
         >
           <!-- Barra de estado superior -->
           <div
