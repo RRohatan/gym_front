@@ -1,50 +1,67 @@
 <template>
   <div class="page-layout">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div class="max-w-7xl mx-auto space-y-6">
+      <header class="page-header">
         <div>
-        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Movimientos de Inventario</h1>
-        <p class="text-sm text-slate-400 mt-0.5">Historial de ventas y compras</p>
-      </div>
+          <h1 class="page-title">Movimientos de Inventario</h1>
+          <p class="page-subtitle">Historial de ventas y compras</p>
+        </div>
         <router-link to="/Products" class="btn btn-dark">Inventario</router-link>
-      </div>
+      </header>
 
-      <div class="bg-gray-800 p-1 rounded-xl inline-flex mb-6 shadow-lg border border-gray-700">
+      <div
+        class="bg-gray-800 p-1 rounded-xl inline-flex shadow-lg border border-gray-700"
+        role="tablist"
+      >
         <button
-          @click="tab = 'ventas'"
-          class="px-6 py-2 rounded-lg font-bold transition text-sm sm:text-base"
+          type="button"
+          role="tab"
+          :aria-selected="tab === 'ventas'"
+          class="px-6 py-2 rounded-lg font-semibold transition text-sm sm:text-base"
           :class="
-            tab === 'ventas' ? 'bg-blue-600 text-white shadow' : 'text-gray-400 hover:text-white'
+            tab === 'ventas'
+              ? 'bg-blue-600 text-white shadow'
+              : 'text-gray-400 hover:text-white'
           "
+          @click="tab = 'ventas'"
         >
           🛒 Reporte de Ventas
         </button>
         <button
-          @click="tab = 'compras'"
-          class="px-6 py-2 rounded-lg font-bold transition text-sm sm:text-base"
+          type="button"
+          role="tab"
+          :aria-selected="tab === 'compras'"
+          class="px-6 py-2 rounded-lg font-semibold transition text-sm sm:text-base"
           :class="
-            tab === 'compras' ? 'bg-green-600 text-white shadow' : 'text-gray-400 hover:text-white'
+            tab === 'compras'
+              ? 'bg-emerald-600 text-white shadow'
+              : 'text-gray-400 hover:text-white'
           "
+          @click="tab = 'compras'"
         >
           🚛 Compras a Proveedores
         </button>
       </div>
 
-      <div
+      <section
         v-if="tab === 'ventas'"
-        class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 text-gray-800 animate-fade-in"
+        class="bg-white rounded-2xl shadow-card p-4 sm:p-6 text-gray-800 animate-fade-in space-y-4"
       >
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-blue-800">Historial de Ventas</h2>
-          <div class="text-sm text-gray-500 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">
+        <div class="flex justify-between items-center gap-3 flex-wrap">
+          <h2 class="text-xl font-semibold text-blue-800">Historial de Ventas</h2>
+          <div
+            class="text-sm text-gray-500 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100"
+          >
             Total Vendido:
-            <span class="font-bold text-blue-700">{{ formatCurrency(totalVentas) }}</span>
+            <span class="font-semibold text-blue-700">
+              {{ formatCurrency(totalVentas) }}
+            </span>
           </div>
         </div>
 
-        <div class="overflow-x-auto rounded-lg border border-gray-100">
+        <div class="table-wrap">
           <table class="w-full text-sm text-left">
-            <thead class="bg-blue-50 text-blue-800 uppercase text-xs font-bold">
+            <thead class="bg-blue-50 text-blue-800 uppercase text-xs font-semibold">
               <tr>
                 <th class="p-3">Fecha</th>
                 <th class="p-3">Producto</th>
@@ -62,10 +79,16 @@
               </tr>
               <tr v-for="v in ventasPaginadas" :key="v.id" class="hover:bg-gray-50">
                 <td class="p-3 text-gray-500">{{ formatDate(v.created_at) }}</td>
-                <td class="p-3 font-bold">{{ v.product?.name || "Producto eliminado" }}</td>
-                <td class="p-3 text-center bg-gray-50 rounded font-mono">{{ v.quantity }}</td>
-                <td class="p-3 text-right">{{ formatCurrency(v.total / v.quantity) }}</td>
-                <td class="p-3 text-right font-bold text-green-600">
+                <td class="p-3 font-medium">
+                  {{ v.product?.name || "Producto eliminado" }}
+                </td>
+                <td class="p-3 text-center bg-gray-50 rounded font-mono">
+                  {{ v.quantity }}
+                </td>
+                <td class="p-3 text-right">
+                  {{ formatCurrency(v.total / v.quantity) }}
+                </td>
+                <td class="p-3 text-right font-semibold text-emerald-600">
                   {{ formatCurrency(v.total) }}
                 </td>
                 <td class="p-3 text-xs">{{ v.member?.name || "Público General" }}</td>
@@ -74,36 +97,48 @@
           </table>
         </div>
 
-        <!-- Paginación ventas -->
-        <div v-if="totalPagesVentas > 1" class="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-sm text-gray-600">
+        <div
+          v-if="totalPagesVentas > 1"
+          class="flex items-center justify-between pt-3 border-t border-gray-100 text-sm text-gray-600"
+        >
           <span>Página {{ currentPageVentas }} de {{ totalPagesVentas }}</span>
           <div class="flex gap-1">
-            <button @click="currentPageVentas--" :disabled="currentPageVentas === 1"
-              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="currentPageVentas === 1"
+              @click="currentPageVentas--"
+            >
               ← Anterior
-            </button>
-            <button @click="currentPageVentas++" :disabled="currentPageVentas === totalPagesVentas"
-              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            </BaseButton>
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="currentPageVentas === totalPagesVentas"
+              @click="currentPageVentas++"
+            >
               Siguiente →
-            </button>
+            </BaseButton>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div
+      <section
         v-if="tab === 'compras'"
-        class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 text-gray-800 animate-fade-in"
+        class="bg-white rounded-2xl shadow-card p-4 sm:p-6 text-gray-800 animate-fade-in space-y-4"
       >
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-green-800">Historial de Compras</h2>
-          <button @click="abrirModalCompra" class="btn btn-success text-sm flex items-center gap-2">
+        <div class="flex justify-between items-center gap-3 flex-wrap">
+          <h2 class="text-xl font-semibold text-emerald-800">Historial de Compras</h2>
+          <BaseButton variant="success" size="sm" @click="abrirModalCompra">
             ➕ Registrar Nueva Compra
-          </button>
+          </BaseButton>
         </div>
 
-        <div class="overflow-x-auto rounded-lg border border-gray-100">
+        <div class="table-wrap">
           <table class="w-full text-sm text-left">
-            <thead class="bg-green-50 text-green-800 uppercase text-xs font-bold">
+            <thead
+              class="bg-emerald-50 text-emerald-800 uppercase text-xs font-semibold"
+            >
               <tr>
                 <th class="p-3">Fecha</th>
                 <th class="p-3">Producto</th>
@@ -120,116 +155,100 @@
               </tr>
               <tr v-for="c in comprasPaginadas" :key="c.id" class="hover:bg-gray-50">
                 <td class="p-3 text-gray-500">{{ formatDate(c.purchase_date) }}</td>
-                <td class="p-3 font-bold">{{ c.product?.name }}</td>
-                <td class="p-3 text-center font-bold text-green-700">+{{ c.quantity }}</td>
-                <td class="p-3 text-right text-gray-600">{{ formatCurrency(c.total_cost) }}</td>
+                <td class="p-3 font-medium">{{ c.product?.name }}</td>
+                <td class="p-3 text-center font-semibold text-emerald-700">
+                  +{{ c.quantity }}
+                </td>
+                <td class="p-3 text-right text-gray-600">
+                  {{ formatCurrency(c.total_cost) }}
+                </td>
                 <td class="p-3 text-xs text-gray-500">{{ c.supplier || "—" }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Paginación compras -->
-        <div v-if="totalPagesCompras > 1" class="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-sm text-gray-600">
+        <div
+          v-if="totalPagesCompras > 1"
+          class="flex items-center justify-between pt-3 border-t border-gray-100 text-sm text-gray-600"
+        >
           <span>Página {{ currentPageCompras }} de {{ totalPagesCompras }}</span>
           <div class="flex gap-1">
-            <button @click="currentPageCompras--" :disabled="currentPageCompras === 1"
-              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="currentPageCompras === 1"
+              @click="currentPageCompras--"
+            >
               ← Anterior
-            </button>
-            <button @click="currentPageCompras++" :disabled="currentPageCompras === totalPagesCompras"
-              class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            </BaseButton>
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="currentPageCompras === totalPagesCompras"
+              @click="currentPageCompras++"
+            >
               Siguiente →
-            </button>
+            </BaseButton>
           </div>
         </div>
-      </div>
+      </section>
     </div>
 
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
-    >
-      <div class="bg-white w-full max-w-md p-6 rounded-xl shadow-2xl text-gray-800">
-        <h2 class="text-xl font-bold mb-4 border-b pb-2 text-green-700">
-          🚛 Reabastecer Inventario
-        </h2>
+    <BaseModal v-model="showModal" title="🚛 Reabastecer Inventario" size="md">
+      <form id="purchase-form" class="space-y-4" @submit.prevent="registrarCompra">
+        <BaseSelect
+          v-model="form.product_id"
+          label="Producto"
+          placeholder="Seleccione..."
+          :options="productos.map((p) => ({ value: p.id, label: `${p.name} (Stock actual: ${p.stock})` }))"
+          required
+        />
 
-        <form @submit.prevent="registrarCompra" class="space-y-4">
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Producto</label>
-            <select
-              v-model="form.product_id"
-              required
-              class="w-full border p-2 rounded-lg bg-white outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option disabled value="">Seleccione...</option>
-              <option v-for="p in productos" :key="p.id" :value="p.id">
-                {{ p.name }} (Stock actual: {{ p.stock }})
-              </option>
-            </select>
-          </div>
+        <div class="grid grid-cols-2 gap-4">
+          <BaseInput
+            v-model.number="form.quantity"
+            label="Cantidad"
+            type="number"
+            min="1"
+            required
+            placeholder="0"
+          />
+          <BaseInput
+            v-model.number="form.total_cost"
+            label="Costo Total ($)"
+            type="number"
+            min="0"
+            required
+            placeholder="$"
+          />
+        </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Cantidad</label>
-              <input
-                v-model.number="form.quantity"
-                type="number"
-                min="1"
-                required
-                class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-green-500 font-mono text-lg"
-                placeholder="0"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Costo Total ($)</label>
-              <input
-                v-model.number="form.total_cost"
-                type="number"
-                min="0"
-                required
-                class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-green-500 font-mono text-lg"
-                placeholder="$"
-              />
-            </div>
-          </div>
+        <BaseInput
+          v-model.number="form.new_price"
+          label="Nuevo Precio de Venta (Opcional)"
+          type="number"
+          min="0"
+          placeholder="Dejar vacío para mantener el actual"
+          hint="Si ingresa un valor, se actualizará el precio de venta del producto."
+        />
 
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1"
-              >Nuevo Precio de Venta (Opcional)</label
-            >
-            <input
-              v-model.number="form.new_price"
-              type="number"
-              min="0"
-              class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-green-500 font-mono text-lg"
-              placeholder="Dejar vacío para mantener el actual"
-            />
-            <p class="text-xs text-gray-500 mt-1">
-              Si ingresa un valor, se actualizará el precio de venta del producto.
-            </p>
-          </div>
+        <BaseInput
+          v-model="form.supplier"
+          label="Proveedor (Opcional)"
+          placeholder="Ej: Distribuidora XYZ"
+        />
+      </form>
 
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Proveedor (Opcional)</label>
-            <input
-              v-model="form.supplier"
-              type="text"
-              class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Ej: Distribuidora XYZ"
-            />
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4 border-t mt-2">
-            <button type="button" @click="showModal = false" class="btn btn-secondary">
-              Cancelar
-            </button>
-            <button type="submit" class="btn btn-success">✅ Registrar Entrada</button>
-          </div>
-        </form>
-      </div>
-    </div>
+      <template #footer>
+        <BaseButton variant="secondary" @click="showModal = false">
+          Cancelar
+        </BaseButton>
+        <BaseButton variant="success" type="submit" form="purchase-form">
+          ✅ Registrar Entrada
+        </BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
@@ -238,6 +257,7 @@ import { ref, onMounted, computed } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import { BaseButton, BaseInput, BaseSelect, BaseModal } from "@/components/ui";
 
 const tab = ref("ventas");
 const ventas = ref([]);

@@ -97,6 +97,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/useAuthStore'
 import api from '@/axios'
 import Swal from 'sweetalert2'
+import { SWAL_COLORS } from '@/lib/colors'
 
 const email = ref('')
 const password = ref('')
@@ -125,7 +126,7 @@ const handleLogin = async () => {
       title: 'Acceso Denegado',
       text: 'El correo o la contraseña son incorrectos.',
       confirmButtonText: 'Intentar de nuevo',
-      confirmButtonColor: '#dc2626',
+      confirmButtonColor: SWAL_COLORS.danger,
       heightAuto: false,
     })
   } finally {

@@ -151,6 +151,7 @@ import { ref, computed, onMounted } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
+import { SWAL_COLORS } from '@/lib/colors'
 
 const loading  = ref(true)
 const saving   = ref(false)
@@ -235,7 +236,7 @@ async function confirmCancel() {
     text: 'Seguirás teniendo acceso hasta que venza el plan.',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#dc2626',
+    confirmButtonColor: SWAL_COLORS.danger,
     cancelButtonText: 'No',
     confirmButtonText: 'Sí, cancelar',
   })

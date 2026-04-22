@@ -1,154 +1,154 @@
 <template>
-  <div
-    class="page-layout"
-  >
-    <div class="page-card space-y-6">
-      <div
-        class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-4"
-      >
-        <div>
-          <h2 class="page-title">Caja Diaria</h2>
-          <p class="page-subtitle">Control de apertura y cierre</p>
-        </div>
-        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
-          <button @click="abrirModalGasto" class="btn btn-danger-solid flex-1 sm:flex-none">Registrar gasto</button>
-          <button @click="confirmarCierre" class="btn btn-dark flex-1 sm:flex-none">Cerrar caja</button>
-        </div>
-      </div>
+  <div class="page-layout">
+    <BaseCard title="Caja Diaria" subtitle="Control de apertura y cierre" class="space-y-6">
+      <template #actions>
+        <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">
+          Inicio
+        </router-link>
+        <BaseButton variant="danger-solid" class="flex-1 sm:flex-none" @click="abrirModalGasto">
+          Registrar gasto
+        </BaseButton>
+        <BaseButton variant="dark" class="flex-1 sm:flex-none" @click="confirmarCierre">
+          Cerrar caja
+        </BaseButton>
+      </template>
 
-      <div v-if="loading" class="text-center py-10">Cargando...</div>
+      <div v-if="loading" class="text-center py-10 text-gray-500">Cargando...</div>
 
-      <div v-else>
-        <div v-if="todayCashbox" class="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-sm">
-          <h3 class="text-sm font-bold mb-3 text-blue-900 uppercase tracking-wide">
+      <div v-else class="space-y-6">
+        <div
+          v-if="todayCashbox"
+          class="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-sm"
+        >
+          <h3 class="text-sm font-semibold mb-3 text-blue-900 uppercase tracking-wide">
             Resumen Hoy ({{ todayCashbox.date }})
           </h3>
 
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
             <div class="bg-white p-3 rounded-lg shadow-sm">
               <p class="text-gray-500 text-xs">🔓 Apertura</p>
-              <p class="text-lg font-bold text-gray-800">
+              <p class="text-lg font-semibold text-gray-800">
                 {{ formatCurrency(todayCashbox.opening_balance) }}
               </p>
             </div>
             <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-green-600 text-xs">💰 Ingresos</p>
-              <p class="text-lg font-bold text-green-700">
+              <p class="text-emerald-600 text-xs">💰 Ingresos</p>
+              <p class="text-lg font-semibold text-emerald-700">
                 {{ formatCurrency(todayCashbox.total_income) }}
               </p>
             </div>
             <div class="bg-white p-3 rounded-lg shadow-sm">
               <p class="text-red-600 text-xs">💸 Gastos</p>
-              <p class="text-lg font-bold text-red-700">
+              <p class="text-lg font-semibold text-red-700">
                 {{ formatCurrency(todayCashbox.total_expense) }}
               </p>
             </div>
             <div class="bg-blue-600 p-3 rounded-lg shadow text-white">
               <p class="text-blue-100 text-xs">🧮 Cierre</p>
-              <p class="text-lg font-bold">{{ formatCurrency(todayCashbox.closing_balance) }}</p>
+              <p class="text-lg font-semibold">
+                {{ formatCurrency(todayCashbox.closing_balance) }}
+              </p>
             </div>
           </div>
         </div>
 
-        <div v-else class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 text-center">
-          <p class="text-yellow-800 font-bold mb-4">⚠️ Caja cerrada</p>
-          <form @submit.prevent="abrirCaja" class="flex gap-2 max-w-sm mx-auto">
-            <input
+        <div
+          v-else
+          class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 text-center"
+        >
+          <p class="text-yellow-800 font-semibold mb-4">⚠️ Caja cerrada</p>
+          <form
+            class="flex gap-2 max-w-sm mx-auto items-end"
+            @submit.prevent="abrirCaja"
+          >
+            <BaseInput
               v-model="nuevoSaldo"
               type="number"
-              class="w-full p-2 border rounded-lg"
               placeholder="Saldo inicial..."
               required
+              class="flex-1"
             />
-            <button type="submit" class="btn btn-primary">Abrir</button>
+            <BaseButton variant="primary" type="submit">Abrir</BaseButton>
           </form>
         </div>
 
-        <div class="mt-8">
-          <h3 class="font-bold mb-3 text-gray-700">📚 Historial</h3>
-          <div class="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
+        <div>
+          <h3 class="font-semibold mb-3 text-gray-700">📚 Historial</h3>
+          <div class="table-wrap">
             <table class="w-full text-sm min-w-[600px]">
-              <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+              <thead class="table-head">
                 <tr>
-                  <th class="p-3 text-left">Fecha</th>
-                  <th class="p-3 text-right">Apertura</th>
-                  <th class="p-3 text-right">Ingresos</th>
-                  <th class="p-3 text-right">Gastos</th>
-                  <th class="p-3 text-right">Cierre</th>
+                  <th>Fecha</th>
+                  <th class="!text-right">Apertura</th>
+                  <th class="!text-right">Ingresos</th>
+                  <th class="!text-right">Gastos</th>
+                  <th class="!text-right">Cierre</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100 bg-white">
-                <tr v-for="cb in cashboxes" :key="cb.id">
-                  <td class="p-3 font-medium">{{ cb.date }}</td>
-                  <td class="p-3 text-right">{{ formatCurrency(cb.opening_balance) }}</td>
-                  <td class="p-3 text-right text-green-600">
+              <tbody class="bg-white">
+                <tr v-for="cb in cashboxes" :key="cb.id" class="table-row">
+                  <td class="font-medium">{{ cb.date }}</td>
+                  <td class="text-right">{{ formatCurrency(cb.opening_balance) }}</td>
+                  <td class="text-right text-emerald-600">
                     {{ formatCurrency(cb.total_income) }}
                   </td>
-                  <td class="p-3 text-right text-red-600">
+                  <td class="text-right text-red-600">
                     {{ formatCurrency(cb.total_expense) }}
                   </td>
-                  <td class="p-3 text-right font-bold">{{ formatCurrency(cb.closing_balance) }}</td>
+                  <td class="text-right font-semibold">
+                    {{ formatCurrency(cb.closing_balance) }}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
+    </BaseCard>
 
-      <div
-        v-if="showExpenseModal"
-        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      >
-        <div class="bg-white w-full max-w-sm p-6 rounded-xl shadow-2xl">
-          <h2 class="text-lg font-bold mb-4">💸 Registrar Gasto</h2>
-          <form @submit.prevent="guardarGasto" class="space-y-4">
-            <input
-              v-model="expenseForm.concepto"
-              type="text"
-              placeholder="Concepto (ej: Luz)"
-              class="w-full border p-2 rounded-lg"
-              required
-            />
-            <input
-              v-model.number="expenseForm.monto"
-              type="number"
-              placeholder="Monto"
-              class="w-full border p-2 rounded-lg"
-              required
-            />
-            <input
-              v-model="expenseForm.fecha"
-              type="date"
-              class="w-full border p-2 rounded-lg"
-              required
-            />
+    <BaseModal v-model="showExpenseModal" title="💸 Registrar Gasto" size="sm">
+      <form id="expense-form" class="space-y-4" @submit.prevent="guardarGasto">
+        <BaseInput
+          v-model="expenseForm.concepto"
+          label="Concepto"
+          placeholder="Ej: Luz"
+          required
+        />
+        <BaseInput
+          v-model.number="expenseForm.monto"
+          type="number"
+          label="Monto"
+          placeholder="0"
+          required
+        />
+        <BaseInput
+          v-model="expenseForm.fecha"
+          type="date"
+          label="Fecha"
+          required
+        />
+      </form>
 
-            <div class="flex gap-3 pt-2">
-              <button
-                type="button"
-                @click="showExpenseModal = false"
-                class="btn btn-secondary flex-1"
-              >
-                Cancelar
-              </button>
-              <button type="submit" class="btn btn-danger-solid flex-1">Guardar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      <template #footer>
+        <BaseButton variant="secondary" @click="showExpenseModal = false">
+          Cancelar
+        </BaseButton>
+        <BaseButton variant="danger-solid" type="submit" form="expense-form">
+          Guardar
+        </BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <script setup>
-// (El script sigue siendo EXACTAMENTE el mismo que te di antes, no hace falta cambiarlo)
-// Solo asegúrate de copiar y pegar el script de la respuesta anterior si lo borraste.
 import { ref, onMounted, reactive } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
+import { BaseButton, BaseInput, BaseCard, BaseModal } from "@/components/ui";
+import { SWAL_COLORS } from "@/lib/colors";
 const router = useRouter();
 const cashboxes = ref([]);
 const todayCashbox = ref(null);
@@ -172,14 +172,14 @@ const fetchCashboxes = async () => {
           icon: "error",
           title: "Sin conexión a internet",
           text: "No se pudo cargar la información de caja. Verifica tu conexión.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error de conexión",
           text: "No se pudo conectar con el servidor para cargar la caja.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     }
@@ -205,14 +205,14 @@ const abrirCaja = async () => {
           icon: "error",
           title: "Sin conexión a internet",
           text: "No se pudo abrir la caja. Verifica tu conexión e intenta nuevamente.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error de conexión",
           text: "No se pudo conectar con el servidor para abrir la caja.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     } else if (error.response.status === 422) {
@@ -222,7 +222,7 @@ const abrirCaja = async () => {
         icon: "error",
         title: "Error del servidor",
         text: "Ocurrió un error en el servidor. Intenta nuevamente más tarde.",
-        confirmButtonColor: "#d33",
+        confirmButtonColor: SWAL_COLORS.danger,
       });
     } else {
       Swal.fire("Error", "No se pudo abrir la caja", "error");
@@ -252,14 +252,14 @@ const guardarGasto = async () => {
           icon: "error",
           title: "Sin conexión a internet",
           text: "No se pudo registrar el gasto. Verifica tu conexión.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error de conexión",
           text: "No se pudo conectar con el servidor para registrar el gasto.",
-          confirmButtonColor: "#d33",
+          confirmButtonColor: SWAL_COLORS.danger,
         });
       }
     } else {

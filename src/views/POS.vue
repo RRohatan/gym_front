@@ -30,10 +30,13 @@
 
         <div class="bg-white p-3 rounded-xl shadow-sm flex flex-col sm:flex-row gap-3 shrink-0">
           <div class="flex-1">
-            <select v-model="selectedMemberId" class="w-full border p-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-              <option :value="null">-- Cliente (Opcional) --</option>
-              <option v-for="m in members" :key="m.id" :value="m.id">{{ m.name }}</option>
-            </select>
+            <BaseSelect
+              v-model="selectedMemberId"
+              :options="[
+                { value: null, label: '-- Cliente (Opcional) --' },
+                ...members.map((m) => ({ value: m.id, label: m.name })),
+              ]"
+            />
           </div>
           <div class="flex-1">
             <input v-model="search" type="text" placeholder="🔍 Buscar producto..." class="w-full border p-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
@@ -119,6 +122,7 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
+import { BaseSelect } from '@/components/ui'
 import dayjs from 'dayjs'
 
 const products = ref([])

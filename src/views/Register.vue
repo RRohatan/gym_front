@@ -127,6 +127,7 @@ import { useRouter } from 'vue-router'
 import api from '@/axios'
 import { useAuthStore } from '@/stores/useAuthStore'
 import Swal from 'sweetalert2'
+import { SWAL_COLORS } from '@/lib/colors'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -151,7 +152,7 @@ const register = async () => {
       text: 'Tu cuenta ha sido creada correctamente.',
       icon: 'success',
       confirmButtonText: 'Continuar',
-      confirmButtonColor: '#dc2626',
+      confirmButtonColor: SWAL_COLORS.danger,
     })
     router.push({ name: 'Login' })
   } catch (error: any) {
@@ -160,7 +161,7 @@ const register = async () => {
       text: error?.response?.data?.message || 'Ocurrió un error desconocido.',
       icon: 'error',
       confirmButtonText: 'Cerrar',
-      confirmButtonColor: '#dc2626',
+      confirmButtonColor: SWAL_COLORS.danger,
     })
   } finally {
     loading.value = false

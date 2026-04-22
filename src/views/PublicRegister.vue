@@ -1,7 +1,6 @@
 <template>
   <div
-    class="w-screen min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center p-4"
-    style="background-image: url('/img/fondo_sin_letra.png')"
+    class="w-screen min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center p-4 bg-[url('/img/fondo_sin_letra.png')]"
   >
     <!-- Logo/Nombre del Gimnasio -->
     <div class="flex justify-center items-center mb-6">
@@ -59,14 +58,12 @@
               </div>
               <div>
                 <label class="block text-gray-600 text-sm mb-1">Sexo</label>
-                <select v-model="form.sexo" class="input-field" required>
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="masculino">Masculino</option>
-                  <option value="femenino">Femenino</option>
-                  <option value="no_binario">No binario</option>
-                  <option value="otro">Otro</option>
-                  <option value="preferir_no_decir">Prefiero no decir</option>
-                </select>
+                <BaseSelect
+                  v-model="form.sexo"
+                  placeholder="Seleccione..."
+                  :options="SEXO_OPTIONS"
+                  required
+                />
               </div>
             </div>
 
@@ -85,13 +82,17 @@
 
             <div>
               <label class="block text-gray-600 text-sm mb-1">Plan de Membresía</label>
-              <select v-model="form.plan_id" class="input-field" required>
-                <option value="" disabled>Seleccione el plan que desea</option>
-                <!-- Typescript ahora sabe qué es 'plan.membership_type' -->
-                <option v-for="plan in planes" :key="plan.id" :value="plan.id">
-                  {{ plan.membership_type.name }} ({{ traducirFrecuencia(plan.frequency) }}) - {{ formatCurrency(plan.price) }}
-                </option>
-              </select>
+              <BaseSelect
+                v-model="form.plan_id"
+                placeholder="Seleccione el plan que desea"
+                :options="
+                  planes.map((plan) => ({
+                    value: plan.id,
+                    label: `${plan.membership_type.name} (${traducirFrecuencia(plan.frequency)}) - ${formatCurrency(plan.price)}`,
+                  }))
+                "
+                required
+              />
             </div>
 
             <div v-if="errorMessage" class="text-red-600 text-sm text-center">
@@ -135,7 +136,17 @@ body {
 import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/axios' // Usamos la instancia de Axios
+import { BaseSelect } from '@/components/ui'
+
+const SEXO_OPTIONS = [
+  { value: 'masculino', label: 'Masculino' },
+  { value: 'femenino', label: 'Femenino' },
+  { value: 'no_binario', label: 'No binario' },
+  { value: 'otro', label: 'Otro' },
+  { value: 'preferir_no_decir', label: 'Prefiero no decir' },
+]
 import Swal from 'sweetalert2'
+import { SWAL_COLORS } from '@/lib/colors'
 
 // --- INICIO DE CORRECCIÓN DE TIPOS ---
 
@@ -221,7 +232,7 @@ const handleSubmit = async () => {
       text: data.message,
       icon: 'success',
       confirmButtonText: 'Entendido',
-      confirmButtonColor: '#2563EB',
+      confirmButtonColor: SWAL_COLORS.primary,
     })
 
   } catch (error: any) {

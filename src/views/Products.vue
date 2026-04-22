@@ -1,152 +1,170 @@
 <template>
   <div class="page-layout">
-    <div class="max-w-7xl mx-auto">
-
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <div class="max-w-7xl mx-auto space-y-6">
+      <header class="page-header">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Inventario</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Gestión de productos y stock</p>
+          <h1 class="page-title">Inventario</h1>
+          <p class="page-subtitle">Gestión de productos y stock</p>
         </div>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none">Inicio</router-link>
-          <button @click="abrirModalRegistro" class="btn btn-success flex-1 sm:flex-none">Agregar producto</button>
-          <router-link to="/inventory-log" class="btn btn-secondary flex-1 sm:flex-none">Movimientos</router-link>
+          <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none">
+            Inicio
+          </router-link>
+          <BaseButton variant="success" class="flex-1 sm:flex-none" @click="abrirModalRegistro">
+            Agregar producto
+          </BaseButton>
+          <router-link to="/inventory-log" class="btn btn-secondary flex-1 sm:flex-none">
+            Movimientos
+          </router-link>
         </div>
-      </div>
+      </header>
 
-      <div class="mb-6">
-        <input v-model="busqueda" type="text" placeholder="Buscar producto..." class="field-input" />
-      </div>
+      <BaseInput v-model="busqueda" placeholder="Buscar producto..." />
 
-    <div v-if="loading" class="text-gray-400 text-center mt-10">Cargando...</div>
-    <div v-else>
-      <div v-if="productosFiltrados.length === 0" class="text-gray-400 text-center mt-10">
-        No encontrado.
-      </div>
+      <div v-if="loading" class="text-gray-400 text-center py-10">Cargando...</div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
+      <template v-else>
         <div
-          v-for="producto in productosPaginados"
-          :key="producto.id"
-          class="bg-white text-black rounded-xl shadow-lg overflow-hidden flex flex-col justify-between"
+          v-if="productosFiltrados.length === 0"
+          class="text-gray-400 text-center py-10"
         >
-          <div class="p-4">
-            <div class="flex justify-between items-start">
-              <h2 class="text-lg font-bold leading-tight">{{ producto.name }}</h2>
-              <span class="text-xs px-2 py-1 rounded bg-gray-100 font-bold border"
-                >Stock: {{ producto.stock }}</span
+          No encontrado.
+        </div>
+
+        <div
+          v-else
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-6"
+        >
+          <article
+            v-for="producto in productosPaginados"
+            :key="producto.id"
+            class="bg-white text-black rounded-2xl shadow-card overflow-hidden flex flex-col justify-between"
+          >
+            <div class="p-4">
+              <div class="flex justify-between items-start gap-2">
+                <h2 class="text-lg font-semibold leading-tight">{{ producto.name }}</h2>
+                <BaseBadge color="gray">Stock: {{ producto.stock }}</BaseBadge>
+              </div>
+              <p
+                v-if="producto.description"
+                class="text-sm text-gray-500 mt-1 line-clamp-2"
               >
+                {{ producto.description }}
+              </p>
+              <p class="text-xl font-semibold text-blue-600 mt-2">
+                ${{ producto.price }}
+              </p>
             </div>
-            <p v-if="producto.description" class="text-sm text-gray-500 mt-1 line-clamp-2">
-              {{ producto.description }}
-            </p>
-            <p class="text-xl font-bold text-blue-600 mt-2">${{ producto.price }}</p>
-          </div>
 
-          <div class="flex p-2 border-t bg-gray-50 gap-2">
-            <button
-              @click="editarProducto(producto)"
-              class="btn btn-indigo btn-sm flex-1 justify-center py-2"
+            <div class="flex p-2 border-t border-gray-100 bg-gray-50 gap-2">
+              <BaseButton
+                variant="indigo"
+                size="sm"
+                class="flex-1 justify-center"
+                @click="editarProducto(producto)"
+              >
+                ✏️ Editar
+              </BaseButton>
+              <BaseButton
+                variant="danger"
+                size="sm"
+                class="flex-1 justify-center"
+                @click="eliminarProducto(producto.id)"
+              >
+                🗑️ Eliminar
+              </BaseButton>
+            </div>
+          </article>
+        </div>
+
+        <div
+          v-if="totalProductos > 1"
+          class="flex items-center justify-between text-sm text-gray-600"
+        >
+          <span>Página {{ currentPageProductos }} de {{ totalProductos }}</span>
+          <div class="flex gap-1">
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="currentPageProductos === 1"
+              @click="currentPageProductos--"
             >
-              ✏️ Editar
-            </button>
-            <button
-              @click="eliminarProducto(producto.id)"
-              class="btn btn-danger btn-sm flex-1 justify-center py-2"
+              ← Anterior
+            </BaseButton>
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="currentPageProductos === totalProductos"
+              @click="currentPageProductos++"
             >
-              🗑️ Eliminar
-            </button>
+              Siguiente →
+            </BaseButton>
           </div>
         </div>
-      </div>
-
-      <!-- Paginación -->
-      <div v-if="totalProductos > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
-        <span>Página {{ currentPageProductos }} de {{ totalProductos }}</span>
-        <div class="flex gap-1">
-          <button @click="currentPageProductos--" :disabled="currentPageProductos === 1"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
-            ← Anterior
-          </button>
-          <button @click="currentPageProductos++" :disabled="currentPageProductos === totalProductos"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
-            Siguiente →
-          </button>
-        </div>
-      </div>
+      </template>
     </div>
 
-    </div><!-- /max-w-7xl -->
-
-    <div
-      v-if="modalRegistro"
-      class="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
+    <BaseModal
+      v-model="modalRegistro"
+      :title="editando ? 'Editar Producto' : 'Nuevo Producto'"
+      size="md"
     >
-      <div
-        class="bg-white text-black w-full sm:max-w-md p-6 rounded-t-2xl sm:rounded-xl shadow-2xl overflow-y-auto max-h-[85vh] animate-slide-up"
-      >
-        <h2 class="text-lg font-bold mb-4">{{ editando ? "Editar" : "Nuevo Producto" }}</h2>
-        <form @submit.prevent="guardarProducto" class="space-y-3">
-          <input
-            v-model="productoForm.name"
-            type="text"
-            required
-            placeholder="Nombre"
-            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-          />
+      <form id="product-form" class="space-y-3" @submit.prevent="guardarProducto">
+        <BaseInput
+          v-model="productoForm.name"
+          label="Nombre"
+          placeholder="Nombre"
+          required
+        />
+
+        <div class="flex flex-col gap-1.5">
+          <label class="field-label">Descripción</label>
           <textarea
             v-model="productoForm.description"
-            placeholder="Descripción"
-            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             rows="2"
-          ></textarea>
+            placeholder="Descripción"
+            class="field-input"
+          />
+        </div>
 
-          <div class="flex gap-3">
-            <div class="flex-1">
-              <label class="text-xs font-bold text-gray-500 uppercase">Precio</label>
-              <input
-                v-model.number="productoForm.price"
-                type="number"
-                required
-                min="0"
-                class="w-full p-3 border rounded-lg font-mono text-lg"
-              />
-            </div>
-            <div class="flex-1">
-              <label class="text-xs font-bold text-gray-500 uppercase">Stock</label>
-              <input
-                v-model.number="productoForm.stock"
-                type="number"
-                required
-                min="0"
-                class="w-full p-3 border rounded-lg font-mono text-lg"
-              />
-            </div>
-          </div>
+        <div class="flex gap-3">
+          <BaseInput
+            v-model.number="productoForm.price"
+            label="Precio"
+            type="number"
+            min="0"
+            required
+            class="flex-1"
+          />
+          <BaseInput
+            v-model.number="productoForm.stock"
+            label="Stock"
+            type="number"
+            min="0"
+            required
+            class="flex-1"
+          />
+        </div>
+      </form>
 
-          <div class="flex gap-3 pt-4 border-t mt-2">
-            <button
-              type="button"
-              @click="cerrarModalRegistro"
-              class="btn btn-secondary flex-1 justify-center py-3"
-            >
-              Cancelar
-            </button>
-            <button type="submit" class="btn btn-primary flex-1 justify-center py-3">
-              Guardar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+      <template #footer>
+        <BaseButton variant="secondary" @click="cerrarModalRegistro">
+          Cancelar
+        </BaseButton>
+        <BaseButton variant="primary" type="submit" form="product-form">
+          Guardar
+        </BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <script setup>
-// (Mismo script, solo copia y pega si lo borraste)
 import { ref, computed, watch, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
+import { BaseButton, BaseInput, BaseBadge, BaseModal } from "@/components/ui";
+import { SWAL_COLORS } from "@/lib/colors";
 const productos = ref([]);
 const currentPageProductos = ref(1);
 const PER_PAGE = 10;
@@ -204,8 +222,8 @@ const eliminarProducto = async (id) => {
     text: "El producto será eliminado permanentemente.",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
+    confirmButtonColor: SWAL_COLORS.info,
+    cancelButtonColor: SWAL_COLORS.danger,
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
   }).then(async (result) => {

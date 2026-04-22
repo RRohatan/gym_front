@@ -1,64 +1,37 @@
 <template>
   <div class="page-layout">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Estadísticas</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Reportes y análisis del gimnasio</p>
-        </div>
-        <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
-      </div>
+    <div class="max-w-7xl mx-auto space-y-6">
+      <BaseCard title="Estadísticas" subtitle="Reportes y análisis del gimnasio">
+        <template #actions>
+          <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
+        </template>
 
-      <div v-if="loading" class="text-center py-20">
-        <p class="text-xl text-gray-400 animate-pulse">Cargando análisis de datos...</p>
-      </div>
+        <p v-if="loading" class="text-center py-16 text-xl text-gray-400 animate-pulse">
+          Cargando análisis de datos...
+        </p>
+      </BaseCard>
 
-      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col text-gray-800">
-          <h3 class="font-bold text-lg mb-4 flex items-center gap-2 border-b pb-2">
-            📊 Ingresos (Últimos 7 días)
-          </h3>
-          <div class="flex-1 relative min-h-[300px]">
-            <Bar v-if="incomeData" :data="incomeData" :options="barOptions" />
-            <p v-else class="text-gray-500 text-center mt-10">No hay datos recientes.</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col text-gray-800">
-          <h3 class="font-bold text-lg mb-4 flex items-center gap-2 border-b pb-2">
-            🍰 Distribución de Clientes
-          </h3>
-          <div class="flex-1 relative min-h-[300px] flex justify-center">
-            <Doughnut v-if="pieData" :data="pieData" :options="pieOptions" />
-            <p v-else class="text-gray-500 text-center mt-10">No hay datos de membresías.</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col text-gray-800">
-          <h3 class="font-bold text-lg mb-4 flex items-center gap-2 border-b pb-2">
-            🥤 Ventas Productos (Últimos 7 días)
-          </h3>
-          <div class="flex-1 relative min-h-[300px]">
-            <Bar v-if="productSalesData" :data="productSalesData" :options="barOptions" />
-            <p v-else class="text-gray-500 text-center mt-10">No hay ventas recientes.</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col text-gray-800">
-          <h3 class="font-bold text-lg mb-4 flex items-center gap-2 border-b pb-2">
-            🏆 Top Productos Más Vendidos
-          </h3>
-          <div class="flex-1 relative min-h-[300px]">
-            <Bar
-              v-if="topProductsData"
-              :data="topProductsData"
-              :options="{ ...barOptions, indexAxis: 'y' }"
+      <div v-if="!loading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BaseCard
+          v-for="chart in chartCards"
+          :key="chart.key"
+          :title="chart.title"
+        >
+          <div
+            class="flex-1 relative min-h-[300px]"
+            :class="chart.center && 'flex justify-center'"
+          >
+            <component
+              :is="chart.component"
+              v-if="chart.data.value"
+              :data="chart.data.value"
+              :options="chart.options"
             />
-            <p v-else class="text-gray-500 text-center mt-10">No hay datos de productos.</p>
+            <p v-else class="text-gray-500 text-center mt-10">{{ chart.emptyText }}</p>
           </div>
-        </div>
+        </BaseCard>
       </div>
-    </div><!-- /max-w-7xl -->
+    </div>
   </div>
 </template>
 
@@ -80,6 +53,8 @@ import {
   ArcElement,
 } from "chart.js";
 import { Bar, Doughnut } from "vue-chartjs";
+import { CHART_COLORS } from "@/lib/colors";
+import { BaseCard } from "@/components/ui";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
@@ -98,6 +73,47 @@ const pieOptions = {
   responsive: true,
   maintainAspectRatio: false,
 };
+const barHorizontalOptions = {
+  ...barOptions,
+  indexAxis: "y",
+};
+
+// Configuración declarativa de las 4 gráficas del dashboard.
+const chartCards = [
+  {
+    key: "income",
+    title: "📊 Ingresos (Últimos 7 días)",
+    component: Bar,
+    data: incomeData,
+    options: barOptions,
+    emptyText: "No hay datos recientes.",
+  },
+  {
+    key: "pie",
+    title: "🍰 Distribución de Clientes",
+    component: Doughnut,
+    data: pieData,
+    options: pieOptions,
+    emptyText: "No hay datos de membresías.",
+    center: true,
+  },
+  {
+    key: "productSales",
+    title: "🥤 Ventas Productos (Últimos 7 días)",
+    component: Bar,
+    data: productSalesData,
+    options: barOptions,
+    emptyText: "No hay ventas recientes.",
+  },
+  {
+    key: "topProducts",
+    title: "🏆 Top Productos Más Vendidos",
+    component: Bar,
+    data: topProductsData,
+    options: barHorizontalOptions,
+    emptyText: "No hay datos de productos.",
+  },
+];
 
 onMounted(async () => {
   try {
@@ -108,7 +124,7 @@ onMounted(async () => {
       labels: ["Activos", "Vencidos", "Por Pagar"],
       datasets: [
         {
-          backgroundColor: ["#16A34A", "#DC2626", "#EAB308"],
+          backgroundColor: [CHART_COLORS.active, CHART_COLORS.expired, CHART_COLORS.pending],
           data: [statsData.active, statsData.expired, statsData.inactive_unpaid],
         },
       ],
@@ -120,8 +136,6 @@ onMounted(async () => {
     const { data: historyData } = await api.get(
       `/payments/history?start_date=${start}&end_date=${end}`,
     );
-
-    procesarDatosIngresos(historyData.historial, start);
 
     procesarDatosIngresos(historyData.historial, start);
   } catch (error) {
@@ -181,7 +195,7 @@ const procesarDatosIngresos = (historial, startDate) => {
   incomeData.value = {
     labels: dias,
     datasets: [
-      { label: "Ingresos ($)", backgroundColor: "#2563EB", borderRadius: 5, data: montos },
+      { label: "Ingresos ($)", backgroundColor: CHART_COLORS.income, borderRadius: 5, data: montos },
     ],
   };
 };
@@ -229,7 +243,7 @@ const procesarVentasProductos = (sales, startDate) => {
   productSalesData.value = {
     labels: dias,
     datasets: [
-      { label: "Ventas Productos ($)", backgroundColor: "#10B981", borderRadius: 5, data: montos },
+      { label: "Ventas Productos ($)", backgroundColor: CHART_COLORS.productSales, borderRadius: 5, data: montos },
     ],
   };
 
@@ -244,7 +258,7 @@ const procesarVentasProductos = (sales, startDate) => {
     datasets: [
       {
         label: "Unidades Vendidas",
-        backgroundColor: ["#F59E0B", "#EF4444", "#3B82F6", "#10B981", "#8B5CF6"],
+        backgroundColor: CHART_COLORS.palette,
         data: topOrdenados.map(([, cant]) => cant),
       },
     ],
