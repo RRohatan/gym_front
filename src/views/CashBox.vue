@@ -237,14 +237,15 @@ const abrirModalGasto = () => {
 };
 const guardarGasto = async () => {
   try {
-    if (todayCashbox.value) {
-      todayCashbox.value.total_expense += expenseForm.monto;
-      todayCashbox.value.closing_balance -= expenseForm.monto;
-    }
+    await api.post("/gastos", {
+      concepto: expenseForm.concepto,
+      monto: expenseForm.monto,
+      fecha: expenseForm.fecha,
+    });
     showExpenseModal.value = false;
-    Swal.fire("Listo", "Gasto visual registrado", "success");
+    await fetchCashboxes();
+    Swal.fire("Listo", "Gasto registrado correctamente", "success");
   } catch (error) {
-    // Manejo de errores de red
     if (!error.response) {
       if (!navigator.onLine) {
         Swal.fire({

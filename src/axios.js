@@ -2,8 +2,10 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Swal from "sweetalert2";
 
+const apiBaseUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: apiBaseUrl,
   timeout: 30000, // 30 segundos de timeout
   headers: {
     Accept: "application/json",
