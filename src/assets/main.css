@@ -162,6 +162,7 @@
 
   /* ============================================================
      AUTH LAYOUT  –  Split: imagen izquierda | blanco derecha
+     (usado en Register.vue)
   ============================================================ */
 
   .auth-layout {
@@ -260,7 +261,6 @@
     @apply text-sm text-gray-400 mb-8;
   }
 
-  /* ── Campos ── */
   .auth-field {
     @apply flex flex-col gap-1.5;
   }
@@ -296,7 +296,6 @@
     @apply absolute right-3.5 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer;
   }
 
-  /* ── Botón ── */
   .auth-submit-btn {
     @apply w-full flex items-center justify-center py-3.5 px-4 rounded-xl font-bold text-sm text-white transition-all duration-200;
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
@@ -317,13 +316,144 @@
     @apply opacity-50 cursor-not-allowed;
   }
 
-  /* ── Footer ── */
   .auth-footer-text {
     @apply mt-6 text-center text-sm text-gray-400;
   }
 
   .auth-footer-link {
     @apply text-red-600 hover:text-red-700 font-semibold ml-1 transition-colors;
+  }
+
+  /* ============================================================
+     LOGIN – Fondo completo con tarjeta centrada (estilo luna)
+  ============================================================ */
+
+  /* Fondo con imagen de gimnasio a pantalla completa */
+  .login-bg {
+    @apply relative flex min-h-screen w-screen items-center justify-center overflow-y-auto;
+    background-image: url('/img/fondo_sin_letra.png');
+    background-size: cover;
+    background-position: center;
+    padding: 2rem 0;
+  }
+
+  /* Overlay gradiente luna: negro profundo abajo → azul noche arriba */
+  .login-overlay {
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(
+      to top,
+      rgba(2, 3, 15, 0.97)  0%,
+      rgba(4,  8, 40, 0.91) 28%,
+      rgba(7, 15, 65, 0.82) 58%,
+      rgba(10, 22, 88, 0.66) 100%
+    );
+  }
+
+  /* Tarjeta glassmorphism centrada */
+  .login-card {
+    @apply relative z-10 w-full;
+    margin: 1rem;
+    max-width: 440px;
+    padding: 2.75rem 2.5rem;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.055);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    box-shadow:
+      0 40px 100px rgba(0, 0, 0, 0.60),
+      0 8px 24px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    animation: authFadeUp 0.7s ease-out both;
+  }
+
+  /* Logo */
+  .login-logo {
+    @apply text-center text-4xl font-black text-white mb-1;
+    letter-spacing: -0.03em;
+  }
+
+  .login-logo span {
+    @apply text-red-500;
+  }
+
+  /* Badge "Sistema de Gestión" */
+  .login-badge {
+    @apply flex items-center justify-center gap-1.5 mb-5 text-xs font-semibold tracking-widest uppercase;
+    color: #fca5a5;
+  }
+
+  .login-badge-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-red-400;
+  }
+
+  /* Títulos */
+  .login-title {
+    @apply text-2xl font-bold text-white mb-1;
+    letter-spacing: -0.02em;
+  }
+
+  .login-subtitle {
+    @apply text-sm mb-8;
+    color: rgba(148, 163, 184, 0.9);
+  }
+
+  /* Labels en oscuro */
+  .login-label {
+    @apply text-xs font-semibold uppercase tracking-wider;
+    color: rgba(148, 163, 184, 0.85);
+  }
+
+  /* Ícono de campo */
+  .login-input-icon {
+    @apply absolute left-3.5 w-4 h-4 pointer-events-none;
+    color: rgba(100, 116, 139, 0.8);
+  }
+
+  /* Input en oscuro */
+  .login-input {
+    @apply w-full pl-10 pr-4 py-3 rounded-xl text-sm text-white outline-none transition-all duration-200;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .login-input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .login-input:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .login-input:focus {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+
+  /* Botón ojo contraseña */
+  .login-eye-btn {
+    @apply absolute right-3.5 transition-colors cursor-pointer;
+    color: rgba(100, 116, 139, 0.8);
+  }
+
+  .login-eye-btn:hover {
+    color: rgba(148, 163, 184, 1);
+  }
+
+  /* Footer del formulario */
+  .login-footer-text {
+    @apply mt-6 text-center text-sm;
+    color: rgba(100, 116, 139, 0.85);
+  }
+
+  .login-footer-link {
+    @apply font-semibold ml-1 transition-colors;
+    color: #f87171;
+  }
+
+  .login-footer-link:hover {
+    color: #ef4444;
   }
 }
 
