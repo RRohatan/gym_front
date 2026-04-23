@@ -6,7 +6,16 @@
     <div
       class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500"
     >
-      <h2 class="text-xl font-bold mb-2 text-gray-800">💰 Registrar Pago</h2>
+      <h2 id="member-payment-modal-title" class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+        <lord-icon
+          src="https://cdn.lordicon.com/qjuicwkz.json"
+          trigger="hover"
+          target="#member-payment-modal-title"
+          colors="primary:#16a34a,secondary:#16a34a"
+          style="width:28px;height:28px;display:block"
+        />
+        Registrar Pago
+      </h2>
       <p class="text-sm text-gray-600 mb-4">
         Cliente: <strong>{{ member?.name }}</strong>
       </p>
