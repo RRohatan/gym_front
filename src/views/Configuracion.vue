@@ -2,9 +2,19 @@
   <div class="page-layout">
     <div class="max-w-3xl mx-auto">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Configuración</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Personalización del gimnasio</p>
+        <div class="flex items-center gap-3">
+          <div class="bg-slate-100 rounded-xl p-2.5 shadow-sm">
+            <lord-icon
+              src="https://cdn.lordicon.com/hwuyudkm.json"
+              trigger="loop"
+              colors="primary:#334155,secondary:#94a3b8"
+              style="width:34px;height:34px;display:block"
+            />
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Configuración</h1>
+            <p class="text-sm text-slate-400 mt-0.5">Personalización del gimnasio</p>
+          </div>
         </div>
         <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
       </div>
