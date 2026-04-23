@@ -39,9 +39,23 @@
               </td>
 
               <td class="py-3 px-4 flex justify-center gap-2">
-                <button @click="editarPlan(plan)" class="btn btn-indigo btn-sm">✏️ Editar</button>
-                <button @click="eliminarPlan(plan.id)" class="btn btn-danger btn-sm">
-                  🗑️ Eliminar
+                <button @click="editarPlan(plan)" class="btn btn-indigo btn-sm flex items-center gap-1">
+                  <lord-icon
+                    src="https://cdn.lordicon.com/gwmloxla.json"
+                    trigger="hover"
+                    colors="primary:#ffffff,secondary:#ffffff"
+                    style="width:16px;height:16px;display:block"
+                  />
+                  Editar
+                </button>
+                <button @click="eliminarPlan(plan.id)" class="btn btn-danger btn-sm flex items-center gap-1">
+                  <lord-icon
+                    src="https://cdn.lordicon.com/skkahier.json"
+                    trigger="hover"
+                    colors="primary:#ffffff,secondary:#ffffff"
+                    style="width:16px;height:16px;display:block"
+                  />
+                  Eliminar
                 </button>
               </td>
             </tr>
@@ -69,7 +83,16 @@
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
       >
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-          <h2 class="text-xl font-bold mb-4 border-b pb-2">Crear Nuevo Plan</h2>
+          <h2 id="plan-create-modal-title" class="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2">
+            <lord-icon
+              src="https://cdn.lordicon.com/tfdnfjtj.json"
+              trigger="hover"
+              target="#plan-create-modal-title"
+              colors="primary:#7c3aed,secondary:#c084fc"
+              style="width:30px;height:30px;display:block"
+            />
+            Crear Nuevo Plan
+          </h2>
           <form @submit.prevent="crearPlan" class="space-y-4">
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Tipo de Membresía</label>
@@ -127,7 +150,16 @@
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
       >
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-          <h2 class="text-xl font-bold mb-4 border-b pb-2">Editar Plan</h2>
+          <h2 id="plan-edit-modal-title" class="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2">
+            <lord-icon
+              src="https://cdn.lordicon.com/gwmloxla.json"
+              trigger="hover"
+              target="#plan-edit-modal-title"
+              colors="primary:#6366f1,secondary:#a78bfa"
+              style="width:30px;height:30px;display:block"
+            />
+            Editar Plan
+          </h2>
           <form @submit.prevent="actualizarPlan" class="space-y-4">
             <div>
               <label class="block text-sm mb-1 font-bold text-gray-700">Tipo de Membresía</label>
