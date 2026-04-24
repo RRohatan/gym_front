@@ -6,7 +6,7 @@
     <div
       class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500"
     >
-      <h2 class="text-xl font-bold mb-2 text-gray-800">💰 Registrar Pago</h2>
+      <h2 class="text-xl font-bold mb-2 text-gray-800"><i class="bi bi-cash-stack"></i> Registrar Pago</h2>
       <p class="text-sm text-gray-600 mb-4">
         Cliente: <strong>{{ member?.name }}</strong>
       </p>
@@ -42,7 +42,8 @@
             class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg"
             :disabled="processing"
           >
-            {{ processing ? "Procesando..." : "✅ Confirmar Pago" }}
+            <template v-if="processing">Procesando...</template>
+            <template v-else><i class="bi bi-check-circle"></i> Confirmar Pago</template>
           </button>
         </div>
       </form>
