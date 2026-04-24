@@ -29,15 +29,6 @@
           :style="{ '--accent': item.color }"
           @click="sidebarOpen = false; adminOpen = false"
         >
-          <div class="sidebar-icon-wrap">
-            <lord-icon
-              :src="item.icon"
-              trigger="loop-on-hover"
-              :target="`#${navTargetId(item.to)}`"
-              :colors="`primary:${item.color},secondary:${item.color}`"
-              style="width:20px;height:20px;display:block"
-            />
-          </div>
           <span class="sidebar-item-label">{{ item.label }}</span>
         </router-link>
       </nav>
@@ -92,15 +83,6 @@
               :style="{ '--accent': '#94a3b8' }"
               @click="sidebarOpen = false; adminOpen = false"
             >
-              <div class="sidebar-icon-wrap">
-                <lord-icon
-                  src="https://cdn.lordicon.com/hwuyudkm.json"
-                  trigger="loop-on-hover"
-                  target="#admin-settings-item"
-                  colors="primary:#94a3b8,secondary:#94a3b8"
-                  style="width:20px;height:20px;display:block"
-                />
-              </div>
               <span class="sidebar-item-label">Ajustes</span>
             </router-link>
 
@@ -109,15 +91,6 @@
               class="sidebar-item sidebar-item--danger w-full text-left"
               @click="confirmLogout"
             >
-              <div class="sidebar-icon-wrap" style="--accent:#ef4444">
-                <lord-icon
-                  src="https://cdn.lordicon.com/vduvxizq.json"
-                  trigger="loop-on-hover"
-                  target="#admin-logout-item"
-                  colors="primary:#ef4444,secondary:#ef4444"
-                  style="width:20px;height:20px;display:block"
-                />
-              </div>
               <span class="sidebar-item-label text-red-400">Salir</span>
             </button>
           </div>
@@ -185,12 +158,6 @@ const user        = auth.user
 const userName    = computed(() => user?.name || 'Usuario')
 const userInitial = computed(() => (user?.name || 'A').charAt(0).toUpperCase())
 
-const iconColors = computed(() =>
-  isDark.value
-    ? 'primary:#ffffff,secondary:#ffffff'
-    : 'primary:#374151,secondary:#374151'
-)
-
 const navTargetId = (to: string) =>
   `sb-item-${to.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
@@ -198,18 +165,18 @@ const isActive = (to: string) =>
   route.path.toLowerCase() === to.toLowerCase()
 
 const navItems = [
-  { to: '/menu',            label: 'Dashboard',      icon: 'https://cdn.lordicon.com/jdgfsfzr.json', color: '#6366f1' },
-  { to: '/pos',             label: 'Punto de Venta', icon: 'https://cdn.lordicon.com/nqtddedc.json', color: '#a78bfa' },
-  { to: '/members',         label: 'Clientes',       icon: 'https://cdn.lordicon.com/dqxvvqzi.json', color: '#34d399' },
-  { to: '/Payments',        label: 'Pagos',          icon: 'https://cdn.lordicon.com/qjuicwkz.json', color: '#fbbf24' },
-  { to: '/Products',        label: 'Inventario',     icon: 'https://cdn.lordicon.com/xcrjfuzb.json', color: '#60a5fa' },
-  { to: '/membershipPlans', label: 'Planes',         icon: 'https://cdn.lordicon.com/tfdnfjtj.json', color: '#c084fc' },
-  { to: '/Membership',      label: 'Membresías',     icon: 'https://cdn.lordicon.com/ihhacbjz.json', color: '#38bdf8' },
-  { to: '/CashBox',         label: 'Caja',           icon: 'https://cdn.lordicon.com/hbvgknxo.json', color: '#2dd4bf' },
-  { to: '/statistics',      label: 'Estadísticas',   icon: 'https://cdn.lordicon.com/dxjqoygy.json', color: '#fb923c' },
-  { to: '/access-logs',     label: 'Ingresos',       icon: 'https://cdn.lordicon.com/bpsvmaul.json', color: '#818cf8' },
-  { to: '/kiosko',          label: 'Kiosco',         icon: 'https://cdn.lordicon.com/msetysan.json', color: '#4ade80' },
-  { to: '/subscription',    label: 'Suscripción',    icon: 'https://cdn.lordicon.com/oqdmuxru.json', color: '#34d399' },
+  { to: '/menu',            label: 'Dashboard',      color: '#6366f1' },
+  { to: '/pos',             label: 'Punto de Venta', color: '#a78bfa' },
+  { to: '/members',         label: 'Clientes',       color: '#34d399' },
+  { to: '/Payments',        label: 'Pagos',          color: '#fbbf24' },
+  { to: '/Products',        label: 'Inventario',     color: '#60a5fa' },
+  { to: '/membershipPlans', label: 'Planes',         color: '#c084fc' },
+  { to: '/Membership',      label: 'Membresías',     color: '#38bdf8' },
+  { to: '/CashBox',         label: 'Caja',           color: '#2dd4bf' },
+  { to: '/statistics',      label: 'Estadísticas',   color: '#fb923c' },
+  { to: '/access-logs',     label: 'Ingresos',       color: '#818cf8' },
+  { to: '/kiosko',          label: 'Kiosco',         color: '#4ade80' },
+  { to: '/subscription',    label: 'Suscripción',    color: '#34d399' },
 ]
 
 const confirmLogout = async () => {
