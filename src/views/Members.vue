@@ -45,13 +45,13 @@
             v-if="member.memberships?.[0]?.status === 'expired'"
             class="w-full text-center text-xs font-bold py-1 bg-red-400 text-white tracking-wide"
           >
-            ⏰ Membresía Vencida
+            <i class="bi bi-clock-history"></i> Membresía Vencida
           </div>
           <div
             v-else-if="member.memberships?.[0]?.status === 'inactive_unpaid'"
             class="w-full text-center text-xs font-bold py-1 bg-yellow-400 text-white tracking-wide"
           >
-            💳 Pendiente de Pago
+            <i class="bi bi-credit-card"></i> Pendiente de Pago
           </div>
 
           <div class="p-4 flex justify-between items-center">
@@ -140,11 +140,11 @@
         <div class="flex gap-1">
           <button @click="currentPageMiembros--" :disabled="currentPageMiembros === 1"
             class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
-            ← Anterior
+            <i class="bi bi-arrow-left"></i> Anterior
           </button>
           <button @click="currentPageMiembros++" :disabled="currentPageMiembros === totalMiembrosPages"
             class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
-            Siguiente →
+            Siguiente <i class="bi bi-arrow-right"></i>
           </button>
         </div>
       </div>
