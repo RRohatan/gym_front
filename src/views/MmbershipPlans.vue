@@ -40,21 +40,9 @@
 
               <td class="py-3 px-4 flex justify-center gap-2">
                 <button @click="editarPlan(plan)" class="btn btn-indigo btn-sm flex items-center gap-1">
-                  <lord-icon
-                    src="https://cdn.lordicon.com/gwmloxla.json"
-                    trigger="hover"
-                    colors="primary:#ffffff,secondary:#ffffff"
-                    style="width:16px;height:16px;display:block"
-                  />
                   Editar
                 </button>
                 <button @click="eliminarPlan(plan.id)" class="btn btn-danger btn-sm flex items-center gap-1">
-                  <lord-icon
-                    src="https://cdn.lordicon.com/skkahier.json"
-                    trigger="hover"
-                    colors="primary:#ffffff,secondary:#ffffff"
-                    style="width:16px;height:16px;display:block"
-                  />
                   Eliminar
                 </button>
               </td>
@@ -84,13 +72,6 @@
       >
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
           <h2 id="plan-create-modal-title" class="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2">
-            <lord-icon
-              src="https://cdn.lordicon.com/tfdnfjtj.json"
-              trigger="hover"
-              target="#plan-create-modal-title"
-              colors="primary:#7c3aed,secondary:#c084fc"
-              style="width:30px;height:30px;display:block"
-            />
             Crear Nuevo Plan
           </h2>
           <form @submit.prevent="crearPlan" class="space-y-4">
@@ -151,13 +132,6 @@
       >
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
           <h2 id="plan-edit-modal-title" class="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2">
-            <lord-icon
-              src="https://cdn.lordicon.com/gwmloxla.json"
-              trigger="hover"
-              target="#plan-edit-modal-title"
-              colors="primary:#6366f1,secondary:#a78bfa"
-              style="width:30px;height:30px;display:block"
-            />
             Editar Plan
           </h2>
           <form @submit.prevent="actualizarPlan" class="space-y-4">
