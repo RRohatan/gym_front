@@ -32,14 +32,6 @@
         <div class="stat-card" style="background:linear-gradient(135deg,#059669 0%,#065f46 100%)">
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(167,243,208,0.85)">Activos</p>
-            <div class="stat-icon-wrap">
-              <lord-icon
-                src="https://cdn.lordicon.com/oqdmuxru.json"
-                trigger="loop"
-                colors="primary:#ffffff"
-                style="width:22px;height:22px;display:block"
-              />
-            </div>
           </div>
           <p class="stat-num">{{ stats.active || 0 }}</p>
           <p class="stat-desc" style="color:rgba(167,243,208,0.6)">Membresías vigentes</p>
@@ -52,14 +44,6 @@
         >
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(254,202,202,0.85)">Vencidos</p>
-            <div class="stat-icon-wrap">
-              <lord-icon
-                src="https://cdn.lordicon.com/tdrtiskw.json"
-                trigger="loop"
-                colors="primary:#ffffff"
-                style="width:22px;height:22px;display:block"
-              />
-            </div>
           </div>
           <p class="stat-num">{{ stats.expired || 0 }}</p>
           <p class="stat-desc" style="color:rgba(254,202,202,0.6)">Requieren renovación</p>
@@ -72,14 +56,6 @@
         >
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(253,230,138,0.85)">Por Pagar</p>
-            <div class="stat-icon-wrap">
-              <lord-icon
-                src="https://cdn.lordicon.com/lznlxwtc.json"
-                trigger="loop"
-                colors="primary:#ffffff,secondary:#fde68a"
-                style="width:24px;height:24px;display:block"
-              />
-            </div>
           </div>
           <p class="stat-num">{{ stats.inactive_unpaid || 0 }}</p>
           <p class="stat-desc" style="color:rgba(253,230,138,0.6)">Pendientes de cobro</p>
@@ -92,14 +68,6 @@
         >
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(191,219,254,0.85)">Vencen Pronto</p>
-            <div class="stat-icon-wrap">
-              <lord-icon
-                src="https://cdn.lordicon.com/abfverha.json"
-                trigger="loop"
-                colors="primary:#ffffff"
-                style="width:22px;height:22px;display:block"
-              />
-            </div>
           </div>
           <p class="stat-num">{{ stats.expiring_soon || 0 }}</p>
           <p class="stat-desc" style="color:rgba(191,219,254,0.6)">En los próximos días</p>
@@ -111,50 +79,18 @@
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
 
         <router-link to="/pos" class="quick-card group" style="--qc:#6366f1">
-          <div class="quick-icon">
-            <lord-icon
-              src="https://cdn.lordicon.com/nqtddedc.json"
-              trigger="loop-on-hover"
-              colors="primary:#6366f1,secondary:#6366f1"
-              style="width:28px;height:28px;display:block"
-            />
-          </div>
           <span class="quick-label">Punto de Venta</span>
         </router-link>
 
         <router-link to="/members" class="quick-card group" style="--qc:#34d399">
-          <div class="quick-icon">
-            <lord-icon
-              src="https://cdn.lordicon.com/dqxvvqzi.json"
-              trigger="loop-on-hover"
-              colors="primary:#34d399,secondary:#34d399"
-              style="width:28px;height:28px;display:block"
-            />
-          </div>
           <span class="quick-label">Clientes</span>
         </router-link>
 
         <router-link to="/Membership" class="quick-card group" style="--qc:#38bdf8">
-          <div class="quick-icon">
-            <lord-icon
-              src="https://cdn.lordicon.com/ihhacbjz.json"
-              trigger="loop-on-hover"
-              colors="primary:#38bdf8,secondary:#38bdf8"
-              style="width:28px;height:28px;display:block"
-            />
-          </div>
           <span class="quick-label">Membresías</span>
         </router-link>
 
         <router-link to="/CashBox" class="quick-card group" style="--qc:#2dd4bf">
-          <div class="quick-icon">
-            <lord-icon
-              src="https://cdn.lordicon.com/hbvgknxo.json"
-              trigger="loop-on-hover"
-              colors="primary:#2dd4bf,secondary:#2dd4bf"
-              style="width:28px;height:28px;display:block"
-            />
-          </div>
           <span class="quick-label">Caja</span>
         </router-link>
       </div>
