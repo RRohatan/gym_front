@@ -31,14 +31,14 @@
           class="w-full sm:w-auto"
           @click="cargarHistorial"
         >
-          🔍 Consultar
+          <i class="bi bi-search"></i> Consultar
         </BaseButton>
       </div>
 
       <div
         class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 rounded-r-lg shadow-sm flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left"
       >
-        <span class="text-sm sm:text-lg font-semibold">💰 Total en rango:</span>
+        <span class="text-sm sm:text-lg font-semibold"><i class="bi bi-cash-stack"></i> Total en rango:</span>
         <span
           class="text-xl sm:text-2xl font-semibold bg-white px-4 py-1 rounded shadow-sm border border-emerald-100 w-full sm:w-auto"
         >
@@ -94,7 +94,7 @@
             :disabled="currentPagePagos === 1"
             @click="currentPagePagos--"
           >
-            ← Anterior
+            <i class="bi bi-arrow-left"></i> Anterior
           </BaseButton>
           <BaseButton
             variant="secondary"
@@ -102,7 +102,7 @@
             :disabled="currentPagePagos === totalPagesPagos"
             @click="currentPagePagos++"
           >
-            Siguiente →
+            Siguiente <i class="bi bi-arrow-right"></i>
           </BaseButton>
         </div>
       </div>
