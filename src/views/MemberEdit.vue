@@ -4,7 +4,7 @@
       <BaseCard title="Editar Cliente" subtitle="Actualiza la información del cliente.">
         <template #actions>
           <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
-            ← Volver
+            <i class="bi bi-arrow-left"></i> Volver
           </router-link>
         </template>
 
