@@ -169,13 +169,6 @@
       >
         <div class="bg-white text-gray-800 w-full max-w-sm p-6 rounded-xl shadow-2xl">
           <h2 id="membership-edit-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
-            <lord-icon
-              src="https://cdn.lordicon.com/gwmloxla.json"
-              trigger="hover"
-              target="#membership-edit-modal-title"
-              colors="primary:#6366f1,secondary:#a78bfa"
-              style="width:28px;height:28px;display:block"
-            />
             Editar Membresía
           </h2>
           <form @submit.prevent="guardarCambios" class="space-y-3">
@@ -233,13 +226,6 @@
       >
         <div class="bg-white text-gray-800 w-full max-w-md p-6 rounded-xl shadow-2xl">
           <h2 id="membership-assign-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
-            <lord-icon
-              src="https://cdn.lordicon.com/ihhacbjz.json"
-              trigger="hover"
-              target="#membership-assign-modal-title"
-              colors="primary:#0284c7,secondary:#38bdf8"
-              style="width:28px;height:28px;display:block"
-            />
             {{ form.member_id ? "Asignar membresía a " + busqueda : "Asignar Nueva" }}
           </h2>
           <form @submit.prevent="asignarMembresia" class="space-y-4">
