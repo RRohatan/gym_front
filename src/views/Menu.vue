@@ -49,7 +49,7 @@
             class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/50"
           >
             <!-- Avatar tipo muñequito -->
-            <span class="text-2xl leading-none" aria-label="Avatar de usuario">👤</span>
+            <span class="text-2xl leading-none" aria-label="Avatar de usuario"></span>
           </div>
           <div class="min-w-0">
             <p class="text-base font-bold text-white truncate max-w-[160px] leading-tight">
