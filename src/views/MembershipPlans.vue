@@ -32,10 +32,10 @@
               <td>
                 <div class="flex justify-center gap-2">
                   <BaseButton variant="indigo" size="sm" @click="editarPlan(plan)">
-                    ✏️ Editar
+                    <i class="bi bi-pencil"></i> Editar
                   </BaseButton>
                   <BaseButton variant="danger" size="sm" @click="eliminarPlan(plan.id)">
-                    🗑️ Eliminar
+                    <i class="bi bi-trash"></i> Eliminar
                   </BaseButton>
                 </div>
               </td>
@@ -56,7 +56,7 @@
             :disabled="currentPagePlanes === 1"
             @click="currentPagePlanes--"
           >
-            ← Anterior
+            <i class="bi bi-arrow-left"></i> Anterior
           </BaseButton>
           <BaseButton
             variant="secondary"
@@ -64,7 +64,7 @@
             :disabled="currentPagePlanes === totalPlanesPages"
             @click="currentPagePlanes++"
           >
-            Siguiente →
+            Siguiente <i class="bi bi-arrow-right"></i>
           </BaseButton>
         </div>
       </div>
@@ -101,7 +101,7 @@
       <template #footer>
         <BaseButton variant="secondary" @click="openModal = false">Cancelar</BaseButton>
         <BaseButton variant="primary" type="submit" form="create-plan-form">
-          💾 Guardar
+          <i class="bi bi-floppy"></i> Guardar
         </BaseButton>
       </template>
     </BaseModal>
@@ -137,7 +137,7 @@
       <template #footer>
         <BaseButton variant="secondary" @click="cerrarModalEdicion">Cancelar</BaseButton>
         <BaseButton variant="primary" type="submit" form="edit-plan-form">
-          💾 Actualizar
+          <i class="bi bi-floppy"></i> Actualizar
         </BaseButton>
       </template>
     </BaseModal>
