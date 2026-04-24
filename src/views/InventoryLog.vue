@@ -25,7 +25,7 @@
           "
           @click="tab = 'ventas'"
         >
-          🛒 Reporte de Ventas
+          <i class="bi bi-cart"></i> Reporte de Ventas
         </button>
         <button
           type="button"
@@ -39,7 +39,7 @@
           "
           @click="tab = 'compras'"
         >
-          🚛 Compras a Proveedores
+          <i class="bi bi-truck"></i> Compras a Proveedores
         </button>
       </div>
 
@@ -109,7 +109,7 @@
               :disabled="currentPageVentas === 1"
               @click="currentPageVentas--"
             >
-              ← Anterior
+              <i class="bi bi-arrow-left"></i> Anterior
             </BaseButton>
             <BaseButton
               variant="secondary"
@@ -117,7 +117,7 @@
               :disabled="currentPageVentas === totalPagesVentas"
               @click="currentPageVentas++"
             >
-              Siguiente →
+              Siguiente <i class="bi bi-arrow-right"></i>
             </BaseButton>
           </div>
         </div>
@@ -130,7 +130,7 @@
         <div class="flex justify-between items-center gap-3 flex-wrap">
           <h2 class="text-xl font-semibold text-emerald-800">Historial de Compras</h2>
           <BaseButton variant="success" size="sm" @click="abrirModalCompra">
-            ➕ Registrar Nueva Compra
+            <i class="bi bi-plus-circle"></i> Registrar Nueva Compra
           </BaseButton>
         </div>
 
@@ -180,7 +180,7 @@
               :disabled="currentPageCompras === 1"
               @click="currentPageCompras--"
             >
-              ← Anterior
+              <i class="bi bi-arrow-left"></i> Anterior
             </BaseButton>
             <BaseButton
               variant="secondary"
@@ -188,14 +188,14 @@
               :disabled="currentPageCompras === totalPagesCompras"
               @click="currentPageCompras++"
             >
-              Siguiente →
+              Siguiente <i class="bi bi-arrow-right"></i>
             </BaseButton>
           </div>
         </div>
       </section>
     </div>
 
-    <BaseModal v-model="showModal" title="🚛 Reabastecer Inventario" size="md">
+    <BaseModal v-model="showModal" title="Reabastecer Inventario" size="md">
       <form id="purchase-form" class="space-y-4" @submit.prevent="registrarCompra">
         <BaseSelect
           v-model="form.product_id"
@@ -245,7 +245,7 @@
           Cancelar
         </BaseButton>
         <BaseButton variant="success" type="submit" form="purchase-form">
-          ✅ Registrar Entrada
+          <i class="bi bi-check-circle"></i> Registrar Entrada
         </BaseButton>
       </template>
     </BaseModal>
