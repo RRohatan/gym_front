@@ -4,7 +4,7 @@
       <BaseCard title="Detalle del cliente" class="space-y-6">
         <template #actions>
           <router-link to="/members" class="btn btn-secondary">
-            ← Volver a Clientes
+            <i class="bi bi-arrow-left"></i> Volver a Clientes
           </router-link>
         </template>
 
@@ -14,7 +14,7 @@
 
         <template v-else>
           <section>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">📝 Información básica</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2"><i class="bi bi-pencil-square"></i> Información básica</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <p><span class="font-semibold">Nombre:</span> {{ member.name }}</p>
               <p><span class="font-semibold">Email:</span> {{ member.email || "—" }}</p>
@@ -27,7 +27,7 @@
           </section>
 
           <section class="text-gray-700 space-y-1">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">🩺 Información Física</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2"><i class="bi bi-heart-pulse"></i> Información Física</h3>
             <p><span class="font-semibold">Edad:</span> {{ calcularEdad(member.birth_date) }} años</p>
             <p><span class="font-semibold">Sexo:</span> {{ member.sexo || "—" }}</p>
             <p>
@@ -49,14 +49,14 @@
           </section>
 
           <section>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">🏥 Antecedentes médicos</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2"><i class="bi bi-hospital"></i> Antecedentes médicos</h3>
             <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-700 whitespace-pre-wrap">
               {{ member.medical_history || "No hay antecedentes médicos registrados." }}
             </div>
           </section>
 
           <section v-if="member.memberships?.length">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">🏋️ Membresía Activa</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2"><i class="bi bi-person-arms-up"></i> Membresía Activa</h3>
             <div class="p-4 bg-primary-50 rounded-lg space-y-2 text-sm">
               <p>
                 <span class="font-semibold">Plan:</span>
