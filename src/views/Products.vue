@@ -63,7 +63,7 @@
                 class="flex-1 justify-center"
                 @click="editarProducto(producto)"
               >
-                ✏️ Editar
+                <i class="bi bi-pencil"></i> Editar
               </BaseButton>
               <BaseButton
                 variant="danger"
@@ -71,7 +71,7 @@
                 class="flex-1 justify-center"
                 @click="eliminarProducto(producto.id)"
               >
-                🗑️ Eliminar
+                <i class="bi bi-trash"></i> Eliminar
               </BaseButton>
             </div>
           </article>
@@ -89,7 +89,7 @@
               :disabled="currentPageProductos === 1"
               @click="currentPageProductos--"
             >
-              ← Anterior
+              <i class="bi bi-arrow-left"></i> Anterior
             </BaseButton>
             <BaseButton
               variant="secondary"
@@ -97,7 +97,7 @@
               :disabled="currentPageProductos === totalProductos"
               @click="currentPageProductos++"
             >
-              Siguiente →
+              Siguiente <i class="bi bi-arrow-right"></i>
             </BaseButton>
           </div>
         </div>
