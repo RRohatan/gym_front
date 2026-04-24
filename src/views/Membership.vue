@@ -54,7 +54,7 @@
                 </BaseBadge>
               </td>
               <td class="text-xs text-gray-500">
-                {{ formatDate(m.start_date) }} ➝ {{ formatDate(m.end_date) }}
+                {{ formatDate(m.start_date) }} <i class="bi bi-arrow-right"></i> {{ formatDate(m.end_date) }}
               </td>
               <td class="text-center">
                 <BaseBadge :color="statusColor(m.status)">
@@ -73,7 +73,7 @@
                     title="Renovar Membresía"
                     @click="abrirRenovacion(m)"
                   >
-                    🔄 Renovar
+                    <i class="bi bi-arrow-clockwise"></i> Renovar
                   </BaseButton>
                   <BaseButton
                     v-else
@@ -82,7 +82,7 @@
                     title="Editar / Corregir"
                     @click="abrirEditarModal(m)"
                   >
-                    ✏️ Editar
+                    <i class="bi bi-pencil"></i> Editar
                   </BaseButton>
                 </div>
               </td>
@@ -105,7 +105,7 @@
             :disabled="currentPage === 1"
             @click="cambiarPagina(currentPage - 1)"
           >
-            ← Anterior
+            <i class="bi bi-arrow-left"></i> Anterior
           </BaseButton>
           <BaseButton
             v-for="page in paginasVisibles"
@@ -122,7 +122,7 @@
             :disabled="currentPage === lastPage"
             @click="cambiarPagina(currentPage + 1)"
           >
-            Siguiente →
+            Siguiente <i class="bi bi-arrow-right"></i>
           </BaseButton>
         </div>
       </div>
@@ -242,9 +242,9 @@ const route = useRoute();
 // Filtros y mapeo de color para badges de estado.
 const filtros = [
   { value: "", label: "Todos" },
-  { value: "active", label: "✅ Activas" },
-  { value: "inactive_unpaid", label: "⏳ Por Pagar" },
-  { value: "expiring_soon", label: "⚠️ Vencen Pronto" },
+  { value: "active", label: "Activas" },
+  { value: "inactive_unpaid", label: "Por Pagar" },
+  { value: "expiring_soon", label: "Vencen Pronto" },
 ];
 
 const STATUS_OPTIONS = [
