@@ -145,7 +145,7 @@ const router = createRouter({
   ],
 });
 
-// 🛡️ Guardia global de autenticación
+// Guardia global de autenticación
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem("token");
 
