@@ -82,7 +82,7 @@ const barHorizontalOptions = {
 const chartCards = [
   {
     key: "income",
-    title: "📊 Ingresos (Últimos 7 días)",
+    title: "Ingresos (Últimos 7 días)",
     component: Bar,
     data: incomeData,
     options: barOptions,
@@ -90,7 +90,7 @@ const chartCards = [
   },
   {
     key: "pie",
-    title: "🍰 Distribución de Clientes",
+    title: "Distribución de Clientes",
     component: Doughnut,
     data: pieData,
     options: pieOptions,
@@ -99,7 +99,7 @@ const chartCards = [
   },
   {
     key: "productSales",
-    title: "🥤 Ventas Productos (Últimos 7 días)",
+    title: "Ventas Productos (Últimos 7 días)",
     component: Bar,
     data: productSalesData,
     options: barOptions,
@@ -107,7 +107,7 @@ const chartCards = [
   },
   {
     key: "topProducts",
-    title: "🏆 Top Productos Más Vendidos",
+    title: "Top Productos Más Vendidos",
     component: Bar,
     data: topProductsData,
     options: barHorizontalOptions,
