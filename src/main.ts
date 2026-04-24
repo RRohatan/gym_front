@@ -1,5 +1,6 @@
 import './assets/main.css'
 import 'animate.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 import { createApp } from 'vue'
