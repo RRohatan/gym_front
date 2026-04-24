@@ -17,7 +17,7 @@
         <form v-else class="space-y-6" @submit.prevent="guardarConfiguracion">
           <div>
             <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-              🕒 Horarios de Atención
+              <i class="bi bi-clock"></i> Horarios de Atención
             </label>
             <div class="relative">
               <textarea
@@ -26,14 +26,14 @@
                 class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50"
                 placeholder="Ej: Lunes a Viernes: 6:00 AM - 10:00 PM&#10;Sábados: 8:00 AM - 4:00 PM"
               ></textarea>
-              <div class="absolute top-3 right-3 text-xl opacity-50">📅</div>
+              <div class="absolute top-3 right-3 text-xl opacity-50"><i class="bi bi-calendar3"></i></div>
             </div>
             <p class="text-xs text-gray-500 mt-1">Aparecerá en el correo de bienvenida.</p>
           </div>
 
           <div>
             <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-              📜 Normas y Políticas
+              <i class="bi bi-file-text"></i> Normas y Políticas
             </label>
             <div class="relative">
               <textarea
@@ -42,7 +42,7 @@
                 class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50"
                 placeholder="Ej: 1. Uso obligatorio de toalla.&#10;2. Ordenar las pesas al terminar.&#10;3. No ingresar alimentos."
               ></textarea>
-              <div class="absolute top-3 right-3 text-xl opacity-50">⚖️</div>
+              <div class="absolute top-3 right-3 text-xl opacity-50"><i class="bi bi-shield-check"></i></div>
             </div>
           </div>
 
@@ -50,7 +50,7 @@
             <label
               class="block text-sm font-bold text-green-700 mb-2 uppercase tracking-wide flex items-center gap-2"
             >
-              <span class="text-xl">📲</span> Enlace Grupo WhatsApp
+              <span class="text-xl"><i class="bi bi-whatsapp"></i></span> Enlace Grupo WhatsApp
             </label>
             <input
               v-model="form.url_grupo_whatsapp"
@@ -67,7 +67,7 @@
           <!-- SECCIÓN CÓDIGO QR -->
           <div class="border-t pt-6" v-if="qrImageUrl">
             <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
-              🏁 Código QR de Registro
+              <i class="bi bi-qr-code"></i> Código QR de Registro
             </h3>
             <p class="text-sm text-gray-500 mb-4">
               Imprime este código y colócalo en la recepción. Los clientes podrán escanearlo para
@@ -87,10 +87,10 @@
 
               <div class="flex flex-col gap-3 w-full sm:w-auto">
                 <BaseButton variant="dark" size="sm" @click="descargarImagen">
-                  📥 Descargar Imagen
+                  <i class="bi bi-download"></i> Descargar Imagen
                 </BaseButton>
                 <BaseButton variant="primary" size="sm" @click="imprimirQR">
-                  🖨️ Imprimir / Guardar PDF
+                  <i class="bi bi-printer"></i> Imprimir / Guardar PDF
                 </BaseButton>
                 <a
                   :href="registrationUrl"
@@ -111,7 +111,7 @@
               :loading="guardando"
               :disabled="guardando"
             >
-              💾 Guardar Cambios
+              <i class="bi bi-floppy"></i> Guardar Cambios
             </BaseButton>
           </div>
         </form>
