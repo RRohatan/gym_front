@@ -26,25 +26,25 @@
 
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
             <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-gray-500 text-xs">🔓 Apertura</p>
+              <p class="text-gray-500 text-xs"><i class="bi bi-unlock"></i> Apertura</p>
               <p class="text-lg font-semibold text-gray-800">
                 {{ formatCurrency(todayCashbox.opening_balance) }}
               </p>
             </div>
             <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-emerald-600 text-xs">💰 Ingresos</p>
+              <p class="text-emerald-600 text-xs"><i class="bi bi-cash-stack"></i> Ingresos</p>
               <p class="text-lg font-semibold text-emerald-700">
                 {{ formatCurrency(todayCashbox.total_income) }}
               </p>
             </div>
             <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-red-600 text-xs">💸 Gastos</p>
+              <p class="text-red-600 text-xs"><i class="bi bi-cash-coin"></i> Gastos</p>
               <p class="text-lg font-semibold text-red-700">
                 {{ formatCurrency(todayCashbox.total_expense) }}
               </p>
             </div>
             <div class="bg-blue-600 p-3 rounded-lg shadow text-white">
-              <p class="text-blue-100 text-xs">🧮 Cierre</p>
+              <p class="text-blue-100 text-xs"><i class="bi bi-calculator"></i> Cierre</p>
               <p class="text-lg font-semibold">
                 {{ formatCurrency(todayCashbox.closing_balance) }}
               </p>
@@ -56,7 +56,7 @@
           v-else
           class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 text-center"
         >
-          <p class="text-yellow-800 font-semibold mb-4">⚠️ Caja cerrada</p>
+          <p class="text-yellow-800 font-semibold mb-4"><i class="bi bi-exclamation-triangle"></i> Caja cerrada</p>
           <form
             class="flex gap-2 max-w-sm mx-auto items-end"
             @submit.prevent="abrirCaja"
@@ -73,7 +73,7 @@
         </div>
 
         <div>
-          <h3 class="font-semibold mb-3 text-gray-700">📚 Historial</h3>
+          <h3 class="font-semibold mb-3 text-gray-700"><i class="bi bi-journal-text"></i> Historial</h3>
           <div class="table-wrap">
             <table class="w-full text-sm min-w-[600px]">
               <thead class="table-head">
@@ -106,7 +106,7 @@
       </div>
     </BaseCard>
 
-    <BaseModal v-model="showExpenseModal" title="💸 Registrar Gasto" size="sm">
+    <BaseModal v-model="showExpenseModal" title="Registrar Gasto" size="sm">
       <form id="expense-form" class="space-y-4" @submit.prevent="guardarGasto">
         <BaseInput
           v-model="expenseForm.concepto"
