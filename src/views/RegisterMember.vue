@@ -6,13 +6,6 @@
       <!-- Header -->
       <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/5">
         <div class="flex items-center gap-4">
-          <div
-            class="w-11 h-11 rounded-xl bg-indigo-400/20 flex items-center justify-center shrink-0"
-          >
-            <svg class="w-6 h-6 text-indigo-300" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M15 12a4 4 0 100-8 4 4 0 000 8zm-8 9a7 7 0 0114 0H7zm13-9v2h2v2h-2v2h-2v-2h-2v-2h2v-2h2z" />
-            </svg>
-          </div>
           <div>
             <h1 class="text-xl font-bold text-white tracking-tight leading-tight">
               Registrar Nuevo Cliente
@@ -134,11 +127,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="metric-card">
-                <div class="metric-icon bg-emerald-500/10">
-                  <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h8M4 14h8M4 18h16" />
-                  </svg>
-                </div>
                 <div class="flex-1 min-w-0">
                   <label class="dark-label-tiny">Estatura (cm)</label>
                   <input
@@ -152,11 +140,6 @@
               </div>
 
               <div class="metric-card">
-                <div class="metric-icon bg-emerald-500/10">
-                  <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 3v3M18 3v3M3 9h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
                 <div class="flex-1 min-w-0">
                   <label class="dark-label-tiny">Peso (kg)</label>
                   <input
@@ -258,11 +241,8 @@
               />
               <p
                 v-if="capturedTemplate"
-                class="mt-3 flex items-center gap-1.5 text-xs font-semibold text-emerald-400"
+                class="mt-3 text-xs font-semibold text-emerald-400"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
                 Huella capturada — se guardará al registrar
               </p>
             </div>
@@ -271,11 +251,8 @@
           <!-- ===== Error global ===== -->
           <div
             v-if="errorMessage"
-            class="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30"
+            class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30"
           >
-            <svg class="w-5 h-5 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
             <p class="text-sm font-medium text-rose-300">{{ errorMessage }}</p>
           </div>
         </form>
