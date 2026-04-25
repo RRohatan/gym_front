@@ -10,17 +10,11 @@
     <!-- Panel central -->
     <div class="w-full max-w-sm bg-gray-800 rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6">
 
-      <!-- Icono del lector -->
+      <!-- Indicador de estado -->
       <div
         class="w-28 h-28 rounded-full flex items-center justify-center transition-all duration-500"
         :class="iconClass"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 64 64" fill="none">
-          <path d="M32 8C18.7 8 8 18.7 8 32s10.7 24 24 24 24-10.7 24-24S45.3 8 32 8z" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-          <path d="M22 32c0-5.5 4.5-10 10-10s10 4.5 10 10v8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-          <path d="M26 32v6M32 30v10M38 32v6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-        </svg>
-      </div>
+      ></div>
 
       <!-- Mensaje de estado -->
       <p class="text-center text-lg font-medium" :class="textClass">
