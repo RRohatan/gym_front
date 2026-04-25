@@ -5,13 +5,6 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-gray-100">
           <div class="flex items-center gap-4">
-            <div
-              class="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center shrink-0"
-            >
-              <svg class="w-6 h-6 text-primary-700" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M15 12a4 4 0 100-8 4 4 0 000 8zm-8 9a7 7 0 0114 0H7zm13-9v2h2v2h-2v2h-2v-2h-2v-2h2v-2h2z" />
-              </svg>
-            </div>
             <div>
               <h1 class="text-xl font-bold text-gray-900 tracking-tight leading-tight">
                 Registrar Nuevo Cliente
@@ -159,11 +152,8 @@
                 />
                 <p
                   v-if="capturedTemplate"
-                  class="mt-3 flex items-center gap-1.5 text-xs font-semibold text-success-700"
+                  class="mt-3 text-xs font-semibold text-success-700"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
                   Huella capturada — se guardará al registrar
                 </p>
               </div>
