@@ -77,7 +77,7 @@
               :disabled="meta.current_page === 1"
               @click="changePage(meta.current_page - 1)"
             >
-              <i class="bi bi-arrow-left"></i> Anterior
+              Anterior
             </BaseButton>
             <BaseButton
               variant="secondary"
@@ -85,7 +85,7 @@
               :disabled="meta.current_page === meta.last_page"
               @click="changePage(meta.current_page + 1)"
             >
-              Siguiente <i class="bi bi-arrow-right"></i>
+              Siguiente
             </BaseButton>
           </div>
         </div>
