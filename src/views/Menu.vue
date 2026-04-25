@@ -17,27 +17,8 @@
             </span>
           </div>
           <h1
-            class="text-4xl sm:text-5xl font-black text-white leading-tight tracking-tight flex items-center gap-3 pb-1"
+            class="text-4xl sm:text-5xl font-black text-white leading-tight tracking-tight pb-1"
           >
-            <!-- Icono mancuerna (Lucide dumbbell) -->
-            <svg
-              class="w-8 h-8 sm:w-10 sm:h-10 text-indigo-400 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path d="m6.5 6.5 11 11" />
-              <path d="m21 21-1-1" />
-              <path d="m3 3 1 1" />
-              <path d="m18 22 4-4" />
-              <path d="m2 6 4-4" />
-              <path d="m3 10 7-7" />
-              <path d="m14 21 7-7" />
-            </svg>
             <span class="truncate">{{ user?.gimnasio?.nombre || "Mi Gimnasio" }}</span>
           </h1>
         </div>
@@ -45,12 +26,6 @@
         <div
           class="flex items-center gap-3 self-start sm:self-auto rounded-2xl px-4 py-2.5 bg-white/5 border border-white/10 backdrop-blur-xl"
         >
-          <div
-            class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/50"
-          >
-            <!-- Avatar tipo muñequito -->
-            <span class="text-2xl leading-none" aria-label="Avatar de usuario"></span>
-          </div>
           <div class="min-w-0">
             <p class="text-base font-bold text-white truncate max-w-[160px] leading-tight">
               {{ user?.name || "Usuario" }}
@@ -61,21 +36,6 @@
               Administrador
             </p>
           </div>
-          <!-- Icono lateral decorativo -->
-          <svg
-            class="w-5 h-5 text-indigo-300/50 ml-1 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
         </div>
       </div>
 
@@ -92,7 +52,7 @@
             card.to && 'cursor-pointer block',
           ]"
         >
-          <div class="flex items-start justify-between mb-4">
+          <div class="mb-4">
             <p
               :class="[
                 'text-[11px] font-semibold uppercase tracking-widest',
@@ -101,23 +61,6 @@
             >
               {{ card.label }}
             </p>
-            <div
-              class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-white/20"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  :d="card.iconPath"
-                />
-              </svg>
-            </div>
           </div>
           <p class="text-5xl sm:text-6xl font-black tracking-tight leading-none mb-2">
             {{ stats[card.statKey] || 0 }}
@@ -147,26 +90,6 @@
           class="menu-card group"
           @click="item.action ? item.action() : null"
         >
-          <div
-            :class="[
-              'w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105 border',
-              item.iconWrapClass,
-            ]"
-          >
-            <svg
-              :class="['w-6 h-6', item.iconColorClass]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="1.75"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                :d="item.iconPath"
-              />
-            </svg>
-          </div>
           <span :class="['text-sm font-semibold', item.labelClass]">
             {{ item.label }}
           </span>
