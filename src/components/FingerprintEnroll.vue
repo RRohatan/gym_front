@@ -1,14 +1,7 @@
 
 <template>
   <div class="border rounded-xl p-5 bg-gray-50">
-    <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 11c0-1.1.9-2 2-2s2 .9 2 2v3" />
-        <path d="M5 12a7 7 0 0 1 14 0" />
-        <path d="M5 12v3a7 7 0 0 0 11.9 5" />
-        <path d="M8 12v5" />
-        <path d="M12 12v6" />
-      </svg>
+    <h3 class="text-base font-semibold text-gray-800 mb-3">
       Huella Dactilar
     </h3>
 
@@ -33,10 +26,7 @@
         ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
         : 'bg-blue-600 hover:bg-blue-700 text-white'"
     >
-      <svg v-if="!busy" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-      </svg>
-      <svg v-else class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <svg v-if="busy" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
       </svg>

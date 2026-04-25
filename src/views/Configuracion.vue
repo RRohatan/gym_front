@@ -1,30 +1,23 @@
 <template>
   <div class="page-layout">
     <div class="max-w-3xl mx-auto">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Configuración</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Personalización del gimnasio</p>
-        </div>
-        <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 text-gray-800 animate-fade-in-up">
-        <div class="border-b pb-4 mb-6">
-          <h2 class="text-xl font-bold text-blue-900">Personalización de Bienvenida</h2>
-          <p class="text-sm text-gray-500">
-            Esta información se enviará automáticamente por correo a los nuevos clientes.
-          </p>
-        </div>
+      <BaseCard
+        title="Personalización de Bienvenida"
+        subtitle="Esta información se enviará automáticamente por correo a los nuevos clientes."
+        class="animate-fade-in-up"
+      >
+        <template #actions>
+          <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
+        </template>
 
         <div v-if="loading" class="text-center py-10">
-          <p class="text-blue-600 font-bold animate-pulse">Cargando configuración...</p>
+          <p class="text-primary-600 font-bold animate-pulse">Cargando configuración...</p>
         </div>
 
-        <form v-else @submit.prevent="guardarConfiguracion" class="space-y-6">
+        <form v-else class="space-y-6" @submit.prevent="guardarConfiguracion">
           <div>
             <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-              🕒 Horarios de Atención
+              Horarios de Atención
             </label>
             <div class="relative">
               <textarea
@@ -33,14 +26,13 @@
                 class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50"
                 placeholder="Ej: Lunes a Viernes: 6:00 AM - 10:00 PM&#10;Sábados: 8:00 AM - 4:00 PM"
               ></textarea>
-              <div class="absolute top-3 right-3 text-xl opacity-50">📅</div>
             </div>
             <p class="text-xs text-gray-500 mt-1">Aparecerá en el correo de bienvenida.</p>
           </div>
 
           <div>
             <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
-              📜 Normas y Políticas
+              Normas y Políticas
             </label>
             <div class="relative">
               <textarea
@@ -49,7 +41,6 @@
                 class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50"
                 placeholder="Ej: 1. Uso obligatorio de toalla.&#10;2. Ordenar las pesas al terminar.&#10;3. No ingresar alimentos."
               ></textarea>
-              <div class="absolute top-3 right-3 text-xl opacity-50">⚖️</div>
             </div>
           </div>
 
@@ -57,7 +48,7 @@
             <label
               class="block text-sm font-bold text-green-700 mb-2 uppercase tracking-wide flex items-center gap-2"
             >
-              <span class="text-xl">📲</span> Enlace Grupo WhatsApp
+              Enlace Grupo WhatsApp
             </label>
             <input
               v-model="form.url_grupo_whatsapp"
@@ -74,7 +65,7 @@
           <!-- SECCIÓN CÓDIGO QR -->
           <div class="border-t pt-6" v-if="qrImageUrl">
             <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
-              🏁 Código QR de Registro
+              Código QR de Registro
             </h3>
             <p class="text-sm text-gray-500 mb-4">
               Imprime este código y colócalo en la recepción. Los clientes podrán escanearlo para
@@ -93,22 +84,16 @@
               </div>
 
               <div class="flex flex-col gap-3 w-full sm:w-auto">
-                <button
-                  @click="descargarImagen"
-                  class="btn btn-dark flex items-center justify-center gap-2 text-sm"
-                >
-                  📥 Descargar Imagen
-                </button>
-                <button
-                  @click="imprimirQR"
-                  class="btn btn-primary flex items-center justify-center gap-2 text-sm"
-                >
-                  🖨️ Imprimir / Guardar PDF
-                </button>
+                <BaseButton variant="dark" size="sm" @click="descargarImagen">
+                  Descargar Imagen
+                </BaseButton>
+                <BaseButton variant="primary" size="sm" @click="imprimirQR">
+                  Imprimir / Guardar PDF
+                </BaseButton>
                 <a
                   :href="registrationUrl"
                   target="_blank"
-                  class="text-blue-600 underline text-sm text-center mt-2"
+                  class="text-primary-600 underline text-sm text-center mt-2"
                 >
                   Probar enlace de registro
                 </a>
@@ -117,17 +102,18 @@
           </div>
 
           <div class="pt-6 border-t flex justify-end">
-            <button
+            <BaseButton
               type="submit"
-              class="btn btn-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center gap-2"
+              variant="primary"
+              size="lg"
+              :loading="guardando"
               :disabled="guardando"
             >
-              <span v-if="guardando" class="animate-spin">🔄</span>
-              {{ guardando ? "Guardando..." : "💾 Guardar Cambios" }}
-            </button>
+              Guardar Cambios
+            </BaseButton>
           </div>
         </form>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -136,6 +122,8 @@
 import { ref, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
+import { SWAL_COLORS } from "@/lib/colors";
+import { BaseButton, BaseCard } from "@/components/ui";
 
 const loading = ref(true);
 const guardando = ref(false);
@@ -191,7 +179,7 @@ const guardarConfiguracion = async () => {
       title: "¡Guardado!",
       text: "La configuración de bienvenida ha sido actualizada.",
       icon: "success",
-      confirmButtonColor: "#2563EB",
+      confirmButtonColor: SWAL_COLORS.primary,
     });
   } catch (error) {
     console.error(error);
