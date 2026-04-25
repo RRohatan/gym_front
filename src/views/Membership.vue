@@ -54,7 +54,7 @@
                 </BaseBadge>
               </td>
               <td class="text-xs text-gray-500">
-                {{ formatDate(m.start_date) }} <i class="bi bi-arrow-right"></i> {{ formatDate(m.end_date) }}
+                {{ formatDate(m.start_date) }} → {{ formatDate(m.end_date) }}
               </td>
               <td class="text-center">
                 <BaseBadge :color="statusColor(m.status)">
@@ -73,7 +73,7 @@
                     title="Renovar Membresía"
                     @click="abrirRenovacion(m)"
                   >
-                    <i class="bi bi-arrow-clockwise"></i> Renovar
+                    Renovar
                   </BaseButton>
                   <BaseButton
                     v-else
@@ -82,7 +82,7 @@
                     title="Editar / Corregir"
                     @click="abrirEditarModal(m)"
                   >
-                    <i class="bi bi-pencil"></i> Editar
+                    Editar
                   </BaseButton>
                 </div>
               </td>
@@ -105,7 +105,7 @@
             :disabled="currentPage === 1"
             @click="cambiarPagina(currentPage - 1)"
           >
-            <i class="bi bi-arrow-left"></i> Anterior
+            Anterior
           </BaseButton>
           <BaseButton
             v-for="page in paginasVisibles"
@@ -122,7 +122,7 @@
             :disabled="currentPage === lastPage"
             @click="cambiarPagina(currentPage + 1)"
           >
-            Siguiente <i class="bi bi-arrow-right"></i>
+            Siguiente
           </BaseButton>
         </div>
       </div>
