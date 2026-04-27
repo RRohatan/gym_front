@@ -168,7 +168,9 @@
         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
       >
         <div class="bg-white text-gray-800 w-full max-w-sm p-6 rounded-xl shadow-2xl">
-          <h2 class="font-bold text-lg mb-4 border-b pb-2">Editar Membresía</h2>
+          <h2 id="membership-edit-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
+            Editar Membresía
+          </h2>
           <form @submit.prevent="guardarCambios" class="space-y-3">
             <div>
               <label class="text-xs font-bold uppercase text-gray-500">Plan</label>
@@ -223,7 +225,7 @@
         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
       >
         <div class="bg-white text-gray-800 w-full max-w-md p-6 rounded-xl shadow-2xl">
-          <h2 class="font-bold text-lg mb-4 border-b pb-2">
+          <h2 id="membership-assign-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
             {{ form.member_id ? "Asignar membresía a " + busqueda : "Asignar Nueva" }}
           </h2>
           <form @submit.prevent="asignarMembresia" class="space-y-4">

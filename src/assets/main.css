@@ -4,6 +4,108 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   VARIABLES DE TEMA  –  :root = modo claro  |  .dark = oscuro
+============================================================ */
+
+/* ── Modo claro (light) ── */
+:root {
+  --sb-bg:               linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --sb-border:           rgba(0, 0, 0, 0.07);
+  --sb-item-color:       rgba(71, 85, 105, 0.85);
+  --sb-item-hover-bg:    rgba(0, 0, 0, 0.04);
+  --sb-item-hover-color: #0f172a;
+  --sb-item-active-bg:   rgba(0, 0, 0, 0.06);
+  --sb-icon-bg:          rgba(0, 0, 0, 0.05);
+  --sb-icon-bg-hover:    rgba(0, 0, 0, 0.09);
+  --sb-logo-color:       #0f172a;
+  --sb-close-color:      rgba(100, 116, 139, 0.7);
+  --sb-scrollbar:        rgba(0, 0, 0, 0.12);
+  --sb-admin-role:       rgba(100, 116, 139, 0.65);
+  --sb-admin-name:       #1e293b;
+  --sb-chevron:          rgba(100, 116, 139, 0.5);
+
+  --tb-bg:               #ffffff;
+  --tb-border:           rgba(0, 0, 0, 0.07);
+  --tb-ham-color:        rgba(71, 85, 105, 0.8);
+  --tb-logo-color:       #0f172a;
+  --tb-btn-bg:           rgba(0, 0, 0, 0.04);
+  --tb-btn-hover:        rgba(0, 0, 0, 0.08);
+  --tb-btn-color:        rgba(71, 85, 105, 0.9);
+  --tb-btn-border:       rgba(0, 0, 0, 0.08);
+
+  --page-dark-bg:        linear-gradient(160deg, #f8fafc 0%, #f1f5f9 60%, #eef2f7 100%);
+  --page-layout-bg:      linear-gradient(160deg, #f8fafc 0%, #f1f5f9 60%, #eef2f7 100%);
+  --page-text:           #0f172a;
+  --page-card-bg:        #ffffff;
+  --page-card-border:    rgba(226, 232, 240, 0.7);
+  --page-title-color:    #0f172a;
+  --page-subtitle-color: rgba(100, 116, 139, 0.75);
+  --dash-title:          #0f172a;
+  --dash-sub:            rgba(71, 85, 105, 0.7);
+  --dash-badge:          rgba(99, 102, 241, 0.75);
+
+  --qc-bg:               #ffffff;
+  --qc-border:           rgba(0, 0, 0, 0.07);
+  --qc-hover-bg:         #f8fafc;
+  --qc-hover-border:     rgba(0, 0, 0, 0.11);
+  --qc-label:            rgba(71, 85, 105, 0.85);
+  --qc-label-hover:      #0f172a;
+  --qc-icon-bg:          rgba(0, 0, 0, 0.04);
+  --qc-icon-border:      rgba(0, 0, 0, 0.06);
+
+  --section-label-color: rgba(100, 116, 139, 0.75);
+}
+
+/* ── Modo oscuro (dark) — diseño actual ── */
+.dark {
+  --sb-bg:               linear-gradient(180deg, #080d1a 0%, #0d1530 100%);
+  --sb-border:           rgba(255, 255, 255, 0.05);
+  --sb-item-color:       rgba(148, 163, 184, 0.8);
+  --sb-item-hover-bg:    rgba(255, 255, 255, 0.06);
+  --sb-item-hover-color: #ffffff;
+  --sb-item-active-bg:   rgba(255, 255, 255, 0.08);
+  --sb-icon-bg:          rgba(255, 255, 255, 0.06);
+  --sb-icon-bg-hover:    rgba(255, 255, 255, 0.12);
+  --sb-logo-color:       #ffffff;
+  --sb-close-color:      rgba(148, 163, 184, 0.6);
+  --sb-scrollbar:        rgba(255, 255, 255, 0.1);
+  --sb-admin-role:       rgba(148, 163, 184, 0.55);
+  --sb-admin-name:       #ffffff;
+  --sb-chevron:          rgba(148, 163, 184, 0.45);
+
+  --tb-bg:               #080d1a;
+  --tb-border:           rgba(255, 255, 255, 0.06);
+  --tb-ham-color:        rgba(148, 163, 184, 0.8);
+  --tb-logo-color:       #ffffff;
+  --tb-btn-bg:           rgba(255, 255, 255, 0.06);
+  --tb-btn-hover:        rgba(255, 255, 255, 0.10);
+  --tb-btn-color:        rgba(148, 163, 184, 0.9);
+  --tb-btn-border:       rgba(255, 255, 255, 0.08);
+
+  --page-dark-bg:        linear-gradient(145deg, #080d1a 0%, #0f172a 35%, #1a1040 65%, #0f172a 100%);
+  --page-layout-bg:      linear-gradient(160deg, #0b1220 0%, #0f172a 60%, #111827 100%);
+  --page-text:           #e2e8f0;
+  --page-card-bg:        #111827;
+  --page-card-border:    rgba(255, 255, 255, 0.08);
+  --page-title-color:    #ffffff;
+  --page-subtitle-color: rgba(148, 163, 184, 0.8);
+  --dash-title:          #ffffff;
+  --dash-sub:            rgba(148, 163, 184, 0.6);
+  --dash-badge:          rgba(165, 180, 252, 0.7);
+
+  --qc-bg:               rgba(255, 255, 255, 0.04);
+  --qc-border:           rgba(255, 255, 255, 0.07);
+  --qc-hover-bg:         rgba(255, 255, 255, 0.08);
+  --qc-hover-border:     rgba(255, 255, 255, 0.13);
+  --qc-label:            rgba(255, 255, 255, 0.75);
+  --qc-label-hover:      #ffffff;
+  --qc-icon-bg:          rgba(255, 255, 255, 0.07);
+  --qc-icon-border:      rgba(255, 255, 255, 0.10);
+
+  --section-label-color: rgba(100, 116, 139, 0.7);
+}
+
 @layer components {
   /* ============================================================
      BOTONES
@@ -70,22 +172,29 @@
      INNER VIEWS LAYOUT
   ============================================================ */
 
-  /* Fondo claro — vistas internas */
+  /* Fondo claro — vistas internas (usa var para adaptarse al tema) */
   .page-layout {
     @apply p-4 sm:p-6 lg:p-8 min-h-screen;
-    background: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 60%, #eef2f7 100%);
+    background: var(--page-layout-bg);
+    color: var(--page-text);
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
-  /* Fondo oscuro — solo Menu/Dashboard */
+  /* Fondo Dashboard (Menu) — adapta al tema vía var */
   .page-layout-dark {
     @apply min-h-screen;
-    background: linear-gradient(145deg, #080d1a 0%, #0f172a 35%, #1a1040 65%, #0f172a 100%);
+    background: var(--page-dark-bg);
+    color: var(--page-text);
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
   .page-card {
-    @apply bg-white rounded-2xl p-5 sm:p-8;
-    border: 1px solid rgba(226,232,240,0.7);
+    @apply rounded-2xl p-5 sm:p-8;
+    background: var(--page-card-bg);
+    color: var(--page-text);
+    border: 1px solid var(--page-card-border);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04), 0 24px 64px rgba(0,0,0,0.05);
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 
   .page-header {
@@ -93,11 +202,15 @@
   }
 
   .page-title {
-    @apply text-xl sm:text-2xl font-bold text-gray-900 tracking-tight;
+    @apply text-xl sm:text-2xl font-bold tracking-tight;
+    color: var(--page-title-color);
+    transition: color 0.3s ease;
   }
 
   .page-subtitle {
-    @apply text-sm text-slate-400 mt-0.5;
+    @apply text-sm mt-0.5;
+    color: var(--page-subtitle-color);
+    transition: color 0.3s ease;
   }
 
   /* ============================================================
@@ -112,6 +225,7 @@
   .badge-blue   { @apply bg-blue-100 text-blue-700; }
   .badge-gray   { @apply bg-gray-100 text-gray-600; }
   .badge-orange { @apply bg-orange-100 text-orange-700; }
+  .badge-violet { @apply bg-violet-100 text-violet-700; }
 
   /* ============================================================
      INPUTS INTERNOS
@@ -161,165 +275,8 @@
 
 
   /* ============================================================
-     DASHBOARD  –  stat cards, menu icons, header
-  ============================================================ */
-
-  /* Stat card gradient variants — elimina inline styles de Menu.vue */
-  .stat-card-green  { background: linear-gradient(135deg, #059669 0%, #065f46 100%); }
-  .stat-card-red    { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); }
-  .stat-card-orange { background: linear-gradient(135deg, #d97706 0%, #92400e 100%); }
-  .stat-card-blue   { background: linear-gradient(135deg, #2563eb 0%, #3730a3 100%); }
-
-  /* Tinte de texto dentro de las stat cards */
-  .stat-tint-green  { color: rgba(167,243,208,0.85); }
-  .stat-sub-green   { color: rgba(167,243,208,0.6); }
-  .stat-tint-red    { color: rgba(254,202,202,0.85); }
-  .stat-sub-red     { color: rgba(254,202,202,0.6); }
-  .stat-tint-orange { color: rgba(253,230,138,0.85); }
-  .stat-sub-orange  { color: rgba(253,230,138,0.6); }
-  .stat-tint-blue   { color: rgba(191,219,254,0.85); }
-  .stat-sub-blue    { color: rgba(191,219,254,0.6); }
-
-  /* Ícono dentro de stat card */
-  .stat-icon {
-    @apply w-9 h-9 rounded-xl flex items-center justify-center shrink-0;
-    background: rgba(255,255,255,0.18);
-  }
-
-  /* Header dashboard */
-  .dash-panel-label {
-    @apply text-xs font-bold uppercase tracking-[0.2em];
-    color: rgba(165,180,252,0.7);
-  }
-  .dash-title {
-    @apply text-4xl sm:text-5xl font-black text-white leading-none;
-    letter-spacing: -0.025em;
-  }
-  .dash-user-card {
-    @apply flex items-center gap-3 self-start sm:self-auto rounded-2xl px-4 py-3;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-  .dash-avatar {
-    @apply w-11 h-11 rounded-full flex items-center justify-center text-white font-black text-lg shrink-0;
-    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
-    box-shadow: 0 4px 14px rgba(99,102,241,0.55);
-  }
-  .dash-user-role {
-    @apply text-[11px] font-semibold uppercase tracking-widest leading-none mb-1;
-    color: rgba(148,163,184,0.8);
-  }
-
-  /* Divisor de sección en dashboard */
-  .dash-divider { @apply flex items-center gap-4 mb-6; }
-  .dash-divider-label {
-    @apply text-[11px] font-bold uppercase tracking-[0.2em] shrink-0;
-    color: rgba(100,116,139,0.7);
-  }
-  .dash-divider-line { @apply h-px flex-1; background: rgba(255,255,255,0.06); }
-
-  /* Íconos de menu cards */
-  .menu-icon {
-    @apply w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105;
-  }
-  .menu-icon-indigo  { background: rgba(99,102,241,0.22);  border: 1px solid rgba(99,102,241,0.3); }
-  .menu-icon-green   { background: rgba(16,185,129,0.2);   border: 1px solid rgba(16,185,129,0.28); }
-  .menu-icon-amber   { background: rgba(245,158,11,0.2);   border: 1px solid rgba(245,158,11,0.28); }
-  .menu-icon-blue    { background: rgba(59,130,246,0.2);   border: 1px solid rgba(59,130,246,0.28); }
-  .menu-icon-violet  { background: rgba(139,92,246,0.2);   border: 1px solid rgba(139,92,246,0.28); }
-  .menu-icon-sky     { background: rgba(14,165,233,0.2);   border: 1px solid rgba(14,165,233,0.28); }
-  .menu-icon-teal    { background: rgba(20,184,166,0.2);   border: 1px solid rgba(20,184,166,0.28); }
-  .menu-icon-orange  { background: rgba(249,115,22,0.2);   border: 1px solid rgba(249,115,22,0.28); }
-  .menu-icon-slate   { background: rgba(148,163,184,0.14); border: 1px solid rgba(148,163,184,0.2); }
-  .menu-icon-emerald { background: rgba(52,211,153,0.18);  border: 1px solid rgba(52,211,153,0.28); }
-  .menu-icon-red     { background: rgba(239,68,68,0.15);   border: 1px solid rgba(239,68,68,0.22); }
-
-  /* ============================================================
-     MODALES  –  overlay + caja reutilizable
-  ============================================================ */
-  .modal-overlay {
-    @apply fixed inset-0 flex items-center justify-center z-50 p-4;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-  .modal-box {
-    @apply bg-white rounded-2xl shadow-2xl w-full overflow-y-auto;
-    max-height: 90vh;
-    border: 1px solid rgba(226,232,240,0.5);
-  }
-  .modal-header  { @apply flex items-center justify-between px-6 py-4 border-b border-gray-100; }
-  .modal-title   { @apply text-lg font-bold text-gray-900 tracking-tight; }
-  .modal-body    { @apply px-6 py-5 space-y-4; }
-  .modal-footer  { @apply flex justify-end gap-3 px-6 py-4 border-t border-gray-100; }
-
-  /* ============================================================
-     MEMBER CARDS  (vista Clientes)
-  ============================================================ */
-  .member-card {
-    @apply rounded-2xl overflow-hidden bg-white transition-all duration-200 hover:shadow-lg;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
-  }
-  .member-card-active  { @apply ring-1 ring-gray-100/80; }
-  .member-card-expired { @apply ring-2 ring-red-200; }
-
-  .member-avatar {
-    @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 select-none;
-  }
-  .member-avatar-active  { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-  .member-avatar-expired { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
-
-  /* ============================================================
-     FILTER BAR  –  filtros horizontales con scroll
-  ============================================================ */
-  .filter-bar { @apply flex overflow-x-auto pb-1 gap-2 mb-4; scrollbar-width: none; }
-  .filter-bar::-webkit-scrollbar { display: none; }
-
-  /* ============================================================
-     FILTER PANEL  –  panel de filtros de fecha
-  ============================================================ */
-  .filter-panel {
-    @apply bg-gray-50 p-4 rounded-xl mb-6 flex flex-col sm:flex-row items-end gap-3;
-    border: 1px solid #f1f5f9;
-  }
-
-  /* ============================================================
-     SUMMARY BANNER  –  totales / resumen destacado
-  ============================================================ */
-  .summary-banner {
-    @apply flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-xl mb-6;
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-    border: 1px solid #a7f3d0;
-  }
-  .summary-banner-label { @apply text-sm font-semibold text-emerald-800; }
-  .summary-banner-value {
-    @apply text-xl sm:text-2xl font-bold text-emerald-700 bg-white px-4 py-1.5 rounded-xl;
-    box-shadow: 0 1px 4px rgba(16,185,129,0.15);
-  }
-
-  /* ============================================================
-     PRODUCT CARDS  (vista Inventario)
-  ============================================================ */
-  .product-card {
-    @apply bg-white rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-lg;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
-    border: 1px solid rgba(226,232,240,0.7);
-  }
-  .product-card-body { @apply p-5; }
-  .product-card-footer { @apply flex p-3 border-t border-gray-100 bg-gray-50/60 gap-2; }
-
-  /* ============================================================
-     FORM SECTION  –  bloques con título dentro de formularios
-  ============================================================ */
-  .form-section { @apply space-y-4; }
-  .form-section-title {
-    @apply text-sm font-bold text-gray-700 uppercase tracking-wider pb-2 mb-1;
-    border-bottom: 2px solid #f1f5f9;
-  }
-
-  /* AUTH LAYOUT  –  Split: imagen izquierda | blanco derecha
+     AUTH LAYOUT  –  Split: imagen izquierda | blanco derecha
+     (usado en Register.vue)
   ============================================================ */
 
   .auth-layout {
@@ -418,7 +375,6 @@
     @apply text-sm text-gray-400 mb-8;
   }
 
-  /* ── Campos ── */
   .auth-field {
     @apply flex flex-col gap-1.5;
   }
@@ -454,7 +410,6 @@
     @apply absolute right-3.5 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer;
   }
 
-  /* ── Botón ── */
   .auth-submit-btn {
     @apply w-full flex items-center justify-center py-3.5 px-4 rounded-xl font-bold text-sm text-white transition-all duration-200;
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
@@ -475,13 +430,144 @@
     @apply opacity-50 cursor-not-allowed;
   }
 
-  /* ── Footer ── */
   .auth-footer-text {
     @apply mt-6 text-center text-sm text-gray-400;
   }
 
   .auth-footer-link {
     @apply text-red-600 hover:text-red-700 font-semibold ml-1 transition-colors;
+  }
+
+  /* ============================================================
+     LOGIN – Fondo completo con tarjeta centrada (estilo luna)
+  ============================================================ */
+
+  /* Fondo con imagen de gimnasio a pantalla completa */
+  .login-bg {
+    @apply relative flex min-h-screen w-screen items-center justify-center overflow-y-auto;
+    background-image: url('/img/fondo_sin_letra.png');
+    background-size: cover;
+    background-position: center;
+    padding: 2rem 0;
+  }
+
+  /* Overlay gradiente luna: negro profundo abajo → azul noche arriba */
+  .login-overlay {
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(
+      to top,
+      rgba(2, 3, 15, 0.97)  0%,
+      rgba(4,  8, 40, 0.91) 28%,
+      rgba(7, 15, 65, 0.82) 58%,
+      rgba(10, 22, 88, 0.66) 100%
+    );
+  }
+
+  /* Tarjeta glassmorphism centrada */
+  .login-card {
+    @apply relative z-10 w-full;
+    margin: 1rem;
+    max-width: 440px;
+    padding: 2.75rem 2.5rem;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.055);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    box-shadow:
+      0 40px 100px rgba(0, 0, 0, 0.60),
+      0 8px 24px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    animation: authFadeUp 0.7s ease-out both;
+  }
+
+  /* Logo */
+  .login-logo {
+    @apply text-center text-4xl font-black text-white mb-1;
+    letter-spacing: -0.03em;
+  }
+
+  .login-logo span {
+    @apply text-red-500;
+  }
+
+  /* Badge "Sistema de Gestión" */
+  .login-badge {
+    @apply flex items-center justify-center gap-1.5 mb-5 text-xs font-semibold tracking-widest uppercase;
+    color: #fca5a5;
+  }
+
+  .login-badge-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-red-400;
+  }
+
+  /* Títulos */
+  .login-title {
+    @apply text-2xl font-bold text-white mb-1;
+    letter-spacing: -0.02em;
+  }
+
+  .login-subtitle {
+    @apply text-sm mb-8;
+    color: rgba(148, 163, 184, 0.9);
+  }
+
+  /* Labels en oscuro */
+  .login-label {
+    @apply text-xs font-semibold uppercase tracking-wider;
+    color: rgba(148, 163, 184, 0.85);
+  }
+
+  /* Ícono de campo */
+  .login-input-icon {
+    @apply absolute left-3.5 w-4 h-4 pointer-events-none;
+    color: rgba(100, 116, 139, 0.8);
+  }
+
+  /* Input en oscuro */
+  .login-input {
+    @apply w-full pl-10 pr-4 py-3 rounded-xl text-sm text-white outline-none transition-all duration-200;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .login-input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .login-input:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .login-input:focus {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+
+  /* Botón ojo contraseña */
+  .login-eye-btn {
+    @apply absolute right-3.5 transition-colors cursor-pointer;
+    color: rgba(100, 116, 139, 0.8);
+  }
+
+  .login-eye-btn:hover {
+    color: rgba(148, 163, 184, 1);
+  }
+
+  /* Footer del formulario */
+  .login-footer-text {
+    @apply mt-6 text-center text-sm;
+    color: rgba(100, 116, 139, 0.85);
+  }
+
+  .login-footer-link {
+    @apply font-semibold ml-1 transition-colors;
+    color: #f87171;
+  }
+
+  .login-footer-link:hover {
+    color: #ef4444;
   }
 }
 
@@ -542,3 +628,448 @@
   transform: translateY(-1px) !important;
 }
 .swal2-cancel:active { transform: translateY(0) !important; }
+
+/* ============================================================
+   APP LAYOUT – Sidebar fijo izquierdo + contenido principal
+============================================================ */
+
+.layout-root {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  background: var(--sb-bg);
+  border-right: 1px solid var(--sb-border);
+  z-index: 40;
+  transition: transform 0.3s ease, background 0.25s ease, border-color 0.25s ease;
+  overflow: hidden;
+}
+
+@media (max-width: 1023px) {
+  .sidebar {
+    transform: translateX(-260px);
+    box-shadow: none;
+  }
+  .sidebar--open {
+    transform: translateX(0);
+    box-shadow: 6px 0 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Overlay móvil */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+  z-index: 39;
+}
+
+/* Logo */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.375rem 1.25rem 1rem;
+  font-size: 1.375rem;
+  letter-spacing: -0.03em;
+  border-bottom: 1px solid var(--sb-border);
+  flex-shrink: 0;
+  transition: border-color 0.25s ease;
+}
+
+.sidebar-logo-text { color: var(--sb-logo-color); transition: color 0.25s ease; }
+
+.sidebar-close-btn {
+  color: var(--sb-close-color);
+  transition: color 0.15s;
+  cursor: pointer;
+}
+.sidebar-close-btn:hover { color: var(--sb-item-hover-color); }
+
+/* Nav area (scrollable) */
+.sidebar-nav {
+  flex: 1;
+  padding: 0.625rem 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--sb-scrollbar); border-radius: 2px; }
+
+/* Nav item */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  color: var(--sb-item-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+}
+.sidebar-item:hover {
+  background: var(--sb-item-hover-bg);
+  color: var(--sb-item-hover-color);
+}
+.sidebar-item--active {
+  background: var(--sb-item-active-bg);
+  color: var(--sb-item-hover-color);
+}
+.sidebar-item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent, #6366f1);
+}
+.sidebar-item--danger:hover { color: #f87171 !important; }
+
+/* Ícono dentro del item */
+.sidebar-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sb-icon-bg);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.sidebar-item:hover .sidebar-icon-wrap,
+.sidebar-item--active .sidebar-icon-wrap {
+  background: var(--sb-icon-bg-hover);
+}
+
+.sidebar-item-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Admin section ── */
+.sidebar-admin {
+  padding: 0.5rem 0.625rem 0.75rem;
+  border-top: 1px solid var(--sb-border);
+  flex-shrink: 0;
+  transition: border-color 0.25s ease;
+}
+
+.admin-dropdown {
+  padding-bottom: 0.375rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  background: transparent;
+  border: none;
+}
+.admin-btn:hover { background: var(--sb-item-hover-bg); }
+
+.admin-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+.admin-info {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+}
+.admin-role {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sb-admin-role);
+  line-height: 1;
+  margin-bottom: 3px;
+  transition: color 0.25s ease;
+}
+.admin-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sb-admin-name);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.25s ease;
+}
+
+.admin-chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--sb-chevron);
+  transition: transform 0.2s ease, color 0.25s ease;
+  flex-shrink: 0;
+}
+
+/* ── Contenido principal ── */
+.layout-main {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+  min-width: 0;
+}
+@media (max-width: 1023px) {
+  .layout-main { margin-left: 0; }
+}
+
+/* ── Topbar (siempre visible) ── */
+.app-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+  height: 52px;
+  background: var(--tb-bg);
+  border-bottom: 1px solid var(--tb-border);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.topbar-ham {
+  color: var(--tb-ham-color);
+  transition: color 0.15s;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+.topbar-ham:hover { color: var(--sb-item-hover-color); }
+
+.topbar-logo {
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: var(--tb-logo-color);
+  letter-spacing: -0.03em;
+  transition: color 0.25s ease;
+}
+
+/* Botón toggle Dark/Light */
+.theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tb-btn-bg);
+  border: 1px solid var(--tb-btn-border);
+  color: var(--tb-btn-color);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.theme-btn:hover {
+  background: var(--tb-btn-hover);
+  color: var(--sb-item-hover-color);
+}
+
+/* ── Toggle tema dentro del menú admin ── */
+.theme-toggle-item {
+  position: relative;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.theme-icon-wrap {
+  color: #6366f1;
+  transition: color 0.3s ease, background 0.2s ease;
+}
+.theme-icon-wrap.is-dark {
+  color: #fbbf24;
+}
+.theme-svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.theme-svg.sun {
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.55));
+  animation: sun-spin 12s linear infinite;
+}
+.theme-svg.moon {
+  filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.45));
+}
+@keyframes sun-spin {
+  to { transform: rotate(360deg); }
+}
+
+.theme-switch {
+  margin-left: auto;
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.35);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.25s ease;
+}
+.theme-switch.on {
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.45);
+}
+.theme-switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.theme-switch.on .theme-switch-knob {
+  transform: translateX(16px);
+  background: #fde68a;
+}
+
+/* ── Transiciones sidebar ── */
+.sb-fade-enter-active,
+.sb-fade-leave-active { transition: opacity 0.25s ease; }
+.sb-fade-enter-from,
+.sb-fade-leave-to    { opacity: 0; }
+
+.sb-slide-enter-active,
+.sb-slide-leave-active { transition: opacity 0.18s ease, transform 0.18s ease; }
+.sb-slide-enter-from,
+.sb-slide-leave-to     { opacity: 0; transform: translateY(6px); }
+
+/* Transición del ícono sol/luna */
+.icon-swap-enter-active,
+.icon-swap-leave-active { transition: opacity 0.15s ease, transform 0.15s ease; }
+.icon-swap-enter-from   { opacity: 0; transform: rotate(-30deg) scale(0.8); }
+.icon-swap-leave-to     { opacity: 0; transform: rotate(30deg) scale(0.8); }
+
+/* ── Nuevas clases para Menu.vue ── */
+.section-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--section-label-color);
+  transition: color 0.25s ease;
+}
+
+.stat-tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.stat-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.18);
+}
+.stat-num {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: white;
+  margin-bottom: 0.375rem;
+}
+@media (min-width: 640px) {
+  .stat-num { font-size: 4rem; }
+}
+.stat-desc {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Quick-access cards */
+.quick-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  background: var(--qc-bg);
+  border: 1px solid var(--qc-border);
+  backdrop-filter: blur(16px);
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.quick-card:hover {
+  background: var(--qc-hover-bg);
+  border-color: var(--qc-hover-border);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+}
+.quick-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--qc-icon-bg);
+  border: 1px solid var(--qc-icon-border);
+  transition: background 0.2s;
+}
+.quick-card:hover .quick-icon {
+  background: color-mix(in srgb, var(--qc, #6366f1) 25%, rgba(255,255,255,0.08));
+}
+.quick-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--qc-label);
+  text-align: center;
+  transition: color 0.2s;
+}
+.quick-card:hover .quick-label { color: var(--qc-label-hover); }

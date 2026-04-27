@@ -3,7 +3,6 @@
 
     <header class="bg-white shadow-sm px-4 py-3 flex justify-between items-center z-10 shrink-0">
       <div class="flex items-center gap-2">
-        <span class="text-2xl">🛒</span>
         <h1 class="text-lg md:text-xl font-bold text-gray-800 hidden sm:block">Punto de Venta</h1>
       </div>
 
@@ -12,14 +11,14 @@
           to="/Products"
           class="bg-purple-100 text-purple-700 px-3 py-2 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-2 active:scale-95 transition"
         >
-          📦 <span class="hidden sm:inline">Inventario</span>
+          <span class="hidden sm:inline">Inventario</span>
         </router-link>
 
         <router-link
           to="/Menu"
           class="bg-gray-900 text-white px-3 py-2 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-2 active:scale-95 transition shadow"
         >
-          🏠 <span class="hidden sm:inline">Salir</span>
+          <span class="hidden sm:inline">Salir</span>
         </router-link>
       </div>
     </header>
@@ -30,13 +29,18 @@
 
         <div class="bg-white p-3 rounded-xl shadow-sm flex flex-col sm:flex-row gap-3 shrink-0">
           <div class="flex-1">
-            <select v-model="selectedMemberId" class="w-full border p-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-              <option :value="null">-- Cliente (Opcional) --</option>
-              <option v-for="m in members" :key="m.id" :value="m.id">{{ m.name }}</option>
-            </select>
+            <BaseSelect
+              v-model="selectedMemberId"
+              :options="[
+                { value: null, label: '-- Cliente (Opcional) --' },
+                ...members.map((m) => ({ value: m.id, label: m.name })),
+              ]"
+            />
           </div>
           <div class="flex-1">
-            <input v-model="search" type="text" placeholder="🔍 Buscar producto..." class="w-full border p-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+            <div class="relative">
+              <input v-model="search" type="text" placeholder="Buscar producto..." class="w-full border p-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+            </div>
           </div>
         </div>
 
@@ -55,7 +59,6 @@
                 {{ product.stock }}
               </span>
 
-              <div class="text-3xl text-center mb-1 mt-2">🥤</div>
               <div>
                 <h3 class="font-bold text-gray-800 text-sm leading-tight line-clamp-2">{{ product.name }}</h3>
                 <p class="text-lg font-bold text-blue-600 mt-1">${{ formatCurrency(product.price) }}</p>
@@ -69,7 +72,7 @@
 
         <div class="p-3 border-b flex justify-between items-center bg-gray-50 lg:bg-white rounded-t-xl shrink-0">
           <h3 class="font-bold text-gray-700 flex items-center gap-2">
-            🧾 Ticket
+            Ticket
             <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">{{ cart.length }} items</span>
           </h3>
           <button @click="cart = []" v-if="cart.length > 0" class="text-xs text-red-500 hover:underline">Vaciar</button>
@@ -77,7 +80,6 @@
 
         <div class="flex-1 overflow-y-auto p-2 space-y-2 bg-white">
           <div v-if="cart.length === 0" class="h-full flex flex-col items-center justify-center text-gray-400 opacity-50">
-            <span class="text-4xl mb-2">🛒</span>
             <p class="text-sm">Carrito vacío</p>
           </div>
 
@@ -90,7 +92,7 @@
             </div>
             <div class="flex items-center gap-3">
               <span class="font-bold text-gray-700">${{ formatCurrency(item.price * item.quantity) }}</span>
-              <button @click="removeFromCart(index)" class="w-6 h-6 flex items-center justify-center bg-red-100 text-red-600 rounded-full active:scale-90">✕</button>
+              <button @click="removeFromCart(index)" class="w-6 h-6 flex items-center justify-center bg-red-100 text-red-600 rounded-full active:scale-90">×</button>
             </div>
           </div>
         </div>
@@ -106,7 +108,8 @@
             :disabled="cart.length === 0 || !selectedMemberId"
             class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white py-3 rounded-xl font-bold shadow-lg text-lg disabled:cursor-not-allowed transition active:scale-95 flex justify-center items-center gap-2"
           >
-            {{ !selectedMemberId ? '👤 Selecciona Cliente' : '✅ COBRAR' }}
+            <template v-if="!selectedMemberId">Selecciona Cliente</template>
+            <template v-else>COBRAR</template>
           </button>
         </div>
       </div>
@@ -119,6 +122,7 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
+import { BaseSelect } from '@/components/ui'
 import dayjs from 'dayjs'
 
 const products = ref([])

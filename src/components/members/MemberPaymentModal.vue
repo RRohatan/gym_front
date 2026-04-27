@@ -6,7 +6,9 @@
     <div
       class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500"
     >
-      <h2 class="text-xl font-bold mb-2 text-gray-800">💰 Registrar Pago</h2>
+      <h2 id="member-payment-modal-title" class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+        Registrar Pago
+      </h2>
       <p class="text-sm text-gray-600 mb-4">
         Cliente: <strong>{{ member?.name }}</strong>
       </p>

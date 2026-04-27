@@ -112,7 +112,9 @@
         <div
           class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto"
         >
-          <h2 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">Registrar Pago</h2>
+          <h2 id="payments-modal-title" class="text-lg font-bold mb-4 text-gray-800 border-b pb-2 flex items-center gap-2">
+            Registrar Pago
+          </h2>
 
           <form @submit.prevent="registrarPago" class="space-y-4">
             <div>
