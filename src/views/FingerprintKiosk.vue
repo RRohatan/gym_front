@@ -1,14 +1,14 @@
 <template>
-  <div class="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-6">
+  <div class="min-h-screen bg-[var(--color-bg)] flex flex-col items-center justify-center p-6">
 
     <!-- Logo / Nombre -->
     <div class="mb-10 text-center">
       <h1 class="text-3xl font-bold text-white tracking-wide">Control de Acceso</h1>
-      <p class="text-gray-400 mt-1 text-sm">Coloca tu dedo en el lector para ingresar</p>
+      <p class="text-subtle mt-1 text-sm">Coloca tu dedo en el lector para ingresar</p>
     </div>
 
     <!-- Panel central -->
-    <div class="w-full max-w-sm bg-gray-800 rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6">
+    <div class="w-full max-w-sm bg-[var(--color-surface)] rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6 border border-default-soft">
 
       <!-- Indicador de estado -->
       <div
@@ -22,9 +22,9 @@
       </p>
 
       <!-- Info del miembro (si fue identificado) -->
-      <div v-if="member" class="w-full bg-gray-700 rounded-xl p-4 text-center">
+      <div v-if="member" class="w-full bg-[var(--color-surface-soft)] rounded-xl p-4 text-center border border-default-soft">
         <p class="text-white text-xl font-bold">{{ member.name }}</p>
-        <p class="text-gray-400 text-sm mt-1">{{ member.identification }}</p>
+        <p class="text-subtle text-sm mt-1">{{ member.identification }}</p>
         <!-- Fecha y hora del acceso -->
         <p v-if="state === 'success'" class="text-emerald-400 text-xs mt-2">
           Ingreso registrado: {{ accessTime }}
@@ -95,14 +95,14 @@ const iconClass = computed(() => ({
   'bg-blue-900 text-blue-300 animate-pulse': state.value === 'scanning',
   'bg-green-900 text-green-300':             state.value === 'success',
   'bg-red-900 text-red-300':                 state.value === 'expired' || state.value === 'unknown',
-  'bg-gray-700 text-gray-400':               state.value === 'idle',
+  'bg-[var(--color-overlay-strong)] text-muted':               state.value === 'idle',
 }))
 
 const textClass = computed(() => ({
   'text-blue-300':  state.value === 'scanning',
   'text-green-300': state.value === 'success',
   'text-red-400':   state.value === 'expired' || state.value === 'unknown',
-  'text-gray-300':  state.value === 'idle',
+  'text-subtle':  state.value === 'idle',
 }))
 
 const displayMessage = computed(() => {

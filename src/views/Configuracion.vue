@@ -4,17 +4,17 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div class="flex items-center gap-3">
           <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Configuración</h1>
-            <p class="text-sm text-slate-400 mt-0.5">Personalización del gimnasio</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-default tracking-tight">Configuración</h1>
+            <p class="text-sm text-subtle mt-0.5">Personalización del gimnasio</p>
           </div>
         </div>
         <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 text-gray-800 animate-fade-in-up">
-        <div class="border-b pb-4 mb-6">
+      <div class="bg-[var(--color-surface)] rounded-2xl shadow-xl p-6 sm:p-8 text-default animate-fade-in-up border border-default-soft">
+        <div class="border-b border-default-soft pb-4 mb-6">
           <h2 class="text-xl font-bold text-blue-900">Personalización de Bienvenida</h2>
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-muted">
             Esta información se enviará automáticamente por correo a los nuevos clientes.
           </p>
         </div>
@@ -25,30 +25,30 @@
 
         <form v-else @submit.prevent="guardarConfiguracion" class="space-y-6">
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
+            <label class="block text-sm font-bold text-muted mb-2 uppercase tracking-wide">
               🕒 Horarios de Atención
             </label>
             <div class="relative">
               <textarea
                 v-model="form.horarios"
                 rows="3"
-                class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50"
+                class="field-input rounded-xl p-3"
                 placeholder="Ej: Lunes a Viernes: 6:00 AM - 10:00 PM&#10;Sábados: 8:00 AM - 4:00 PM"
               ></textarea>
               <div class="absolute top-3 right-3 text-xl opacity-50">📅</div>
             </div>
-            <p class="text-xs text-gray-500 mt-1">Aparecerá en el correo de bienvenida.</p>
+            <p class="text-xs text-muted mt-1">Aparecerá en el correo de bienvenida.</p>
           </div>
 
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">
+            <label class="block text-sm font-bold text-muted mb-2 uppercase tracking-wide">
               📜 Normas y Políticas
             </label>
             <div class="relative">
               <textarea
                 v-model="form.politicas"
                 rows="5"
-                class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50"
+                class="field-input rounded-xl p-3"
                 placeholder="Ej: 1. Uso obligatorio de toalla.&#10;2. Ordenar las pesas al terminar.&#10;3. No ingresar alimentos."
               ></textarea>
               <div class="absolute top-3 right-3 text-xl opacity-50">⚖️</div>
@@ -64,10 +64,10 @@
             <input
               v-model="form.url_grupo_whatsapp"
               type="url"
-              class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition bg-green-50 text-green-800 font-medium"
+              class="field-input font-medium"
               placeholder="https://chat.whatsapp.com/ExampleCode..."
             />
-            <p class="text-xs text-gray-500 mt-1">
+            <p class="text-xs text-muted mt-1">
               Pega aquí el "Enlace de invitación" de tu grupo. Si lo dejas vacío, no aparecerá el
               botón en el correo.
             </p>
@@ -75,18 +75,18 @@
 
           <!-- SECCIÓN CÓDIGO QR -->
           <div class="border-t pt-6" v-if="qrImageUrl">
-            <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <h3 class="text-lg font-bold text-default mb-2 flex items-center gap-2">
               🏁 Código QR de Registro
             </h3>
-            <p class="text-sm text-gray-500 mb-4">
+            <p class="text-sm text-muted mb-4">
               Imprime este código y colócalo en la recepción. Los clientes podrán escanearlo para
               registrarse ellos mismos.
             </p>
 
             <div
-              class="flex flex-col sm:flex-row items-center gap-6 bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300"
+              class="flex flex-col sm:flex-row items-center gap-6 bg-[var(--color-surface-soft)] p-4 rounded-xl border border-dashed border-default-soft"
             >
-              <div class="bg-white p-2 rounded shadow-sm">
+              <div class="bg-[var(--color-surface)] p-2 rounded shadow-sm border border-default-soft">
                 <img
                   :src="qrImageUrl"
                   alt="Código QR de Registro"

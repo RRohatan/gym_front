@@ -36,14 +36,14 @@
             </thead>
             <tbody>
               <tr v-if="loading">
-                <td colspan="5" class="text-center py-10 text-gray-400">Cargando...</td>
+                <td colspan="5" class="text-center py-10 text-subtle">Cargando...</td>
               </tr>
               <tr v-else-if="filtered.length === 0">
-                <td colspan="5" class="text-center py-10 text-gray-400">No hay registros.</td>
+                <td colspan="5" class="text-center py-10 text-subtle">No hay registros.</td>
               </tr>
               <tr v-for="log in filtered" :key="log.id" class="table-row">
-                <td class="font-medium text-gray-900">{{ log.member?.name ?? '—' }}</td>
-                <td class="text-gray-500">{{ log.member?.identification ?? '—' }}</td>
+                <td class="font-medium text-default">{{ log.member?.name ?? '—' }}</td>
+                <td class="text-muted">{{ log.member?.identification ?? '—' }}</td>
                 <td>
                   <BaseBadge :color="log.method === 'huella' ? 'violet' : 'blue'">
                     {{ log.method === 'huella' ? 'Huella' : 'Cédula' }}
@@ -57,7 +57,7 @@
                     {{ log.status === 'permitido' ? 'Permitido' : 'Denegado' }}
                   </BaseBadge>
                 </td>
-                <td class="text-gray-500">{{ formatDate(log.accessed_at) }}</td>
+                <td class="text-muted">{{ formatDate(log.accessed_at) }}</td>
               </tr>
             </tbody>
           </table>
@@ -65,9 +65,9 @@
 
         <div
           v-if="meta && meta.last_page > 1"
-          class="flex items-center justify-between text-sm text-gray-600"
+          class="flex items-center justify-between text-sm text-muted"
         >
-          <p class="text-xs text-gray-400">
+          <p class="text-xs text-subtle">
             Mostrando {{ meta.from }}–{{ meta.to }} de {{ meta.total }} registros
           </p>
           <div class="flex gap-2">

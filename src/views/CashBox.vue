@@ -13,7 +13,7 @@
         </BaseButton>
       </template>
 
-      <div v-if="loading" class="text-center py-10 text-gray-500">Cargando...</div>
+      <div v-if="loading" class="text-center py-10 text-muted">Cargando...</div>
 
       <div v-else class="space-y-6">
         <div
@@ -25,19 +25,19 @@
           </h3>
 
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-            <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-gray-500 text-xs">Apertura</p>
-              <p class="text-lg font-semibold text-gray-800">
+            <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
+              <p class="text-muted text-xs">Apertura</p>
+              <p class="text-lg font-semibold text-default">
                 {{ formatCurrency(todayCashbox.opening_balance) }}
               </p>
             </div>
-            <div class="bg-white p-3 rounded-lg shadow-sm">
+            <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
               <p class="text-emerald-600 text-xs">Ingresos</p>
               <p class="text-lg font-semibold text-emerald-700">
                 {{ formatCurrency(todayCashbox.total_income) }}
               </p>
             </div>
-            <div class="bg-white p-3 rounded-lg shadow-sm">
+            <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
               <p class="text-red-600 text-xs">Gastos</p>
               <p class="text-lg font-semibold text-red-700">
                 {{ formatCurrency(todayCashbox.total_expense) }}
@@ -73,7 +73,7 @@
         </div>
 
         <div>
-          <h3 class="font-semibold mb-3 text-gray-700">Historial</h3>
+          <h3 class="font-semibold mb-3 text-default">Historial</h3>
           <div class="table-wrap">
             <table class="w-full text-sm min-w-[600px]">
               <thead class="table-head">
@@ -85,7 +85,7 @@
                   <th class="!text-right">Cierre</th>
                 </tr>
               </thead>
-              <tbody class="bg-white">
+              <tbody class="bg-[var(--color-surface)]">
                 <tr v-for="cb in cashboxes" :key="cb.id" class="table-row">
                   <td class="font-medium">{{ cb.date }}</td>
                   <td class="text-right">{{ formatCurrency(cb.opening_balance) }}</td>

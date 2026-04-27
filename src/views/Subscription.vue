@@ -5,8 +5,8 @@
       <!-- Header -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Suscripción</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Gestiona tu plan y funcionalidades</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-default tracking-tight">Suscripción</h1>
+          <p class="text-sm text-subtle mt-0.5">Gestiona tu plan y funcionalidades</p>
         </div>
         <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
       </div>
@@ -18,17 +18,17 @@
       <div v-else class="space-y-6">
 
         <!-- Sin suscripción -->
-        <div v-if="!subscription" class="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+        <div v-if="!subscription" class="bg-[var(--color-surface-soft)] border border-[var(--color-border)] rounded-2xl p-6 text-center">
           <p class="text-amber-700 font-semibold text-lg mb-1">No tienes una suscripción activa</p>
           <p class="text-amber-600 text-sm">Elige un plan para comenzar.</p>
         </div>
 
         <!-- Suscripción activa -->
-        <div v-else class="bg-white rounded-2xl shadow-xl p-6">
+        <div v-else class="bg-[var(--color-surface)] rounded-2xl shadow-xl p-6 border border-default-soft">
           <div class="flex items-start justify-between mb-4">
             <div>
-              <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Plan actual</span>
-              <h2 class="text-3xl font-black text-gray-900 capitalize mt-1">{{ subscription.plan?.name }}</h2>
+              <span class="text-xs font-bold uppercase tracking-widest text-subtle">Plan actual</span>
+              <h2 class="text-3xl font-black text-default capitalize mt-1">{{ subscription.plan?.name }}</h2>
             </div>
             <span
               class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
@@ -37,16 +37,16 @@
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 my-6">
-            <div class="bg-slate-50 rounded-xl p-4">
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Inicio</p>
-              <p class="text-sm font-bold text-gray-800">{{ formatDate(subscription.started_at) }}</p>
+            <div class="bg-[var(--color-surface-soft)] rounded-xl p-4 border border-default-soft">
+              <p class="text-xs text-subtle font-semibold uppercase tracking-wide mb-1">Inicio</p>
+              <p class="text-sm font-bold text-default">{{ formatDate(subscription.started_at) }}</p>
             </div>
-            <div class="bg-slate-50 rounded-xl p-4">
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Vence</p>
-              <p class="text-sm font-bold text-gray-800">{{ formatDate(subscription.expired_at) }}</p>
+            <div class="bg-[var(--color-surface-soft)] rounded-xl p-4 border border-default-soft">
+              <p class="text-xs text-subtle font-semibold uppercase tracking-wide mb-1">Vence</p>
+              <p class="text-sm font-bold text-default">{{ formatDate(subscription.expired_at) }}</p>
             </div>
-            <div class="bg-slate-50 rounded-xl p-4">
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Días restantes</p>
+            <div class="bg-[var(--color-surface-soft)] rounded-xl p-4 border border-default-soft">
+              <p class="text-xs text-subtle font-semibold uppercase tracking-wide mb-1">Días restantes</p>
               <p class="text-sm font-bold" :class="daysLeft <= 5 ? 'text-red-600' : 'text-emerald-600'">
                 {{ daysLeft >= 0 ? daysLeft : 0 }} días
               </p>
@@ -55,7 +55,7 @@
 
           <!-- Features -->
           <div class="border-t pt-4">
-            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Funcionalidades incluidas</p>
+            <p class="text-xs font-bold uppercase tracking-widest text-subtle mb-3">Funcionalidades incluidas</p>
             <div class="flex flex-wrap gap-2">
               <span
                 v-for="feature in subscription.plan?.features"
@@ -75,11 +75,11 @@
             <button
               v-if="!subscription.canceled_at"
               @click="confirmCancel"
-              class="btn flex-1 border border-red-300 text-red-600 hover:bg-red-50 bg-white"
+              class="btn flex-1 border border-red-300 text-red-600 hover:bg-red-50 bg-[var(--color-surface)]"
             >
               Cancelar suscripción
             </button>
-            <div v-else class="flex-1 text-center text-sm text-slate-400 self-center">
+            <div v-else class="flex-1 text-center text-sm text-subtle self-center">
               Cancelada — acceso hasta vencimiento
             </div>
           </div>
@@ -87,24 +87,24 @@
 
         <!-- Planes disponibles -->
         <div v-if="!subscription || showPlans">
-          <h3 class="text-lg font-bold text-gray-900 mb-4">
+          <h3 class="text-lg font-bold text-default mb-4">
             {{ subscription ? 'Cambiar a otro plan' : 'Elige un plan' }}
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div
               v-for="plan in plans"
               :key="plan.id"
-              class="bg-white rounded-2xl shadow border-2 p-5 flex flex-col gap-4 transition cursor-pointer"
+              class="bg-[var(--color-surface)] rounded-2xl shadow border-2 p-5 flex flex-col gap-4 transition cursor-pointer"
               :class="subscription?.plan?.id === plan.id
                 ? 'border-blue-500 ring-2 ring-blue-200'
                 : 'border-transparent hover:border-blue-300'"
             >
               <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Plan</p>
-                <h4 class="text-xl font-black text-gray-900 capitalize">{{ plan.name }}</h4>
+                <p class="text-xs font-bold uppercase tracking-widest text-subtle mb-1">Plan</p>
+                <h4 class="text-xl font-black text-default capitalize">{{ plan.name }}</h4>
                 <p class="text-2xl font-black text-blue-600 mt-1">
                   {{ formatPrice(plan.price) }}
-                  <span class="text-xs font-semibold text-slate-400">/ {{ plan.periodicity_type === 'year' ? 'año' : 'mes' }}</span>
+                  <span class="text-xs font-semibold text-subtle">/ {{ plan.periodicity_type === 'year' ? 'año' : 'mes' }}</span>
                 </p>
               </div>
 
@@ -112,7 +112,7 @@
                 <li
                   v-for="feature in plan.features"
                   :key="feature.id"
-                  class="text-xs text-gray-700"
+                  class="text-xs text-muted"
                 >
                   {{ featureLabel(feature) }}
                 </li>

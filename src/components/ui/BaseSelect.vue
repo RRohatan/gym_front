@@ -66,7 +66,7 @@ const onChange = (event: Event) => {
         :required="required"
         :disabled="disabled"
         :class="[
-          'field-input appearance-none bg-white pr-10 cursor-pointer',
+          'field-input appearance-none pr-10 cursor-pointer',
           error && 'border-red-400 focus:border-red-500',
           disabled && 'opacity-60 cursor-not-allowed',
         ]"
@@ -84,9 +84,8 @@ const onChange = (event: Event) => {
         <slot />
       </select>
 
-      <!-- Chevron icono nativo reemplazado por SVG consistente -->
       <svg
-        class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-subtle pointer-events-none"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -96,7 +95,7 @@ const onChange = (event: Event) => {
       </svg>
     </div>
 
-    <p v-if="error" class="text-xs text-red-600">{{ error }}</p>
-    <p v-else-if="hint" class="text-xs text-gray-400">{{ hint }}</p>
+    <p v-if="error" class="text-xs text-red-600 dark:text-red-400">{{ error }}</p>
+    <p v-else-if="hint" class="text-xs text-subtle">{{ hint }}</p>
   </div>
 </template>

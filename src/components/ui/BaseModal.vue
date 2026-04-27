@@ -71,17 +71,17 @@ watch(
     >
       <div
         :class="[
-          'w-full bg-white rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up',
+          'w-full surface rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up',
           sizeMap[size],
         ]"
       >
         <header
           v-if="title || $slots.header || !hideClose"
-          class="flex items-center justify-between gap-4 px-6 pt-5 pb-3 border-b border-gray-100"
+          class="flex items-center justify-between gap-4 px-6 pt-5 pb-3 border-b border-default-soft"
         >
           <div class="min-w-0 flex-1">
             <slot name="header">
-              <h3 v-if="title" class="text-lg font-bold text-gray-900 truncate">
+              <h3 v-if="title" class="text-lg font-bold text-default truncate">
                 {{ title }}
               </h3>
             </slot>
@@ -89,7 +89,7 @@ watch(
           <button
             v-if="!hideClose"
             type="button"
-            class="shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
+            class="shrink-0 text-subtle hover:text-default transition-colors"
             aria-label="Cerrar"
             @click="close"
           >
@@ -115,7 +115,7 @@ watch(
 
         <footer
           v-if="$slots.footer"
-          class="flex flex-wrap justify-end gap-2 px-6 pb-5 pt-2 border-t border-gray-100"
+          class="flex flex-wrap justify-end gap-2 px-6 pb-5 pt-2 border-t border-default-soft"
         >
           <slot name="footer" />
         </footer>

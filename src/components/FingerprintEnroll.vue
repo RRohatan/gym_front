@@ -1,7 +1,7 @@
 
 <template>
-  <div class="border rounded-xl p-5 bg-gray-50">
-    <h3 class="text-base font-semibold text-gray-800 mb-3">
+  <div class="border border-default-soft rounded-xl p-5 bg-[var(--color-surface-soft)]">
+    <h3 class="text-base font-semibold text-default mb-3">
       Huella Dactilar
     </h3>
 
@@ -9,7 +9,7 @@
     <div class="flex items-center gap-3 mb-4">
       <span
         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
-        :class="captured || hasFingerprint ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'"
+        :class="captured || hasFingerprint ? 'bg-green-100 text-green-700' : 'bg-[var(--color-overlay-strong)] text-muted'"
       >
         <span class="w-2 h-2 rounded-full" :class="captured || hasFingerprint ? 'bg-green-500' : 'bg-gray-400'"></span>
         {{ captured ? 'Huella capturada (se guardará al registrar)' : hasFingerprint ? 'Huella registrada' : 'Sin huella' }}
@@ -23,7 +23,7 @@
       :disabled="busy"
       class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
       :class="busy
-        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        ? 'bg-[var(--color-overlay-strong)] text-subtle cursor-not-allowed'
         : 'bg-blue-600 hover:bg-blue-700 text-white'"
     >
       <svg v-if="busy" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
     </button>
 
     <!-- Mensaje de estado -->
-    <p v-if="statusMsg" class="mt-3 text-sm text-center text-gray-500">{{ statusMsg }}</p>
+    <p v-if="statusMsg" class="mt-3 text-sm text-center text-muted">{{ statusMsg }}</p>
 
     <!-- Resultado -->
     <div v-if="result" class="mt-3 p-3 rounded-lg text-sm text-center font-medium"

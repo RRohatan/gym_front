@@ -21,12 +21,12 @@
 
       <BaseInput v-model="busqueda" placeholder="Buscar producto..." />
 
-      <div v-if="loading" class="text-gray-400 text-center py-10">Cargando...</div>
+      <div v-if="loading" class="text-subtle text-center py-10">Cargando...</div>
 
       <template v-else>
         <div
           v-if="productosFiltrados.length === 0"
-          class="text-gray-400 text-center py-10"
+          class="text-subtle text-center py-10"
         >
           No encontrado.
         </div>
@@ -38,7 +38,7 @@
           <article
             v-for="producto in productosPaginados"
             :key="producto.id"
-            class="bg-white text-black rounded-2xl shadow-card overflow-hidden flex flex-col justify-between"
+            class="bg-[var(--color-surface)] text-default rounded-2xl shadow-card overflow-hidden flex flex-col justify-between border border-default-soft"
           >
             <div class="p-4">
               <div class="flex justify-between items-start gap-2">
@@ -47,7 +47,7 @@
               </div>
               <p
                 v-if="producto.description"
-                class="text-sm text-gray-500 mt-1 line-clamp-2"
+                class="text-sm text-muted mt-1 line-clamp-2"
               >
                 {{ producto.description }}
               </p>
@@ -56,7 +56,7 @@
               </p>
             </div>
 
-            <div class="flex p-2 border-t border-gray-100 bg-gray-50 gap-2">
+            <div class="flex p-2 border-t border-default-soft bg-[var(--color-surface-soft)] gap-2">
               <BaseButton
                 variant="indigo"
                 size="sm"
@@ -79,7 +79,7 @@
 
         <div
           v-if="totalProductos > 1"
-          class="flex items-center justify-between text-sm text-gray-600"
+          class="flex items-center justify-between text-sm text-muted"
         >
           <span>Página {{ currentPageProductos }} de {{ totalProductos }}</span>
           <div class="flex gap-1">

@@ -54,11 +54,11 @@
         />
       </div>
 
-      <div class="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
-        <div v-if="loading" class="text-center py-10 text-gray-400">Cargando...</div>
+      <div class="overflow-x-auto rounded-lg border border-default-soft shadow-sm">
+        <div v-if="loading" class="text-center py-10 text-subtle">Cargando...</div>
 
         <table v-else class="w-full text-sm min-w-[800px]">
-          <thead class="bg-gray-100 text-gray-700">
+          <thead class="bg-[var(--color-surface-soft)] text-muted">
             <tr>
               <th class="py-3 px-4 text-left">Cliente</th>
               <th class="py-3 px-4 text-left">Plan</th>
@@ -68,23 +68,23 @@
               <th class="py-3 px-4 text-center">Acción</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 bg-white">
+          <tbody class="divide-y border-default-soft bg-[var(--color-surface)]">
             <tr v-if="membresias.length === 0">
-              <td colspan="6" class="py-10 text-center text-gray-400">
+              <td colspan="6" class="py-10 text-center text-subtle">
                 No se encontraron resultados.
               </td>
             </tr>
-            <tr v-for="m in membresias" :key="m.id" class="hover:bg-gray-50 transition">
-              <td class="py-3 px-4 font-bold text-gray-700">{{ m.member?.name }}</td>
+            <tr v-for="m in membresias" :key="m.id" class="hover:bg-[var(--color-surface-soft)] transition">
+              <td class="py-3 px-4 font-bold text-default">{{ m.member?.name }}</td>
 
               <td class="py-3 px-4">
                 {{ m.plan?.membership_type?.name }}
-                <span class="text-xs text-gray-500 bg-gray-100 px-1 rounded ml-1">
+                <span class="text-xs text-muted bg-[var(--color-overlay)] px-1 rounded ml-1">
                   {{ traducirFrecuencia(m.plan?.frequency) }}
                 </span>
               </td>
 
-              <td class="py-3 px-4 text-xs text-gray-500">
+              <td class="py-3 px-4 text-xs text-muted">
                 {{ formatDate(m.start_date) }} ➝ {{ formatDate(m.end_date) }}
               </td>
 
@@ -96,7 +96,7 @@
                     'bg-red-100 text-red-700 border-red-200': m.status === 'expired',
                     'bg-yellow-100 text-yellow-700 border-yellow-200':
                       m.status === 'inactive_unpaid',
-                    'bg-gray-100 text-gray-500 border-gray-200': m.status === 'cancelled' || m.status === 'inactive',
+                    'bg-[var(--color-overlay)] text-muted border-default-soft': m.status === 'cancelled' || m.status === 'inactive',
                   }"
                 >
                   {{ traducirEstado(m.status) }}
@@ -120,7 +120,7 @@
                   <!-- Mostrar Editar solo si NO está vencida (activa, pendiente, etc.) -->
                   <button
                     v-else
-                    class="btn btn-sm bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 border border-gray-200 flex items-center gap-1"
+                    class="btn btn-sm bg-[var(--color-overlay)] text-muted hover:bg-[var(--color-overlay-strong)] hover:text-default border border-default-soft flex items-center gap-1"
                     @click="abrirEditarModal(m)"
                     title="Editar / Corregir"
                   >
@@ -134,13 +134,13 @@
       </div>
 
       <!-- Paginación -->
-      <div v-if="lastPage > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+      <div v-if="lastPage > 1" class="flex items-center justify-between mt-4 text-sm text-muted">
         <span>Página {{ currentPage }} de {{ lastPage }} ({{ totalItems }} registros)</span>
         <div class="flex gap-1">
           <button
             @click="cambiarPagina(currentPage - 1)"
             :disabled="currentPage === 1"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             ← Anterior
           </button>
@@ -149,14 +149,14 @@
             :key="page"
             @click="cambiarPagina(page)"
             class="px-3 py-1 rounded border"
-            :class="page === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-200 bg-white hover:bg-gray-50'"
+            :class="page === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)]'"
           >
             {{ page }}
           </button>
           <button
             @click="cambiarPagina(currentPage + 1)"
             :disabled="currentPage === lastPage"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Siguiente →
           </button>
@@ -165,16 +165,17 @@
 
       <div
         v-if="showEditModal"
-        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+        class="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+        :style="{ background: 'var(--modal-backdrop)' }"
       >
-        <div class="bg-white text-gray-800 w-full max-w-sm p-6 rounded-xl shadow-2xl">
-          <h2 id="membership-edit-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
+        <div class="w-full max-w-sm p-6 rounded-xl shadow-2xl" :style="{ background: 'var(--modal-panel-bg)', border: '1px solid var(--modal-panel-border)' }">
+          <h2 id="membership-edit-modal-title" class="font-bold text-lg mb-4 border-b border-default-soft pb-2 flex items-center gap-2 text-default">
             Editar Membresía
           </h2>
           <form @submit.prevent="guardarCambios" class="space-y-3">
             <div>
-              <label class="text-xs font-bold uppercase text-gray-500">Plan</label>
-              <select v-model="editarMembresia.plan.id" class="w-full border p-2 rounded-lg">
+              <label class="text-xs font-bold uppercase text-subtle">Plan</label>
+              <select v-model="editarMembresia.plan.id" class="field-input">
                 <option v-for="plan in planes" :key="plan.id" :value="plan.id">
                   {{ plan.membership_type?.name }} ({{ traducirFrecuencia(plan.frequency) }})
                 </option>
@@ -183,26 +184,26 @@
 
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="text-xs font-bold uppercase text-gray-500">Inicio</label>
+                <label class="text-xs font-bold uppercase text-subtle">Inicio</label>
                 <input
                   v-model="editarMembresia.start_date"
                   type="date"
-                  class="w-full border p-2 rounded-lg"
+                  class="field-input"
                 />
               </div>
               <div>
-                <label class="text-xs font-bold uppercase text-gray-500">Fin</label>
+                <label class="text-xs font-bold uppercase text-subtle">Fin</label>
                 <input
                   v-model="editarMembresia.end_date"
                   type="date"
-                  class="w-full border p-2 rounded-lg"
+                  class="field-input"
                 />
               </div>
             </div>
 
             <div>
-              <label class="text-xs font-bold uppercase text-gray-500">Estado</label>
-              <select v-model="editarMembresia.status" class="w-full border p-2 rounded-lg">
+              <label class="text-xs font-bold uppercase text-subtle">Estado</label>
+              <select v-model="editarMembresia.status" class="field-input">
                 <option value="active">Activa</option>
                 <option value="expired">Vencida</option>
                 <option value="inactive_unpaid">Por Pagar</option>
@@ -222,31 +223,32 @@
 
       <div
         v-if="showModal"
-        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+        class="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+        :style="{ background: 'var(--modal-backdrop)' }"
       >
-        <div class="bg-white text-gray-800 w-full max-w-md p-6 rounded-xl shadow-2xl">
-          <h2 id="membership-assign-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
+        <div class="w-full max-w-md p-6 rounded-xl shadow-2xl" :style="{ background: 'var(--modal-panel-bg)', border: '1px solid var(--modal-panel-border)' }">
+          <h2 id="membership-assign-modal-title" class="font-bold text-lg mb-4 border-b border-default-soft pb-2 flex items-center gap-2 text-default">
             {{ form.member_id ? "Asignar membresía a " + busqueda : "Asignar Nueva" }}
           </h2>
           <form @submit.prevent="asignarMembresia" class="space-y-4">
             <!-- Solo mostrar búsqueda si NO hay member_id pre-seleccionado -->
             <div v-if="!form.member_id">
-              <label class="text-xs font-bold uppercase text-gray-500">Buscar Cliente</label>
+              <label class="text-xs font-bold uppercase text-subtle">Buscar Cliente</label>
               <input
                 v-model="busqueda"
                 type="text"
                 placeholder="Nombre..."
-                class="w-full border p-2 rounded-lg"
+                class="field-input"
               />
               <ul
                 v-if="miembrosFiltrados.length"
-                class="border rounded-lg mt-1 max-h-32 overflow-y-auto bg-gray-50 absolute w-64 z-10 shadow-lg"
+                class="border border-default-soft rounded-lg mt-1 max-h-32 overflow-y-auto bg-[var(--color-surface)] absolute w-64 z-10 shadow-lg"
               >
                 <li
                   v-for="m in miembrosFiltrados"
                   :key="m.id"
                   @click="seleccionarMiembro(m)"
-                  class="p-2 hover:bg-blue-100 cursor-pointer text-sm border-b"
+                  class="p-2 hover:bg-[var(--color-surface-soft)] cursor-pointer text-sm border-b border-default-soft"
                 >
                   {{ m.name }}
                 </li>
@@ -254,11 +256,11 @@
             </div>
 
             <div>
-              <label class="text-xs font-bold uppercase text-gray-500">Plan</label>
-              <select v-model="form.plan_id" class="w-full border p-2 rounded-lg" required>
+              <label class="text-xs font-bold uppercase text-subtle">Plan</label>
+              <select v-model="form.plan_id" class="field-input" required>
                 <option disabled value="">Seleccione...</option>
                 <option v-for="p in planes" :key="p.id" :value="p.id">
-                  {{ p.membership_type?.name }} - {{ traducirFrecuencia(p.frequency) }} - ${{
+                  {{ p.membership_type?.name }} - {{ traducirFrecuencia(p.frequency) }} - ${
                     parseInt(p.price).toLocaleString()
                   }}
                 </option>

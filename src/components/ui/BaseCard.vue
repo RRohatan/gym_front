@@ -10,7 +10,7 @@ withDefaults(
 </script>
 
 <template>
-  <section :class="padding ? 'page-card space-y-4' : 'bg-white rounded-2xl space-y-4'">
+  <section :class="['space-y-4', padding ? 'page-card' : 'surface rounded-2xl']">
     <header
       v-if="title || subtitle || $slots.header || $slots.actions"
       class="page-header"
@@ -28,7 +28,7 @@ withDefaults(
 
     <slot />
 
-    <footer v-if="$slots.footer" class="pt-3 border-t border-gray-100">
+    <footer v-if="$slots.footer" class="pt-3 border-t border-default-soft">
       <slot name="footer" />
     </footer>
   </section>

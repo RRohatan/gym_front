@@ -4,23 +4,23 @@
     <!-- Panel principal -->
     <div class="register-panel">
       <!-- Header -->
-      <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/5">
+      <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-default-soft">
         <div class="flex items-center gap-4">
           <div>
-            <h1 class="text-xl font-bold text-white tracking-tight leading-tight">
+            <h1 class="text-xl font-bold text-default tracking-tight leading-tight">
               Registrar Nuevo Cliente
             </h1>
-            <p class="text-xs text-slate-400 mt-0.5">
+            <p class="text-xs text-subtle mt-0.5">
               Complete los detalles para dar de alta un nuevo miembro.
             </p>
           </div>
         </div>
         <router-link
           :to="{ name: 'Members' }"
-          class="p-2 hover:bg-white/5 rounded-full transition-colors"
+          class="p-2 hover:bg-[var(--color-overlay)] rounded-full transition-colors"
           aria-label="Cerrar"
         >
-          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-subtle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </router-link>
@@ -106,8 +106,8 @@
                     :class="[
                       'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all border',
                       form.sexo === opt.value
-                        ? 'bg-white text-slate-900 border-white'
-                        : 'bg-black/30 text-slate-400 border-white/5 hover:bg-white/5 hover:text-slate-200',
+                        ? 'bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--color-border-strong)]'
+                        : 'bg-[var(--color-overlay)] text-subtle border-default-soft hover:bg-[var(--color-overlay-strong)] hover:text-default',
                     ]"
                     @click="form.sexo = opt.value"
                   >
@@ -119,7 +119,7 @@
           </section>
 
           <!-- ===== Biometría ===== -->
-          <section class="p-5 sm:p-6 bg-black/20 rounded-xl border border-white/5">
+          <section class="p-5 sm:p-6 bg-[var(--color-overlay)] rounded-xl border border-default-soft">
             <div class="section-header">
               <span class="section-bar bg-emerald-400" />
               <h2 class="section-title text-emerald-300">Biometría</h2>
@@ -169,7 +169,7 @@
           </section>
 
           <!-- ===== Plan inicial ===== -->
-          <section v-if="planes.length" class="pt-6 border-t border-white/5">
+          <section v-if="planes.length" class="pt-6 border-t border-default-soft">
             <label class="dark-label block mb-4">Asignar Plan Inicial (Opcional)</label>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
               <label
@@ -180,7 +180,7 @@
                   'block p-4 rounded-xl border-2 cursor-pointer transition-all',
                   selectedPlanId === plan.id
                     ? 'border-indigo-400 bg-indigo-400/10'
-                    : 'border-white/5 bg-black/20 hover:border-white/10',
+                    : 'border-default-soft bg-[var(--color-overlay)] hover:border-default',
                 ]"
               >
                 <input
@@ -192,7 +192,7 @@
                   class="sr-only"
                 />
                 <div class="flex justify-between items-start mb-2">
-                  <span class="text-sm font-bold text-white capitalize">
+                  <span class="text-sm font-bold text-default capitalize">
                     {{ translateFrequency(plan.frequency) || plan.name }}
                   </span>
                   <span
@@ -216,9 +216,9 @@
                     />
                   </div>
                 </div>
-                <p class="text-xl font-black text-white">
+                <p class="text-xl font-black text-default">
                   {{ formatPrice(plan.price) }}
-                  <span class="text-xs font-medium text-slate-400">
+                  <span class="text-xs font-medium text-subtle">
                     /{{ translateFrequency(plan.frequency)?.toLowerCase() || "mes" }}
                   </span>
                 </p>
@@ -227,13 +227,13 @@
           </section>
 
           <!-- ===== Huella dactilar ===== -->
-          <section class="pt-6 border-t border-white/5">
+          <section class="pt-6 border-t border-default-soft">
             <div class="section-header">
               <span class="section-bar bg-indigo-400" />
               <h2 class="section-title text-indigo-300">Huella Dactilar</h2>
               <span class="ml-auto dark-label-tiny">Opcional</span>
             </div>
-            <div class="rounded-xl border-2 border-dashed border-white/10 bg-black/20 p-4">
+            <div class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-overlay)] p-4">
               <FingerprintEnroll
                 :member-id="null"
                 :has-fingerprint="false"
@@ -260,11 +260,11 @@
 
       <!-- Footer -->
       <div
-        class="px-6 sm:px-8 py-5 border-t border-white/5 bg-black/20 flex items-center justify-end gap-4"
+        class="px-6 sm:px-8 py-5 border-t border-default-soft bg-[var(--color-overlay)] flex items-center justify-end gap-4"
       >
         <router-link
           :to="{ name: 'Members' }"
-          class="px-5 py-2.5 text-sm font-bold text-slate-400 hover:text-white transition-colors"
+          class="px-5 py-2.5 text-sm font-bold text-subtle hover:text-default transition-colors"
         >
           Cancelar
         </router-link>
@@ -443,7 +443,7 @@ const registerMember = async () => {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: rgba(15, 11, 33, 0.85);
+  background: var(--modal-backdrop);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow-y: auto;
@@ -457,10 +457,10 @@ const registerMember = async () => {
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
-  background: rgba(26, 22, 48, 0.9);
+  background: var(--modal-panel-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--modal-panel-border);
   border-radius: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   overflow: hidden;
@@ -502,7 +502,7 @@ const registerMember = async () => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: rgb(148 163 184 / 0.9);
+  color: var(--color-text-subtle);
   padding-left: 0.25rem;
 }
 
@@ -512,25 +512,25 @@ const registerMember = async () => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: rgb(148 163 184 / 0.8);
+  color: var(--color-text-subtle);
 }
 
 .dark-input {
   width: 100%;
   padding: 0.75rem 0.875rem;
   border-radius: 0.5rem;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: rgb(233 225 255);
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  color: var(--field-text);
   font-size: 0.875rem;
   outline: none;
   transition: all 0.15s;
 }
-.dark-input::placeholder { color: rgb(148 163 184 / 0.35); }
-.dark-input:hover { border-color: rgba(255, 255, 255, 0.1); }
+.dark-input::placeholder { color: var(--field-placeholder); }
+.dark-input:hover { border-color: var(--field-border-hover); }
 .dark-input:focus {
-  border-color: rgb(129 140 248);
-  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+  border-color: var(--field-border-focus);
+  box-shadow: 0 0 0 3px var(--field-ring);
 }
 .dark-input.input-error {
   border-color: rgb(244 63 94);
@@ -550,8 +550,8 @@ const registerMember = async () => {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
   border-radius: 0.75rem;
 }
 
@@ -573,10 +573,10 @@ const registerMember = async () => {
   margin-top: 0.25rem;
   font-size: 1.25rem;
   font-weight: 700;
-  color: rgb(233 225 255);
+  color: var(--field-text);
   outline: none;
 }
-.metric-input::placeholder { color: rgb(71 85 105); }
+.metric-input::placeholder { color: var(--field-placeholder); }
 
 /* ===== Botón submit con gradiente ===== */
 .register-submit-btn {

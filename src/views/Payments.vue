@@ -15,22 +15,22 @@
       </div>
 
       <div
-        class="bg-gray-50 p-4 rounded-xl mb-6 flex flex-col sm:flex-row items-end gap-3 border border-gray-100"
+        class="bg-[var(--color-surface-soft)] p-4 rounded-xl mb-6 flex flex-col sm:flex-row items-end gap-3 border border-default-soft"
       >
         <div class="w-full sm:w-auto">
-          <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Desde</label>
+          <label class="block text-xs font-bold text-subtle mb-1 uppercase">Desde</label>
           <input
             type="date"
             v-model="filtros.startDate"
-            class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm"
+            class="field-input text-sm"
           />
         </div>
         <div class="w-full sm:w-auto">
-          <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Hasta</label>
+          <label class="block text-xs font-bold text-subtle mb-1 uppercase">Hasta</label>
           <input
             type="date"
             v-model="filtros.endDate"
-            class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm"
+            class="field-input text-sm"
           />
         </div>
 
@@ -48,19 +48,19 @@
       >
         <span class="text-sm sm:text-lg font-semibold">💰 Total en rango:</span>
         <span
-          class="text-xl sm:text-2xl font-bold bg-white px-4 py-1 rounded shadow-sm border border-green-100 w-full sm:w-auto"
+          class="text-xl sm:text-2xl font-bold bg-[var(--color-surface)] px-4 py-1 rounded shadow-sm border border-green-100 w-full sm:w-auto"
         >
           {{ formatCurrency(totalHistorial) }}
         </span>
       </div>
 
-      <div class="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
+      <div class="overflow-x-auto rounded-lg border border-default-soft shadow-sm">
         <div v-if="loadingHistorial" class="text-center py-10">
-          <p class="text-gray-500 animate-pulse">Cargando...</p>
+          <p class="text-muted animate-pulse">Cargando...</p>
         </div>
 
-        <table v-else class="min-w-[600px] w-full bg-white text-sm">
-          <thead class="bg-gray-100 text-gray-700 uppercase text-xs font-bold">
+        <table v-else class="min-w-[600px] w-full bg-[var(--color-surface)] text-sm">
+          <thead class="bg-[var(--color-surface-soft)] text-muted uppercase text-xs font-bold">
             <tr>
               <th class="py-3 px-4 text-left">Cliente</th>
               <th class="py-3 px-4 text-left">Monto</th>
@@ -68,38 +68,38 @@
               <th class="py-3 px-4 text-left">Fecha</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
+          <tbody class="divide-y border-default-soft">
             <tr v-if="pagos.length === 0">
-              <td colspan="4" class="py-10 text-center text-gray-500 italic">Sin resultados.</td>
+              <td colspan="4" class="py-10 text-center text-muted italic">Sin resultados.</td>
             </tr>
-            <tr v-for="pago in pagosPaginados" :key="pago.id" class="hover:bg-gray-50 transition-colors">
-              <td class="py-3 px-4 font-medium text-gray-900">
+            <tr v-for="pago in pagosPaginados" :key="pago.id" class="hover:bg-[var(--color-surface-soft)] transition-colors">
+              <td class="py-3 px-4 font-medium text-default">
                 {{ pago.paymentable?.member?.name || "—" }}
               </td>
               <td class="py-3 px-4 text-green-600 font-bold">{{ formatCurrency(pago.amount) }}</td>
               <td class="py-3 px-4">
                 <span
-                  class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs border border-gray-200 whitespace-nowrap"
+                  class="bg-[var(--color-overlay)] text-muted px-2 py-1 rounded text-xs border border-default-soft whitespace-nowrap"
                 >
                   {{ pago.payment_method?.name }}
                 </span>
               </td>
-              <td class="py-3 px-4 text-gray-500 text-xs">{{ formatDate(pago.paid_at) }}</td>
+              <td class="py-3 px-4 text-muted text-xs">{{ formatDate(pago.paid_at) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Paginación -->
-      <div v-if="totalPagesPagos > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+      <div v-if="totalPagesPagos > 1" class="flex items-center justify-between mt-4 text-sm text-muted">
         <span>Página {{ currentPagePagos }} de {{ totalPagesPagos }}</span>
         <div class="flex gap-1">
           <button @click="currentPagePagos--" :disabled="currentPagePagos === 1"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
             ← Anterior
           </button>
           <button @click="currentPagePagos++" :disabled="currentPagePagos === totalPagesPagos"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
             Siguiente →
           </button>
         </div>
@@ -107,34 +107,36 @@
 
       <div
         v-if="openModal"
-        class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 backdrop-blur-sm"
+        class="fixed inset-0 flex justify-center items-center z-50 p-4 backdrop-blur-sm"
+        :style="{ background: 'var(--modal-backdrop)' }"
       >
         <div
-          class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto"
+          class="rounded-xl shadow-2xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto"
+          :style="{ background: 'var(--modal-panel-bg)', border: '1px solid var(--modal-panel-border)' }"
         >
-          <h2 id="payments-modal-title" class="text-lg font-bold mb-4 text-gray-800 border-b pb-2 flex items-center gap-2">
+          <h2 id="payments-modal-title" class="text-lg font-bold mb-4 text-default border-b border-default-soft pb-2 flex items-center gap-2">
             Registrar Pago
           </h2>
 
           <form @submit.prevent="registrarPago" class="space-y-4">
             <div>
-              <label class="block mb-1 text-xs font-bold text-gray-700 uppercase">Cliente</label>
+              <label class="block mb-1 text-xs font-bold text-muted uppercase">Cliente</label>
               <input
                 v-model="busqueda"
                 type="text"
                 placeholder="Buscar nombre..."
-                class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                class="field-input text-sm"
                 autocomplete="off"
               />
               <ul
                 v-if="miembrosFiltrados.length > 0"
-                class="border rounded-lg bg-white mt-1 max-h-32 overflow-y-auto shadow-lg absolute w-64 z-10"
+                class="border border-default-soft rounded-lg bg-[var(--color-surface)] mt-1 max-h-32 overflow-y-auto shadow-lg absolute w-64 z-10"
               >
                 <li
                   v-for="miembro in miembrosFiltrados"
                   :key="miembro.id"
                   @click="seleccionarMiembro(miembro)"
-                  class="px-3 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-0 text-xs"
+                  class="px-3 py-2 hover:bg-[var(--color-surface-soft)] cursor-pointer border-b border-default-soft last:border-0 text-xs"
                 >
                   {{ miembro.name }}
                 </li>
@@ -142,7 +144,7 @@
             </div>
 
             <div>
-              <label class="block mb-1 text-xs font-bold text-gray-700 uppercase">Monto</label>
+              <label class="block mb-1 text-xs font-bold text-muted uppercase">Monto</label>
               <input
                 v-model="nuevoPago.amount"
                 placeholder="0"
@@ -150,16 +152,16 @@
                 min="0"
                 step="0.01"
                 required
-                class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-lg"
+                class="field-input font-mono text-lg"
               />
             </div>
 
             <div>
-              <label class="block mb-1 text-xs font-bold text-gray-700 uppercase">Método</label>
+              <label class="block mb-1 text-xs font-bold text-muted uppercase">Método</label>
               <select
                 v-model="nuevoPago.payment_method_id"
                 required
-                class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                class="field-input"
               >
                 <option disabled value="">Seleccionar...</option>
                 <option v-for="m in metodosPago" :key="m.id" :value="m.id">{{ m.name }}</option>

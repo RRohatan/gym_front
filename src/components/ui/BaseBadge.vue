@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type BadgeColor = 'green' | 'red' | 'yellow' | 'blue' | 'gray' | 'orange'
+type BadgeColor = 'green' | 'red' | 'yellow' | 'blue' | 'gray' | 'orange' | 'violet'
 
 withDefaults(
   defineProps<{

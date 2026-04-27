@@ -63,7 +63,7 @@ const onInput = (event: Event) => {
     <div class="relative">
       <span
         v-if="$slots.prefix"
-        class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        class="absolute left-3.5 top-1/2 -translate-y-1/2 text-subtle pointer-events-none"
       >
         <slot name="prefix" />
       </span>
@@ -88,13 +88,13 @@ const onInput = (event: Event) => {
 
       <span
         v-if="$slots.suffix"
-        class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+        class="absolute right-3.5 top-1/2 -translate-y-1/2 text-subtle"
       >
         <slot name="suffix" />
       </span>
     </div>
 
-    <p v-if="error" class="text-xs text-red-600">{{ error }}</p>
-    <p v-else-if="hint" class="text-xs text-gray-400">{{ hint }}</p>
+    <p v-if="error" class="text-xs text-red-600 dark:text-red-400">{{ error }}</p>
+    <p v-else-if="hint" class="text-xs text-subtle">{{ hint }}</p>
   </div>
 </template>

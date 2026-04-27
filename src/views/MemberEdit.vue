@@ -2,7 +2,7 @@
   <div class="register-overlay">
     <div class="register-panel">
       <!-- Header -->
-      <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-gray-100">
+      <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-default-soft">
         <div class="flex items-center gap-4">
           <div class="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
             <svg class="w-6 h-6 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -10,20 +10,20 @@
             </svg>
           </div>
           <div>
-            <h1 class="text-xl font-bold text-gray-900 tracking-tight leading-tight">
+            <h1 class="text-xl font-bold text-default tracking-tight leading-tight">
               Editar Cliente
             </h1>
-            <p class="text-xs text-gray-500 mt-0.5">
+            <p class="text-xs text-muted mt-0.5">
               Actualiza la información del cliente.
             </p>
           </div>
         </div>
         <router-link
           :to="{ name: 'Members' }"
-          class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          class="p-2 hover:bg-[var(--color-overlay)] rounded-full transition-colors"
           aria-label="Cerrar"
         >
-          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </router-link>
@@ -85,7 +85,7 @@
           </section>
 
           <!-- ===== Biometría ===== -->
-          <section class="p-5 sm:p-6 bg-gray-50 rounded-xl border border-gray-100">
+          <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
             <div class="section-header">
               <span class="section-bar bg-success-600" />
               <h2 class="section-title text-success-700">Biometría</h2>
@@ -141,13 +141,13 @@
           </section>
 
           <!-- ===== Huella dactilar ===== -->
-          <section class="pt-6 border-t border-gray-100">
+          <section class="pt-6 border-t border-default-soft">
             <div class="section-header">
               <span class="section-bar bg-primary-600" />
               <h2 class="section-title text-primary-700">Huella Dactilar</h2>
               <span class="ml-auto optional-tag">Opcional</span>
             </div>
-            <div class="rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 p-4">
+            <div class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-surface-soft)] p-4">
               <FingerprintEnroll
                 :member-id="Number(memberId)"
                 :has-fingerprint="memberHasFingerprint"
@@ -166,7 +166,7 @@
       </div>
 
       <!-- Footer -->
-      <div class="px-6 sm:px-8 py-5 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
+      <div class="px-6 sm:px-8 py-5 border-t border-default-soft bg-[var(--color-surface-soft)] flex items-center justify-end gap-3">
         <BaseButton variant="secondary" @click="router.push({ name: 'Members' })">
           Cancelar
         </BaseButton>
@@ -295,7 +295,7 @@ onMounted(fetchMember);
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: rgba(17, 24, 39, 0.5);
+  background: var(--modal-backdrop);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   overflow-y: auto;
@@ -307,8 +307,8 @@ onMounted(fetchMember);
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
-  background: white;
-  border: 1px solid rgb(229 231 235);
+  background: var(--modal-panel-bg);
+  border: 1px solid var(--modal-panel-border);
   border-radius: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -340,6 +340,6 @@ onMounted(fetchMember);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: rgb(156 163 175);
+  color: var(--color-text-subtle);
 }
 </style>

@@ -9,14 +9,14 @@
 
     <!-- Sidebar -->
     <div
-      class="fixed top-0 left-0 h-full bg-white shadow-lg w-64 z-40 transform transition-transform duration-300"
+      class="fixed top-0 left-0 h-full bg-[var(--color-surface)] shadow-lg w-64 z-40 transform transition-transform duration-300 border-r border-default-soft"
       :class="{ '-translate-x-full': !open }"
     >
-      <div class="p-6 border-b text-lg font-bold text-blue-700 ml-16">
+      <div class="p-6 border-b border-default-soft text-lg font-bold text-blue-700 ml-16">
         CosmoGym
       </div>
 
-      <nav class="flex flex-col p-4 space-y-2 text-gray-800">
+      <nav class="flex flex-col p-4 space-y-2 text-default">
         <router-link @click="toggle" to="/Menu" class="hover:text-blue-600">Inicio</router-link>
         <router-link @click="toggle" to="/members" class="hover:text-blue-600">Clientes</router-link>
         <router-link @click="toggle" to="/Membership" class="hover:text-blue-600">Membresías</router-link>

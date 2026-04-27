@@ -6,7 +6,7 @@
           <router-link to="/Menu" class="btn btn-dark">Inicio</router-link>
         </template>
 
-        <p v-if="loading" class="text-center py-16 text-xl text-gray-400 animate-pulse">
+        <p v-if="loading" class="text-center py-16 text-xl text-subtle animate-pulse">
           Cargando análisis de datos...
         </p>
       </BaseCard>
@@ -27,7 +27,7 @@
               :data="chart.data.value"
               :options="chart.options"
             />
-            <p v-else class="text-gray-500 text-center mt-10">{{ chart.emptyText }}</p>
+            <p v-else class="text-muted text-center mt-10">{{ chart.emptyText }}</p>
           </div>
         </BaseCard>
       </div>
