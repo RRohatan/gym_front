@@ -1,89 +1,131 @@
 <template>
-  <div class="page-layout">
-    <BaseCard title="Membresías" :subtitle="tituloFiltro" class="space-y-6">
-      <template #actions>
-        <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">
-          Inicio
-        </router-link>
-        <BaseButton variant="success" class="flex-1 sm:flex-none" @click="showModal = true">
-          Asignar membresía
-        </BaseButton>
-      </template>
-
-      <div class="flex overflow-x-auto pb-2 gap-2 scrollbar-hide">
-        <BaseButton
-          v-for="f in filtros"
-          :key="f.value"
-          size="sm"
-          :variant="statusFilter === f.value ? 'primary' : 'secondary'"
-          class="whitespace-nowrap"
-          @click="filtrarMembresias(f.value)"
-        >
-          {{ f.label }}
-        </BaseButton>
+  <div
+    class="page-layout"
+  >
+    <div class="page-card">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+          <h1 class="page-title">Membresías</h1>
+          <p class="page-subtitle">{{ tituloFiltro }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
+          <button @click="showModal = true" class="btn btn-success flex-1 sm:flex-none">Asignar membresía</button>
+        </div>
       </div>
 
-      <BaseInput v-model="busquedaMembresia" placeholder="Buscar miembro..." />
+      <div class="flex overflow-x-auto pb-2 gap-2 mb-4 scrollbar-hide">
+        <button
+          @click="filtrarMembresias('')"
+          class="btn btn-sm whitespace-nowrap"
+          :class="statusFilter === '' ? 'btn-primary' : 'btn-secondary'"
+        >
+          Todos
+        </button>
+        <button
+          @click="filtrarMembresias('active')"
+          class="btn btn-sm whitespace-nowrap"
+          :class="statusFilter === 'active' ? 'btn-primary' : 'btn-secondary'"
+        >
+          ✅ Activas
+        </button>
+        <button
+          @click="filtrarMembresias('inactive_unpaid')"
+          class="btn btn-sm whitespace-nowrap"
+          :class="statusFilter === 'inactive_unpaid' ? 'btn-primary' : 'btn-secondary'"
+        >
+          ⏳ Por Pagar
+        </button>
+        <button
+          @click="filtrarMembresias('expiring_soon')"
+          class="btn btn-sm whitespace-nowrap"
+          :class="statusFilter === 'expiring_soon' ? 'btn-primary' : 'btn-secondary'"
+        >
+          ⚠️ Vencen Pronto
+        </button>
+      </div>
 
-      <div class="table-wrap">
+      <div class="mb-4">
+        <input
+          v-model="busquedaMembresia"
+          type="text"
+          placeholder="Buscar miembro..."
+          class="field-input"
+        />
+      </div>
+
+      <div class="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
         <div v-if="loading" class="text-center py-10 text-gray-400">Cargando...</div>
 
         <table v-else class="w-full text-sm min-w-[800px]">
-          <thead class="table-head">
+          <thead class="bg-gray-100 text-gray-700">
             <tr>
-              <th>Cliente</th>
-              <th>Plan</th>
-              <th>Vigencia</th>
-              <th class="!text-center">Estado</th>
-              <th class="!text-right">Saldo</th>
-              <th class="!text-center">Acción</th>
+              <th class="py-3 px-4 text-left">Cliente</th>
+              <th class="py-3 px-4 text-left">Plan</th>
+              <th class="py-3 px-4 text-left">Vigencia</th>
+              <th class="py-3 px-4 text-center">Estado</th>
+              <th class="py-3 px-4 text-right">Saldo</th>
+              <th class="py-3 px-4 text-center">Acción</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="divide-y divide-gray-100 bg-white">
             <tr v-if="membresias.length === 0">
               <td colspan="6" class="py-10 text-center text-gray-400">
                 No se encontraron resultados.
               </td>
             </tr>
-            <tr v-for="m in membresias" :key="m.id" class="table-row">
-              <td class="font-semibold text-gray-700">{{ m.member?.name }}</td>
-              <td>
+            <tr v-for="m in membresias" :key="m.id" class="hover:bg-gray-50 transition">
+              <td class="py-3 px-4 font-bold text-gray-700">{{ m.member?.name }}</td>
+
+              <td class="py-3 px-4">
                 {{ m.plan?.membership_type?.name }}
-                <BaseBadge color="gray" class="ml-1">
+                <span class="text-xs text-gray-500 bg-gray-100 px-1 rounded ml-1">
                   {{ traducirFrecuencia(m.plan?.frequency) }}
-                </BaseBadge>
+                </span>
               </td>
-              <td class="text-xs text-gray-500">
-                {{ formatDate(m.start_date) }} → {{ formatDate(m.end_date) }}
+
+              <td class="py-3 px-4 text-xs text-gray-500">
+                {{ formatDate(m.start_date) }} ➝ {{ formatDate(m.end_date) }}
               </td>
-              <td class="text-center">
-                <BaseBadge :color="statusColor(m.status)">
+
+              <td class="py-3 px-4 text-center">
+                <span
+                  class="px-2 py-1 rounded-full text-xs font-bold shadow-sm border"
+                  :class="{
+                    'bg-green-100 text-green-700 border-green-200': m.status === 'active',
+                    'bg-red-100 text-red-700 border-red-200': m.status === 'expired',
+                    'bg-yellow-100 text-yellow-700 border-yellow-200':
+                      m.status === 'inactive_unpaid',
+                    'bg-gray-100 text-gray-500 border-gray-200': m.status === 'cancelled' || m.status === 'inactive',
+                  }"
+                >
                   {{ traducirEstado(m.status) }}
-                </BaseBadge>
+                </span>
               </td>
-              <td class="text-right font-mono font-semibold">
+              <td class="py-3 px-4 text-right font-mono font-bold">
                 {{ formatCurrency(m.outstanding_balance) }}
               </td>
-              <td class="text-center">
+              <td class="py-3 px-4 text-center">
                 <div class="flex gap-2 justify-center">
-                  <BaseButton
+                  <!-- Solo mostrar Renovar si está Vencida -->
+                  <button
                     v-if="m.status === 'expired'"
-                    variant="orange"
-                    size="sm"
-                    title="Renovar Membresía"
                     @click="abrirRenovacion(m)"
+                    class="btn btn-sm bg-orange-500 hover:bg-orange-600 text-white shadow-sm flex items-center gap-1"
+                    title="Renovar Membresía"
                   >
-                    Renovar
-                  </BaseButton>
-                  <BaseButton
+                    <span>🔄</span> Renovar
+                  </button>
+
+                  <!-- Mostrar Editar solo si NO está vencida (activa, pendiente, etc.) -->
+                  <button
                     v-else
-                    variant="secondary"
-                    size="sm"
-                    title="Editar / Corregir"
+                    class="btn btn-sm bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 border border-gray-200 flex items-center gap-1"
                     @click="abrirEditarModal(m)"
+                    title="Editar / Corregir"
                   >
-                    Editar
-                  </BaseButton>
+                    <span>✏️</span> Editar
+                  </button>
                 </div>
               </td>
             </tr>
@@ -91,138 +133,146 @@
         </table>
       </div>
 
-      <div
-        v-if="lastPage > 1"
-        class="flex items-center justify-between text-sm text-gray-600"
-      >
-        <span>
-          Página {{ currentPage }} de {{ lastPage }} ({{ totalItems }} registros)
-        </span>
+      <!-- Paginación -->
+      <div v-if="lastPage > 1" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+        <span>Página {{ currentPage }} de {{ lastPage }} ({{ totalItems }} registros)</span>
         <div class="flex gap-1">
-          <BaseButton
-            variant="secondary"
-            size="sm"
-            :disabled="currentPage === 1"
+          <button
             @click="cambiarPagina(currentPage - 1)"
+            :disabled="currentPage === 1"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Anterior
-          </BaseButton>
-          <BaseButton
+            ← Anterior
+          </button>
+          <button
             v-for="page in paginasVisibles"
             :key="page"
-            :variant="page === currentPage ? 'primary' : 'secondary'"
-            size="sm"
             @click="cambiarPagina(page)"
+            class="px-3 py-1 rounded border"
+            :class="page === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-200 bg-white hover:bg-gray-50'"
           >
             {{ page }}
-          </BaseButton>
-          <BaseButton
-            variant="secondary"
-            size="sm"
-            :disabled="currentPage === lastPage"
+          </button>
+          <button
             @click="cambiarPagina(currentPage + 1)"
+            :disabled="currentPage === lastPage"
+            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Siguiente
-          </BaseButton>
+            Siguiente →
+          </button>
         </div>
       </div>
-    </BaseCard>
 
-    <BaseModal
-      v-model="showEditModal"
-      title="Editar Membresía"
-      size="sm"
-      @close="cerrarEditarModal"
-    >
-      <form id="edit-membership-form" class="space-y-3" @submit.prevent="guardarCambios">
-        <BaseSelect
-          v-model="editarMembresia.plan.id"
-          label="Plan"
-          :options="
-            planes.map((p) => ({
-              value: p.id,
-              label: `${p.membership_type?.name} (${traducirFrecuencia(p.frequency)})`,
-            }))
-          "
-        />
+      <div
+        v-if="showEditModal"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+      >
+        <div class="bg-white text-gray-800 w-full max-w-sm p-6 rounded-xl shadow-2xl">
+          <h2 id="membership-edit-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
+            Editar Membresía
+          </h2>
+          <form @submit.prevent="guardarCambios" class="space-y-3">
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-500">Plan</label>
+              <select v-model="editarMembresia.plan.id" class="w-full border p-2 rounded-lg">
+                <option v-for="plan in planes" :key="plan.id" :value="plan.id">
+                  {{ plan.membership_type?.name }} ({{ traducirFrecuencia(plan.frequency) }})
+                </option>
+              </select>
+            </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <BaseInput
-            v-model="editarMembresia.start_date"
-            label="Inicio"
-            type="date"
-          />
-          <BaseInput
-            v-model="editarMembresia.end_date"
-            label="Fin"
-            type="date"
-          />
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs font-bold uppercase text-gray-500">Inicio</label>
+                <input
+                  v-model="editarMembresia.start_date"
+                  type="date"
+                  class="w-full border p-2 rounded-lg"
+                />
+              </div>
+              <div>
+                <label class="text-xs font-bold uppercase text-gray-500">Fin</label>
+                <input
+                  v-model="editarMembresia.end_date"
+                  type="date"
+                  class="w-full border p-2 rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-500">Estado</label>
+              <select v-model="editarMembresia.status" class="w-full border p-2 rounded-lg">
+                <option value="active">Activa</option>
+                <option value="expired">Vencida</option>
+                <option value="inactive_unpaid">Por Pagar</option>
+                <option value="cancelled">Cancelada</option>
+              </select>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4 pt-2 border-t">
+              <button type="button" @click="cerrarEditarModal" class="btn btn-secondary">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
         </div>
+      </div>
 
-        <BaseSelect
-          v-model="editarMembresia.status"
-          label="Estado"
-          :options="STATUS_OPTIONS"
-        />
-      </form>
+      <div
+        v-if="showModal"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+      >
+        <div class="bg-white text-gray-800 w-full max-w-md p-6 rounded-xl shadow-2xl">
+          <h2 id="membership-assign-modal-title" class="font-bold text-lg mb-4 border-b pb-2 flex items-center gap-2">
+            {{ form.member_id ? "Asignar membresía a " + busqueda : "Asignar Nueva" }}
+          </h2>
+          <form @submit.prevent="asignarMembresia" class="space-y-4">
+            <!-- Solo mostrar búsqueda si NO hay member_id pre-seleccionado -->
+            <div v-if="!form.member_id">
+              <label class="text-xs font-bold uppercase text-gray-500">Buscar Cliente</label>
+              <input
+                v-model="busqueda"
+                type="text"
+                placeholder="Nombre..."
+                class="w-full border p-2 rounded-lg"
+              />
+              <ul
+                v-if="miembrosFiltrados.length"
+                class="border rounded-lg mt-1 max-h-32 overflow-y-auto bg-gray-50 absolute w-64 z-10 shadow-lg"
+              >
+                <li
+                  v-for="m in miembrosFiltrados"
+                  :key="m.id"
+                  @click="seleccionarMiembro(m)"
+                  class="p-2 hover:bg-blue-100 cursor-pointer text-sm border-b"
+                >
+                  {{ m.name }}
+                </li>
+              </ul>
+            </div>
 
-      <template #footer>
-        <BaseButton variant="secondary" @click="cerrarEditarModal">Cancelar</BaseButton>
-        <BaseButton variant="primary" type="submit" form="edit-membership-form">
-          Guardar
-        </BaseButton>
-      </template>
-    </BaseModal>
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-500">Plan</label>
+              <select v-model="form.plan_id" class="w-full border p-2 rounded-lg" required>
+                <option disabled value="">Seleccione...</option>
+                <option v-for="p in planes" :key="p.id" :value="p.id">
+                  {{ p.membership_type?.name }} - {{ traducirFrecuencia(p.frequency) }} - ${{
+                    parseInt(p.price).toLocaleString()
+                  }}
+                </option>
+              </select>
+            </div>
 
-    <BaseModal
-      v-model="showModal"
-      :title="form.member_id ? `Asignar membresía a ${busqueda}` : 'Asignar Nueva'"
-      size="md"
-      @close="cerrarModal"
-    >
-      <form id="assign-membership-form" class="space-y-4" @submit.prevent="asignarMembresia">
-        <div v-if="!form.member_id" class="relative">
-          <BaseInput
-            v-model="busqueda"
-            label="Buscar Cliente"
-            placeholder="Nombre..."
-          />
-          <ul
-            v-if="miembrosFiltrados.length"
-            class="border border-gray-200 rounded-lg mt-1 max-h-32 overflow-y-auto bg-white absolute left-0 right-0 z-10 shadow-lg"
-          >
-            <li
-              v-for="m in miembrosFiltrados"
-              :key="m.id"
-              class="p-2 hover:bg-blue-100 cursor-pointer text-sm border-b last:border-0"
-              @click="seleccionarMiembro(m)"
-            >
-              {{ m.name }}
-            </li>
-          </ul>
+            <div class="flex justify-end gap-2 pt-2">
+              <button type="button" @click="cerrarModal" class="btn btn-secondary">Cancelar</button>
+              <button type="submit" class="btn btn-success">Asignar</button>
+            </div>
+          </form>
         </div>
-
-        <BaseSelect
-          v-model="form.plan_id"
-          label="Plan"
-          placeholder="Seleccione..."
-          :options="
-            planes.map((p) => ({
-              value: p.id,
-              label: `${p.membership_type?.name} - ${traducirFrecuencia(p.frequency)} - $${parseInt(p.price).toLocaleString()}`,
-            }))
-          "
-          required
-        />
-      </form>
-
-      <template #footer>
-        <BaseButton variant="secondary" @click="cerrarModal">Cancelar</BaseButton>
-        <BaseButton variant="success" type="submit" form="assign-membership-form">
-          Asignar
-        </BaseButton>
-      </template>
-    </BaseModal>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -235,35 +285,8 @@ import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 import Swal from "sweetalert2";
-import { BaseButton, BaseInput, BaseSelect, BaseCard, BaseBadge, BaseModal } from "@/components/ui";
 
 const route = useRoute();
-
-// Filtros y mapeo de color para badges de estado.
-const filtros = [
-  { value: "", label: "Todos" },
-  { value: "active", label: "Activas" },
-  { value: "inactive_unpaid", label: "Por Pagar" },
-  { value: "expiring_soon", label: "Vencen Pronto" },
-];
-
-const STATUS_OPTIONS = [
-  { value: "active", label: "Activa" },
-  { value: "expired", label: "Vencida" },
-  { value: "inactive_unpaid", label: "Por Pagar" },
-  { value: "cancelled", label: "Cancelada" },
-];
-
-const statusColor = (status) => {
-  const map = {
-    active: "green",
-    expired: "red",
-    inactive_unpaid: "yellow",
-    cancelled: "gray",
-    inactive: "gray",
-  };
-  return map[status] || "gray";
-};
 
 // Estado
 const membresias = ref([]);
@@ -323,20 +346,10 @@ const cargarMembresias = async () => {
     if (busquedaMembresia.value) params.append("search", busquedaMembresia.value);
     params.append("page", currentPage.value);
     const { data } = await api.get(`/memberships?${params.toString()}`);
-    // El backend devuelve estructura paginada {data, current_page, last_page, total}
-    // para algunos filtros, pero para otros (ej. "active", "expiring_soon")
-    // regresa un array plano. Toleramos ambos casos.
-    if (Array.isArray(data)) {
-      membresias.value = data;
-      currentPage.value = 1;
-      lastPage.value = 1;
-      totalItems.value = data.length;
-    } else {
-      membresias.value = Array.isArray(data?.data) ? data.data : [];
-      currentPage.value = data?.current_page ?? 1;
-      lastPage.value = data?.last_page ?? 1;
-      totalItems.value = data?.total ?? membresias.value.length;
-    }
+    membresias.value = data.data;
+    currentPage.value = data.current_page;
+    lastPage.value = data.last_page;
+    totalItems.value = data.total;
   } catch (error) {
     console.error(error);
     membresias.value = [];

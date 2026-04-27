@@ -6,7 +6,9 @@
     <div
       class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500"
     >
-      <h2 class="text-xl font-bold mb-2 text-gray-800">Registrar Pago</h2>
+      <h2 id="member-payment-modal-title" class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+        Registrar Pago
+      </h2>
       <p class="text-sm text-gray-600 mb-4">
         Cliente: <strong>{{ member?.name }}</strong>
       </p>
@@ -42,8 +44,7 @@
             class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg"
             :disabled="processing"
           >
-            <template v-if="processing">Procesando...</template>
-            <template v-else>Confirmar Pago</template>
+            {{ processing ? "Procesando..." : "✅ Confirmar Pago" }}
           </button>
         </div>
       </form>
@@ -56,7 +57,6 @@
 import { ref, watch, onMounted } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
-import { SWAL_COLORS } from "@/lib/colors";
 
 const props = defineProps({
   show: Boolean,
@@ -113,14 +113,14 @@ watch(
               icon: "error",
               title: "Sin conexión a internet",
               text: "No se pudo verificar el saldo. Verifica tu conexión.",
-              confirmButtonColor: SWAL_COLORS.danger,
+              confirmButtonColor: "#d33",
             });
           } else {
             Swal.fire({
               icon: "error",
               title: "Error de conexión",
               text: "No se pudo conectar con el servidor para verificar el saldo.",
-              confirmButtonColor: SWAL_COLORS.danger,
+              confirmButtonColor: "#d33",
             });
           }
         } else if (error.response.status === 404) {
@@ -162,7 +162,7 @@ const pagar = async () => {
           title: "Tiempo de espera agotado",
           html: `<p>El pago tardó demasiado tiempo en procesarse.</p>
                  <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
-          confirmButtonColor: SWAL_COLORS.info,
+          confirmButtonColor: "#3085d6",
         });
       } else if (!navigator.onLine) {
         Swal.fire({
@@ -170,7 +170,7 @@ const pagar = async () => {
           title: "Sin conexión a internet",
           html: `<p>No se pudo procesar el pago porque no hay conexión a internet.</p>
                  <p class="text-sm mt-2">Por favor, verifica tu conexión y vuelve a intentar.</p>`,
-          confirmButtonColor: SWAL_COLORS.danger,
+          confirmButtonColor: "#d33",
         });
       } else {
         Swal.fire({
@@ -178,7 +178,7 @@ const pagar = async () => {
           title: "Error de conexión",
           html: `<p>No se pudo conectar con el servidor para procesar el pago.</p>
                  <p class="text-sm mt-2">Verifica tu conexión e intenta nuevamente.</p>`,
-          confirmButtonColor: SWAL_COLORS.danger,
+          confirmButtonColor: "#d33",
         });
       }
     } else {
@@ -190,14 +190,14 @@ const pagar = async () => {
           icon: "error",
           title: "Membresía no encontrada",
           text: "No se encontró la membresía asociada a este cliente.",
-          confirmButtonColor: SWAL_COLORS.danger,
+          confirmButtonColor: "#d33",
         });
       } else if (status === 422) {
         Swal.fire({
           icon: "warning",
           title: "Datos inválidos",
           text: error.response.data?.message || "Los datos del pago no son válidos.",
-          confirmButtonColor: SWAL_COLORS.warning,
+          confirmButtonColor: "#f39c12",
         });
       } else if (status >= 500) {
         Swal.fire({
@@ -205,14 +205,14 @@ const pagar = async () => {
           title: "Error del servidor",
           html: `<p>Ocurrió un error en el servidor al procesar el pago.</p>
                  <p class="text-sm mt-2"><strong>IMPORTANTE:</strong> Verifica si el pago se registró antes de intentar nuevamente.</p>`,
-          confirmButtonColor: SWAL_COLORS.danger,
+          confirmButtonColor: "#d33",
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "Error al procesar pago",
           text: error.response?.data?.message || "No se pudo registrar el pago.",
-          confirmButtonColor: SWAL_COLORS.danger,
+          confirmButtonColor: "#d33",
         });
       }
     }
