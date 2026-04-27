@@ -35,21 +35,23 @@
           v-for="member in miembrosPaginados"
           :key="member.id"
           class="relative rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-white text-black"
-          :class="member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80'"
-          style="box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);"
+          :class="[
+            'shadow-card',
+            member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80',
+          ]"
         >
           <!-- Barra de estado superior -->
           <div
             v-if="member.memberships?.[0]?.status === 'expired'"
             class="w-full text-center text-xs font-bold py-1 bg-red-400 text-white tracking-wide"
           >
-            ⏰ Membresía Vencida
+            Membresía Vencida
           </div>
           <div
             v-else-if="member.memberships?.[0]?.status === 'inactive_unpaid'"
             class="w-full text-center text-xs font-bold py-1 bg-yellow-400 text-white tracking-wide"
           >
-            💳 Pendiente de Pago
+            Pendiente de Pago
           </div>
 
           <div class="p-4 flex justify-between items-center">
@@ -138,11 +140,11 @@
         <div class="flex gap-1">
           <button @click="currentPageMiembros--" :disabled="currentPageMiembros === 1"
             class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
-            ← Anterior
+            Anterior
           </button>
           <button @click="currentPageMiembros++" :disabled="currentPageMiembros === totalMiembrosPages"
             class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
-            Siguiente →
+            Siguiente
           </button>
         </div>
       </div>

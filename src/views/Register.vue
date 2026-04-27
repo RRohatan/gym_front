@@ -43,9 +43,6 @@
           <div class="auth-field">
             <label class="auth-label">Nombre completo</label>
             <div class="auth-input-wrap">
-              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
               <input v-model="form.name" type="text" class="auth-input" placeholder="Tu nombre completo" required />
             </div>
           </div>
@@ -53,9 +50,6 @@
           <div class="auth-field">
             <label class="auth-label">Correo electrónico</label>
             <div class="auth-input-wrap">
-              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-              </svg>
               <input v-model="form.email" type="email" class="auth-input" placeholder="tu@correo.com" required />
             </div>
           </div>
@@ -63,9 +57,6 @@
           <div class="auth-field">
             <label class="auth-label">Nombre del Gimnasio</label>
             <div class="auth-input-wrap">
-              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-              </svg>
               <input v-model="form.gym_name" type="text" class="auth-input" placeholder="Nombre de tu gimnasio" required />
             </div>
           </div>
@@ -73,9 +64,6 @@
           <div class="auth-field">
             <label class="auth-label">Contraseña</label>
             <div class="auth-input-wrap">
-              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
               <input v-model="form.password" :type="showPassword ? 'text' : 'password'" class="auth-input pr-11" placeholder="••••••••" required />
               <button type="button" class="auth-eye-btn" @click="showPassword = !showPassword" tabindex="-1">
                 <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -92,9 +80,6 @@
           <div class="auth-field">
             <label class="auth-label">Confirmar contraseña</label>
             <div class="auth-input-wrap">
-              <svg class="auth-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
               <input v-model="form.password_confirmation" :type="showPassword ? 'text' : 'password'" class="auth-input" placeholder="••••••••" required />
             </div>
           </div>
@@ -127,6 +112,7 @@ import { useRouter } from 'vue-router'
 import api from '@/axios'
 import { useAuthStore } from '@/stores/useAuthStore'
 import Swal from 'sweetalert2'
+import { SWAL_COLORS } from '@/lib/colors'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -151,7 +137,7 @@ const register = async () => {
       text: 'Tu cuenta ha sido creada correctamente.',
       icon: 'success',
       confirmButtonText: 'Continuar',
-      confirmButtonColor: '#dc2626',
+      confirmButtonColor: SWAL_COLORS.danger,
     })
     router.push({ name: 'Login' })
   } catch (error: any) {
@@ -160,7 +146,7 @@ const register = async () => {
       text: error?.response?.data?.message || 'Ocurrió un error desconocido.',
       icon: 'error',
       confirmButtonText: 'Cerrar',
-      confirmButtonColor: '#dc2626',
+      confirmButtonColor: SWAL_COLORS.danger,
     })
   } finally {
     loading.value = false

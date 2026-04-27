@@ -60,11 +60,8 @@
               <span
                 v-for="feature in subscription.plan?.features"
                 :key="feature.id"
-                class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold"
+                class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold"
               >
-                <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                </svg>
                 {{ featureLabel(feature) }}
               </span>
             </div>
@@ -115,11 +112,8 @@
                 <li
                   v-for="feature in plan.features"
                   :key="feature.id"
-                  class="flex items-center gap-2 text-xs text-gray-700"
+                  class="text-xs text-gray-700"
                 >
-                  <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                  </svg>
                   {{ featureLabel(feature) }}
                 </li>
               </ul>
@@ -151,6 +145,7 @@ import { ref, computed, onMounted } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
+import { SWAL_COLORS } from '@/lib/colors'
 
 const loading  = ref(true)
 const saving   = ref(false)
@@ -235,7 +230,7 @@ async function confirmCancel() {
     text: 'Seguirás teniendo acceso hasta que venza el plan.',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#dc2626',
+    confirmButtonColor: SWAL_COLORS.danger,
     cancelButtonText: 'No',
     confirmButtonText: 'Sí, cancelar',
   })

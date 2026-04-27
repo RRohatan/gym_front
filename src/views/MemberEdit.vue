@@ -1,22 +1,14 @@
 <template>
-  <div
-    class="page-layout"
-  >
+  <div class="page-layout">
     <div class="max-w-3xl mx-auto">
-      <!-- Header -->
-      <div class="mb-8 flex items-center justify-between">
-        <div>
-          <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Editar Cliente</h2>
-          <p class="mt-1 text-sm text-slate-400">Actualiza la información del cliente.</p>
-        </div>
-        <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
-          Volver
-        </router-link>
-      </div>
+      <BaseCard title="Editar Cliente" subtitle="Actualiza la información del cliente.">
+        <template #actions>
+          <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
+            Volver
+          </router-link>
+        </template>
 
-      <!-- Card -->
-      <div class="bg-white shadow-xl rounded-2xl overflow-hidden text-gray-900">
-        <form @submit.prevent="updateMember" class="p-6 sm:p-8 space-y-6">
+        <form class="space-y-6" @submit.prevent="updateMember">
           <!-- Section: Personal Info -->
           <div>
             <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">
@@ -68,21 +60,13 @@
               </div>
 
               <div class="sm:col-span-1">
-                <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo</label>
-                <div class="mt-1">
-                  <select
-                    id="sexo"
-                    v-model="form.sexo"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  >
-                    <option disabled value="">Selecciona una opción</option>
-                    <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
-                    <option value="no binario">No binario</option>
-                    <option value="prefiere no decirlo">Prefiero no decirlo</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
+                <BaseSelect
+                  id="sexo"
+                  v-model="form.sexo"
+                  label="Sexo"
+                  placeholder="Selecciona una opción"
+                  :options="SEXO_OPTIONS"
+                />
               </div>
             </div>
           </div>
@@ -94,24 +78,11 @@
               <div class="sm:col-span-1">
                 <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      class="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                      />
-                    </svg>
-                  </div>
                   <input
                     id="phone"
                     v-model="form.phone"
                     type="text"
-                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                    class="focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="+1 (555) 987-6543"
                   />
                 </div>
@@ -120,25 +91,11 @@
               <div class="sm:col-span-1">
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      class="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                      />
-                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
-                  </div>
                   <input
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                    class="focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="ejemplo@correo.com"
                   />
                 </div>
@@ -221,17 +178,16 @@
             />
           </div>
 
-          <!-- Actions -->
           <div class="pt-5 border-t border-gray-200 flex justify-end gap-3">
             <router-link :to="{ name: 'Members' }" class="btn btn-secondary">
               Cancelar
             </router-link>
-            <button type="submit" class="btn btn-primary" :disabled="loading">
-              {{ loading ? "Guardando..." : "Guardar Cambios" }}
-            </button>
+            <BaseButton type="submit" variant="primary" :loading="loading" :disabled="loading">
+              Guardar Cambios
+            </BaseButton>
           </div>
         </form>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -240,6 +196,15 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/axios";
+import { BaseSelect, BaseButton, BaseCard } from "@/components/ui";
+
+const SEXO_OPTIONS = [
+  { value: "masculino", label: "Masculino" },
+  { value: "femenino", label: "Femenino" },
+  { value: "no binario", label: "No binario" },
+  { value: "prefiere no decirlo", label: "Prefiero no decirlo" },
+  { value: "otro", label: "Otro" },
+];
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
 
