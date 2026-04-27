@@ -48,12 +48,13 @@
         class="bg-[var(--color-surface)] rounded-2xl shadow-card p-4 sm:p-6 text-default animate-fade-in space-y-4"
       >
         <div class="flex justify-between items-center gap-3 flex-wrap">
-          <h2 class="text-xl font-semibold text-blue-800">Historial de Ventas</h2>
+          <h2 class="text-xl font-semibold" style="color: var(--color-text);">Historial de Ventas</h2>
           <div
-            class="text-sm text-muted bg-blue-50 px-3 py-1 rounded-lg border border-blue-100"
+            class="text-sm px-3 py-1 rounded-lg border"
+            style="color: var(--color-text-muted); background: var(--color-surface-soft); border-color: var(--color-border);"
           >
             Total Vendido:
-            <span class="font-semibold text-blue-700">
+            <span class="font-semibold text-emerald-500">
               {{ formatCurrency(totalVentas) }}
             </span>
           </div>
@@ -61,7 +62,7 @@
 
         <div class="table-wrap">
           <table class="w-full text-sm text-left">
-            <thead class="bg-blue-50 text-blue-800 uppercase text-xs font-semibold">
+            <thead class="table-head">
               <tr>
                 <th class="p-3">Fecha</th>
                 <th class="p-3">Producto</th>
@@ -128,7 +129,7 @@
         class="bg-[var(--color-surface)] rounded-2xl shadow-card p-4 sm:p-6 text-default animate-fade-in space-y-4"
       >
         <div class="flex justify-between items-center gap-3 flex-wrap">
-          <h2 class="text-xl font-semibold text-emerald-800">Historial de Compras</h2>
+          <h2 class="text-xl font-semibold" style="color: var(--color-text);">Historial de Compras</h2>
           <BaseButton variant="success" size="sm" @click="abrirModalCompra">
             Registrar Nueva Compra
           </BaseButton>
@@ -136,9 +137,7 @@
 
         <div class="table-wrap">
           <table class="w-full text-sm text-left">
-            <thead
-              class="bg-emerald-50 text-emerald-800 uppercase text-xs font-semibold"
-            >
+            <thead class="table-head">
               <tr>
                 <th class="p-3">Fecha</th>
                 <th class="p-3">Producto</th>

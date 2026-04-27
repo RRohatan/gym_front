@@ -106,7 +106,7 @@
             <!-- Stats strip -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
               <div class="stat-card">
-                <div class="stat-icon bg-primary-100 text-primary-700">
+                <div class="stat-icon stat-icon-primary">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon bg-success-100 text-success-700">
+                <div class="stat-icon stat-icon-success">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h8M4 14h8M4 18h16" />
                   </svg>
@@ -128,7 +128,7 @@
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon bg-success-100 text-success-700">
+                <div class="stat-icon stat-icon-success">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 3v3M18 3v3M3 9h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -160,7 +160,7 @@
                 <div class="detail-card">
                   <div class="section-header">
                     <span class="section-bar bg-primary-600" />
-                    <h2 class="section-title text-primary-700">Información Personal</h2>
+                    <h2 class="section-title" style="color: var(--color-text-muted);">Información Personal</h2>
                   </div>
                   <dl class="info-grid">
                     <div class="info-item">
@@ -193,7 +193,7 @@
                 <div class="detail-card">
                   <div class="section-header">
                     <span class="section-bar bg-danger-500" />
-                    <h2 class="section-title text-danger-600">Antecedentes Médicos</h2>
+                    <h2 class="section-title" style="color: var(--color-text-muted);">Antecedentes Médicos</h2>
                   </div>
                   <div
                     v-if="member.medical_history"
@@ -211,20 +211,20 @@
                 <div v-if="member.memberships?.length" class="detail-card">
                   <div class="section-header">
                     <span class="section-bar bg-primary-600" />
-                    <h2 class="section-title text-primary-700">Membresía</h2>
+                    <h2 class="section-title" style="color: var(--color-text-muted);">Membresía</h2>
                   </div>
-                  <div class="bg-gradient-to-br from-primary-50 to-indigo-50 border border-primary-100 rounded-xl p-4 mb-4">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-primary-700/70 mb-1">
+                  <div class="membership-plan-card">
+                    <p class="text-[10px] font-semibold uppercase tracking-widest mb-1" style="color: var(--color-text-subtle);">
                       Plan Actual
                     </p>
-                    <p class="text-lg font-bold text-default capitalize">
+                    <p class="text-lg font-bold capitalize" style="color: var(--color-text);">
                       {{ traducirFrecuencia(member.memberships[0].plan?.frequency) }}
                     </p>
-                    <p class="text-2xl font-black text-primary-700 mt-1">
+                    <p class="text-2xl font-black mt-1" style="color: #60a5fa;">
                       {{ formatPrice(member.memberships[0].plan?.price) }}
                     </p>
                   </div>
-                  <div class="text-sm divide-y divide-gray-200">
+                  <div class="text-sm divide-y" style="--tw-divide-opacity:1; border-color: var(--color-border);">
                     <div class="flex items-center justify-between py-2.5">
                       <span class="info-label !mb-0">Estado</span>
                       <BaseBadge :color="statusColor(member.memberships[0].status)">
@@ -339,17 +339,17 @@ const diasRestantesCls = computed(() => {
 
 const imcIconCls = computed(() => {
   const cls = clasificacionIMC.value;
-  if (cls === "Normal") return "bg-success-100 text-success-700";
-  if (cls === "Bajo peso" || cls === "Sobrepeso") return "bg-amber-100 text-amber-700";
-  if (cls.startsWith("Obesidad")) return "bg-danger-100 text-danger-600";
-  return "bg-[var(--color-overlay)] text-muted";
+  if (cls === "Normal") return "stat-icon-success";
+  if (cls === "Bajo peso" || cls === "Sobrepeso") return "stat-icon-warning";
+  if (cls.startsWith("Obesidad")) return "stat-icon-danger";
+  return "stat-icon-neutral";
 });
 
 const imcTextCls = computed(() => {
   const cls = clasificacionIMC.value;
-  if (cls === "Normal") return "text-success-700";
-  if (cls === "Bajo peso" || cls === "Sobrepeso") return "text-amber-700";
-  if (cls.startsWith("Obesidad")) return "text-danger-600";
+  if (cls === "Normal") return "imc-text-success";
+  if (cls === "Bajo peso" || cls === "Sobrepeso") return "imc-text-warning";
+  if (cls.startsWith("Obesidad")) return "imc-text-danger";
   return "text-muted";
 });
 
@@ -477,6 +477,11 @@ function traducirEstado(estado) {
   border-radius: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 .stat-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.stat-icon-primary { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+.stat-icon-success { background: rgba(16, 185, 129, 0.12); color: #10b981; }
+:global(.dark) .stat-icon-primary { background: rgba(99, 102, 241, 0.18); color: #a5b4fc; }
+:global(.dark) .stat-icon-success { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; }
+
 .stat-label { font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-subtle); }
 .stat-value { font-size: 1.125rem; font-weight: 800; color: var(--color-text); line-height: 1.2; }
 
@@ -485,6 +490,26 @@ function traducirEstado(estado) {
   border: 1px solid var(--color-border);
   border-radius: 1rem; padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+:global(.dark) .detail-card {
+  background: var(--color-surface-muted);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+:global(.dark) .stat-card {
+  background: var(--color-surface-muted);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+.membership-plan-card {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+:global(.dark) .membership-plan-card {
+  background: rgba(99, 102, 241, 0.10);
+  border-color: rgba(99, 102, 241, 0.25);
 }
 
 .info-label {
@@ -529,4 +554,19 @@ function traducirEstado(estado) {
   margin-right: 0.75rem;
   vertical-align: middle;
 }
+
+/* Additional stat-icon variants */
+.stat-icon-warning { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.stat-icon-danger { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.stat-icon-neutral { background: var(--color-overlay); color: var(--color-text-muted); }
+:global(.dark) .stat-icon-warning { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+:global(.dark) .stat-icon-danger { background: rgba(239, 68, 68, 0.18); color: #fca5a5; }
+
+/* IMC text colors */
+.imc-text-success { color: #10b981; }
+.imc-text-warning { color: #f59e0b; }
+.imc-text-danger { color: #ef4444; }
+:global(.dark) .imc-text-success { color: #6ee7b7; }
+:global(.dark) .imc-text-warning { color: #fbbf24; }
+:global(.dark) .imc-text-danger { color: #fca5a5; }
 </style>

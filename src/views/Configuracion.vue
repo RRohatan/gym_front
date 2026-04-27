@@ -13,7 +13,7 @@
 
       <div class="bg-[var(--color-surface)] rounded-2xl shadow-xl p-6 sm:p-8 text-default animate-fade-in-up border border-default-soft">
         <div class="border-b border-default-soft pb-4 mb-6">
-          <h2 class="text-xl font-bold text-blue-900">Personalización de Bienvenida</h2>
+          <h2 class="text-xl font-bold" style="color: var(--color-text);">Personalización de Bienvenida</h2>
           <p class="text-sm text-muted">
             Esta información se enviará automáticamente por correo a los nuevos clientes.
           </p>
@@ -57,7 +57,7 @@
 
           <div>
             <label
-              class="block text-sm font-bold text-green-700 mb-2 uppercase tracking-wide flex items-center gap-2"
+              class="block text-sm font-bold mb-2 uppercase tracking-wide flex items-center gap-2 text-emerald-600 dark:text-emerald-400"
             >
               <span class="text-xl">📲</span> Enlace Grupo WhatsApp
             </label>

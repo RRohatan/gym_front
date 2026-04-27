@@ -1,33 +1,27 @@
 <template>
-  <div class="h-screen bg-[var(--color-bg)] flex flex-col text-default overflow-hidden">
+  <div class="pos-root">
 
-    <header class="bg-[var(--color-surface)] shadow-sm px-4 py-3 flex justify-between items-center z-10 shrink-0 border-b border-default-soft">
-      <div class="flex items-center gap-2">
-        <h1 class="text-lg md:text-xl font-bold text-default hidden sm:block">Punto de Venta</h1>
-      </div>
-
+    <!-- ═══ HEADER ═══ -->
+    <header class="pos-header">
+      <h1 class="text-lg md:text-xl font-bold">Punto de Venta</h1>
       <div class="flex gap-2">
-        <router-link
-          to="/Products"
-          class="bg-purple-100 text-purple-700 px-3 py-2 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-2 active:scale-95 transition"
-        >
-          <span class="hidden sm:inline">Inventario</span>
+        <router-link to="/Products" class="btn btn-indigo px-3 py-2 text-xs sm:text-sm">
+          Inventario
         </router-link>
-
-        <router-link
-          to="/Menu"
-          class="bg-gray-900 text-white px-3 py-2 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-2 active:scale-95 transition shadow"
-        >
-          <span class="hidden sm:inline">Salir</span>
+        <router-link to="/Menu" class="btn btn-dark px-3 py-2 text-xs sm:text-sm">
+          Salir
         </router-link>
       </div>
     </header>
 
-    <div class="flex-1 p-2 sm:p-4 flex flex-col lg:flex-row gap-4 overflow-hidden">
+    <!-- ═══ BODY ═══ -->
+    <div class="pos-body">
 
-      <div class="w-full lg:w-2/3 flex flex-col gap-3 h-1/2 lg:h-full">
+      <!-- ── Productos (izquierda) ── -->
+      <div class="pos-products-col">
 
-        <div class="bg-[var(--color-surface)] p-3 rounded-xl shadow-sm flex flex-col sm:flex-row gap-3 shrink-0 border border-default-soft">
+        <!-- Barra de filtros -->
+        <div class="pos-filters">
           <div class="flex-1">
             <BaseSelect
               v-model="selectedMemberId"
@@ -38,75 +32,78 @@
             />
           </div>
           <div class="flex-1">
-            <div class="relative">
-              <input v-model="search" type="text" placeholder="Buscar producto..." class="field-input text-sm">
-            </div>
+            <input v-model="search" type="text" placeholder="Buscar producto..." class="field-input text-sm">
           </div>
         </div>
 
+        <!-- Grid de productos -->
         <div class="flex-1 overflow-y-auto pb-20 lg:pb-0 pr-1">
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             <div
               v-for="product in filteredProducts"
               :key="product.id"
               @click="addToCart(product)"
-              class="bg-[var(--color-surface)] p-3 rounded-xl shadow-sm border border-transparent active:border-blue-500 active:bg-blue-50 cursor-pointer flex flex-col justify-between h-full relative"
+              class="pos-product-card"
             >
               <span
-                :class="product.stock < 5 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'"
-                class="absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-full font-bold"
+                class="badge absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-full font-bold"
+                :class="product.stock < 5 ? 'badge-red' : 'badge-green'"
               >
                 {{ product.stock }}
               </span>
-
               <div>
-                <h3 class="font-bold text-default text-sm leading-tight line-clamp-2">{{ product.name }}</h3>
-                <p class="text-lg font-bold text-blue-600 mt-1">${{ formatCurrency(product.price) }}</p>
+                <h3 class="font-bold text-sm leading-tight line-clamp-2" style="color: var(--color-text);">{{ product.name }}</h3>
+                <p class="text-lg font-bold mt-1 pos-price">${{ formatCurrency(product.price) }}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="w-full lg:w-1/3 bg-[var(--color-surface)] rounded-t-xl lg:rounded-xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] lg:shadow-lg flex flex-col h-1/2 lg:h-full z-20 border-t lg:border-t-0 border-default-soft">
+      <!-- ── Ticket (derecha) ── -->
+      <div class="pos-ticket">
 
-        <div class="p-3 border-b border-default-soft flex justify-between items-center bg-[var(--color-surface-soft)] lg:bg-[var(--color-surface)] rounded-t-xl shrink-0">
-          <h3 class="font-bold text-muted flex items-center gap-2">
-            Ticket
-            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">{{ cart.length }} items</span>
+        <!-- Ticket header -->
+        <div class="pos-ticket-header">
+          <h3 class="font-bold flex items-center gap-2" style="color: var(--color-text);">
+            🧾 Ticket
+            <span class="badge badge-blue text-xs px-2 py-0.5 rounded-full">{{ cart.length }} items</span>
           </h3>
-          <button @click="cart = []" v-if="cart.length > 0" class="text-xs text-red-500 hover:underline">Vaciar</button>
+          <button @click="cart = []" v-if="cart.length > 0" class="text-xs text-red-400 hover:text-red-300 hover:underline cursor-pointer">Vaciar</button>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-2 space-y-2 bg-[var(--color-surface)]">
-          <div v-if="cart.length === 0" class="h-full flex flex-col items-center justify-center text-subtle opacity-50">
-            <p class="text-sm">Carrito vacío</p>
+        <!-- Ticket items -->
+        <div class="pos-ticket-items">
+          <div v-if="cart.length === 0" class="h-full flex flex-col items-center justify-center opacity-40">
+            <svg class="w-10 h-10 mb-2" style="color: var(--color-text-subtle);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+            <p class="text-sm" style="color: var(--color-text-subtle);">Carrito vacío</p>
           </div>
 
-          <div v-for="(item, index) in cart" :key="index" class="flex justify-between items-center bg-[var(--color-surface-soft)] p-2 rounded-lg border border-default-soft text-sm">
-            <div class="flex-1">
-              <p class="font-bold text-default truncate">{{ item.name }}</p>
-              <div class="text-xs text-muted">
+          <div v-for="(item, index) in cart" :key="index" class="pos-cart-item">
+            <div class="flex-1 min-w-0">
+              <p class="font-bold truncate" style="color: var(--color-text);">{{ item.name }}</p>
+              <div class="text-xs" style="color: var(--color-text-muted);">
                 {{ item.quantity }} x ${{ formatCurrency(item.price) }}
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <span class="font-bold text-muted">${{ formatCurrency(item.price * item.quantity) }}</span>
-              <button @click="removeFromCart(index)" class="w-6 h-6 flex items-center justify-center bg-red-100 text-red-600 rounded-full active:scale-90">×</button>
+              <span class="font-bold" style="color: var(--color-text-soft);">${{ formatCurrency(item.price * item.quantity) }}</span>
+              <button @click="removeFromCart(index)" class="pos-remove-btn">×</button>
             </div>
           </div>
         </div>
 
-        <div class="p-3 bg-[var(--color-surface-soft)] border-t border-default-soft shrink-0">
+        <!-- Ticket footer -->
+        <div class="pos-ticket-footer">
           <div class="flex justify-between items-center mb-3">
-            <span class="text-muted font-medium">Total a Pagar</span>
-            <span class="text-2xl font-black text-default">${{ formatCurrency(totalCart) }}</span>
+            <span style="color: var(--color-text-muted);" class="font-medium">Total a Pagar</span>
+            <span class="text-2xl font-black" style="color: var(--color-text);">${{ formatCurrency(totalCart) }}</span>
           </div>
 
           <button
             @click="procesarVenta"
             :disabled="cart.length === 0 || !selectedMemberId"
-            class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-[var(--color-overlay-strong)] disabled:text-subtle text-white py-3 rounded-xl font-bold shadow-lg text-lg disabled:cursor-not-allowed transition active:scale-95 flex justify-center items-center gap-2"
+            class="pos-cobrar-btn"
           >
             <template v-if="!selectedMemberId">Selecciona Cliente</template>
             <template v-else>COBRAR</template>
@@ -214,3 +211,242 @@ const procesarVenta = async () => {
 
 onMounted(() => fetchData())
 </script>
+
+<style scoped>
+/* ═══════════════════════════════════════════
+   POS – Layout principal
+   ═══════════════════════════════════════════ */
+.pos-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.pos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 10;
+  flex-shrink: 0;
+}
+:global(.dark) .pos-header {
+  background: var(--color-surface-muted);
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.pos-body {
+  flex: 1;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+}
+@media (min-width: 640px) { .pos-body { padding: 1rem; } }
+@media (min-width: 1024px) { .pos-body { flex-direction: row; } }
+
+/* ═══════════════════════════════════════════
+   Columna de productos
+   ═══════════════════════════════════════════ */
+.pos-products-col {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 50%;
+}
+@media (min-width: 1024px) {
+  .pos-products-col { width: 66.66%; height: 100%; }
+}
+
+.pos-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+@media (min-width: 640px) { .pos-filters { flex-direction: row; } }
+:global(.dark) .pos-filters {
+  background: var(--color-surface-muted);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ═══════════════════════════════════════════
+   Tarjeta de producto
+   ═══════════════════════════════════════════ */
+.pos-product-card {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+  transition: all 0.15s ease;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+:global(.dark) .pos-product-card {
+  background: var(--color-surface-muted);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.pos-product-card:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  transform: translateY(-1px);
+}
+:global(.dark) .pos-product-card:hover {
+  background: var(--color-surface-soft);
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.pos-product-card:active {
+  border-color: #3b82f6;
+  transform: scale(0.97);
+}
+
+.pos-price {
+  color: #3b82f6;
+}
+:global(.dark) .pos-price {
+  color: #60a5fa;
+}
+
+/* ═══════════════════════════════════════════
+   Panel del Ticket
+   ═══════════════════════════════════════════ */
+.pos-ticket {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  z-index: 20;
+  border-radius: 0.75rem 0.75rem 0 0;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.1);
+}
+@media (min-width: 1024px) {
+  .pos-ticket {
+    width: 33.33%;
+    height: 100%;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+}
+:global(.dark) .pos-ticket {
+  background: var(--color-surface-muted);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+.pos-ticket-header {
+  padding: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+}
+:global(.dark) .pos-ticket-header {
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.pos-ticket-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pos-cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+}
+:global(.dark) .pos-cart-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+.pos-remove-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+.pos-remove-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+.pos-remove-btn:active { transform: scale(0.9); }
+
+.pos-ticket-footer {
+  padding: 0.75rem;
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+}
+:global(.dark) .pos-ticket-footer {
+  background: rgba(255, 255, 255, 0.04);
+  border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+.pos-cobrar-btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #2563eb;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+.pos-cobrar-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+}
+.pos-cobrar-btn:active:not(:disabled) { transform: scale(0.97); }
+.pos-cobrar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--color-overlay-strong);
+  color: var(--color-text-subtle);
+  box-shadow: none;
+}
+</style>

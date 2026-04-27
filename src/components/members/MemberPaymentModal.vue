@@ -20,7 +20,7 @@
       <form v-else @submit.prevent="pagar">
         <div class="mb-4 bg-[var(--color-surface-soft)] p-3 rounded border border-default-soft">
           <p class="text-sm text-muted">Monto a pagar:</p>
-          <p class="text-2xl font-bold text-green-700">
+          <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
             {{ formatCurrency(amount) }}
           </p>
         </div>

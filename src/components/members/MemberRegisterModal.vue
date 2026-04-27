@@ -6,9 +6,10 @@
         <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-default-soft">
           <div class="flex items-center gap-4">
             <div
-              class="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center shrink-0"
+              class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+              style="background: rgba(99,102,241,0.12); color: #818cf8;"
             >
-              <svg class="w-5 h-5 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <line x1="19" y1="8" x2="19" y2="14" />
@@ -43,7 +44,7 @@
             <section>
               <div class="section-header">
                 <span class="section-bar bg-primary-600" />
-                <h2 class="section-title text-primary-700">Información Personal</h2>
+                <h2 class="section-title" style="color: var(--color-text-muted);">Información Personal</h2>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -90,7 +91,7 @@
             <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
               <div class="section-header">
                 <span class="section-bar bg-success-600" />
-                <h2 class="section-title text-success-700">Biometría</h2>
+                <h2 class="section-title" style="color: var(--color-text-muted);">Biometría</h2>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -126,7 +127,7 @@
             <section>
               <div class="section-header">
                 <span class="section-bar bg-danger-500" />
-                <h2 class="section-title text-danger-600">Antecedentes Médicos</h2>
+                <h2 class="section-title" style="color: var(--color-text-muted);">Antecedentes Médicos</h2>
                 <span class="ml-auto optional-tag">Opcional</span>
               </div>
               <textarea
@@ -151,7 +152,7 @@
             <section class="pt-6 border-t border-default-soft">
               <div class="section-header">
                 <span class="section-bar bg-primary-600" />
-                <h2 class="section-title text-primary-700">Huella Dactilar</h2>
+                <h2 class="section-title" style="color: var(--color-text-muted);">Huella Dactilar</h2>
                 <span class="ml-auto optional-tag">Opcional</span>
               </div>
               <div class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-surface-soft)] p-4">

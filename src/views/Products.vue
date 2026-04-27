@@ -51,7 +51,7 @@
               >
                 {{ producto.description }}
               </p>
-              <p class="text-xl font-semibold text-blue-600 mt-2">
+              <p class="text-xl font-semibold text-blue-600 dark:text-blue-400 mt-2">
                 ${{ producto.price }}
               </p>
             </div>

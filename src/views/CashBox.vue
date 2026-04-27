@@ -18,9 +18,10 @@
       <div v-else class="space-y-6">
         <div
           v-if="todayCashbox"
-          class="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-sm"
+          class="p-4 rounded-xl border shadow-sm"
+          style="background: var(--color-surface-soft); border-color: var(--color-border);"
         >
-          <h3 class="text-sm font-semibold mb-3 text-blue-900 uppercase tracking-wide">
+          <h3 class="text-sm font-semibold mb-3 uppercase tracking-wide" style="color: var(--color-text-muted);">
             Resumen Hoy ({{ todayCashbox.date }})
           </h3>
 
@@ -32,14 +33,14 @@
               </p>
             </div>
             <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
-              <p class="text-emerald-600 text-xs">Ingresos</p>
-              <p class="text-lg font-semibold text-emerald-700">
+              <p class="text-emerald-600 dark:text-emerald-400 text-xs">Ingresos</p>
+              <p class="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
                 {{ formatCurrency(todayCashbox.total_income) }}
               </p>
             </div>
             <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
-              <p class="text-red-600 text-xs">Gastos</p>
-              <p class="text-lg font-semibold text-red-700">
+              <p class="text-red-500 dark:text-red-400 text-xs">Gastos</p>
+              <p class="text-lg font-semibold text-red-500 dark:text-red-400">
                 {{ formatCurrency(todayCashbox.total_expense) }}
               </p>
             </div>
@@ -54,9 +55,10 @@
 
         <div
           v-else
-          class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 text-center"
+          class="p-6 rounded-xl border text-center"
+          style="background: var(--color-surface-soft); border-color: var(--color-border);"
         >
-          <p class="text-yellow-800 font-semibold mb-4">Caja cerrada</p>
+          <p class="font-semibold mb-4" style="color: var(--color-text-muted);">Caja cerrada</p>
           <form
             class="flex gap-2 max-w-sm mx-auto items-end"
             @submit.prevent="abrirCaja"

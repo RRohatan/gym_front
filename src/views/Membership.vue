@@ -90,13 +90,12 @@
 
               <td class="py-3 px-4 text-center">
                 <span
-                  class="px-2 py-1 rounded-full text-xs font-bold shadow-sm border"
+                  class="badge px-2 py-1 rounded-full text-xs font-bold"
                   :class="{
-                    'bg-green-100 text-green-700 border-green-200': m.status === 'active',
-                    'bg-red-100 text-red-700 border-red-200': m.status === 'expired',
-                    'bg-yellow-100 text-yellow-700 border-yellow-200':
-                      m.status === 'inactive_unpaid',
-                    'bg-[var(--color-overlay)] text-muted border-default-soft': m.status === 'cancelled' || m.status === 'inactive',
+                    'badge-green':  m.status === 'active',
+                    'badge-red':    m.status === 'expired',
+                    'badge-yellow': m.status === 'inactive_unpaid',
+                    'badge-gray':   m.status === 'cancelled' || m.status === 'inactive',
                   }"
                 >
                   {{ traducirEstado(m.status) }}

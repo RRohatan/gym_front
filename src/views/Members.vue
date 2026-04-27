@@ -37,7 +37,7 @@
           class="relative rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-[var(--color-surface)] text-default"
           :class="[
             'shadow-card',
-            member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-[var(--color-border-soft)]',
+            member.is_expired ? 'ring-2 ring-red-400/40' : 'ring-1 ring-[var(--color-border-soft)]',
           ]"
         >
           <!-- Barra de estado superior -->
@@ -65,7 +65,7 @@
               class="text-xs font-bold px-3 py-1 rounded-full border transition-all h-8 flex items-center select-none"
               :class="
                 detallesAbiertos.includes(member.id)
-                  ? 'bg-blue-100 text-blue-700 border-blue-200'
+                  ? 'detail-toggle-active'
                   : 'bg-[var(--color-overlay)] text-muted border-default-soft'
               "
             >
@@ -395,19 +395,65 @@ const traducirEstado = (estado) => {
   background: rgb(22 163 74); color: white;
 }
 .action-success:hover { background: rgb(21 128 61); }
+
+/* Claro */
 .action-neutral {
   background: rgb(243 244 246); color: rgb(55 65 81);
   border-color: rgb(229 231 235);
 }
 .action-neutral:hover { background: rgb(229 231 235); }
+
 .action-indigo {
   background: rgb(238 242 255); color: rgb(67 56 202);
   border-color: rgb(199 210 254);
 }
 .action-indigo:hover { background: rgb(224 231 255); }
+
 .action-warning {
   background: rgb(255 237 213); color: rgb(154 52 18);
   border-color: rgb(254 215 170);
 }
 .action-warning:hover { background: rgb(254 215 170); }
+
+/* Modo oscuro */
+:global(.dark) .action-neutral {
+  background: rgba(255,255,255,0.07);
+  color: rgba(148,163,184,0.9);
+  border-color: rgba(255,255,255,0.12);
+}
+:global(.dark) .action-neutral:hover {
+  background: rgba(255,255,255,0.12);
+  color: #f1f5f9;
+}
+
+:global(.dark) .action-indigo {
+  background: rgba(99,102,241,0.15);
+  color: #c7d2fe;
+  border-color: rgba(99,102,241,0.35);
+}
+:global(.dark) .action-indigo:hover {
+  background: rgba(99,102,241,0.25);
+  border-color: rgba(99,102,241,0.5);
+}
+
+:global(.dark) .action-warning {
+  background: rgba(249,115,22,0.15);
+  color: #fdba74;
+  border-color: rgba(249,115,22,0.35);
+}
+:global(.dark) .action-warning:hover {
+  background: rgba(249,115,22,0.25);
+  border-color: rgba(249,115,22,0.5);
+}
+
+.detail-toggle-active {
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+:global(.dark) .detail-toggle-active {
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+  border-color: rgba(96, 165, 250, 0.30);
+}
 </style>
