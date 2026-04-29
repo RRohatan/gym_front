@@ -3,12 +3,17 @@
 
     <!-- ═══ HEADER ═══ -->
     <header class="pos-header">
-      <h1 class="text-lg md:text-xl font-bold">Punto de Venta</h1>
+      <h1 class="text-lg md:text-xl font-bold inline-flex items-center gap-2">
+        <ShoppingCart class="w-5 h-5" aria-hidden="true" />
+        Punto de Venta
+      </h1>
       <div class="flex gap-2">
-        <router-link to="/Products" class="btn btn-indigo px-3 py-2 text-xs sm:text-sm">
+        <router-link to="/Products" class="btn btn-indigo px-3 py-2 text-xs sm:text-sm inline-flex items-center gap-2">
+          <Boxes class="w-4 h-4" aria-hidden="true" />
           Inventario
         </router-link>
-        <router-link to="/Menu" class="btn btn-dark px-3 py-2 text-xs sm:text-sm">
+        <router-link to="/Menu" class="btn btn-dark px-3 py-2 text-xs sm:text-sm inline-flex items-center gap-2">
+          <Home class="w-4 h-4" aria-hidden="true" />
           Salir
         </router-link>
       </div>
@@ -96,10 +101,14 @@
         <!-- Ticket header -->
         <div class="pos-ticket-header">
           <h3 class="font-bold flex items-center gap-2" style="color: var(--color-text);">
+            <Receipt class="w-4 h-4" aria-hidden="true" />
             Ticket
             <span class="badge badge-blue text-xs px-2 py-0.5 rounded-full">{{ cart.length }} items</span>
           </h3>
-          <button @click="cart = []" v-if="cart.length > 0" class="text-xs text-red-400 hover:text-red-300 hover:underline cursor-pointer">Vaciar</button>
+          <button @click="cart = []" v-if="cart.length > 0" class="text-xs text-red-400 hover:text-red-300 hover:underline cursor-pointer inline-flex items-center gap-1">
+            <Trash2 class="w-3.5 h-3.5" aria-hidden="true" />
+            Vaciar
+          </button>
         </div>
 
         <!-- Ticket items -->
@@ -118,7 +127,9 @@
             </div>
             <div class="flex items-center gap-3">
               <span class="font-bold" style="color: var(--color-text-soft);">${{ formatCurrency(item.price * item.quantity) }}</span>
-              <button @click="removeFromCart(index)" class="pos-remove-btn">×</button>
+              <button @click="removeFromCart(index)" class="pos-remove-btn" aria-label="Quitar del carrito">
+                <X class="w-4 h-4" aria-hidden="true" />
+              </button>
             </div>
           </div>
         </div>
@@ -133,10 +144,16 @@
           <button
             @click="procesarVenta"
             :disabled="cart.length === 0 || !selectedMemberId"
-            class="pos-cobrar-btn"
+            class="pos-cobrar-btn inline-flex items-center justify-center gap-2"
           >
-            <template v-if="!selectedMemberId">Selecciona Cliente</template>
-            <template v-else>COBRAR</template>
+            <template v-if="!selectedMemberId">
+              <UserCircle class="w-5 h-5" aria-hidden="true" />
+              Selecciona Cliente
+            </template>
+            <template v-else>
+              <CreditCard class="w-5 h-5" aria-hidden="true" />
+              COBRAR
+            </template>
           </button>
         </div>
       </div>
@@ -149,7 +166,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 import api from '@/axios'
-import { ChevronDown, Search, ShoppingCart, X } from 'lucide-vue-next'
+import { ChevronDown, Search, ShoppingCart, X, Boxes, Home, Receipt, Trash2, UserCircle, CreditCard } from 'lucide-vue-next'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
 

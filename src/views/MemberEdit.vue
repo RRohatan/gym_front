@@ -164,6 +164,7 @@
       <!-- Footer -->
       <div class="px-6 sm:px-8 py-5 border-t border-default-soft bg-[var(--color-surface-soft)] flex items-center justify-end gap-3">
         <BaseButton variant="secondary" @click="router.push({ name: 'Members' })">
+          <X class="w-4 h-4 mr-2 inline" aria-hidden="true" />
           Cancelar
         </BaseButton>
         <BaseButton
@@ -174,6 +175,7 @@
           :loading="loading"
           :disabled="loading"
         >
+          <Save class="w-4 h-4 mr-2 inline" aria-hidden="true" />
           Guardar Cambios
         </BaseButton>
       </div>
@@ -185,7 +187,7 @@
 import { reactive, ref, onMounted } from "vue";
 
 import { useRoute, useRouter } from "vue-router";
-import { User, X } from 'lucide-vue-next'
+import { User, X, Save } from 'lucide-vue-next'
 import api from "@/axios";
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";

@@ -171,6 +171,7 @@
           class="px-6 sm:px-8 py-5 border-t border-default-soft bg-[var(--color-surface-soft)] flex items-center justify-end gap-3"
         >
           <BaseButton variant="secondary" @click="$emit('close')">
+            <X class="w-4 h-4 mr-2 inline" aria-hidden="true" />
             Cancelar
           </BaseButton>
           <BaseButton
@@ -181,6 +182,7 @@
             :loading="loading"
             :disabled="loading"
           >
+            <Save class="w-4 h-4 mr-2 inline" aria-hidden="true" />
             Guardar Cliente
           </BaseButton>
         </div>
@@ -193,7 +195,7 @@
 import { ref, reactive, computed } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
-import { Check, UserPlus, X } from 'lucide-vue-next'
+import { Check, UserPlus, X, Save } from 'lucide-vue-next'
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
 import { BaseInput, BaseSelect, BaseButton } from "@/components/ui";
 import { SWAL_COLORS } from "@/lib/colors";
