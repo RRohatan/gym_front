@@ -23,45 +23,52 @@
 
         <div class="auth-field">
           <label class="login-label">Nombre completo</label>
-          <div class="auth-input-wrap">
-            <input v-model="form.name" type="text" class="login-input" placeholder="Tu nombre completo" required />
+          <div class="auth-input-wrap relative">
+            <User class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" aria-hidden="true" />
+            <input v-model="form.name" type="text" class="login-input pl-10" placeholder="Tu nombre completo" required />
           </div>
         </div>
 
         <div class="auth-field">
           <label class="login-label">Correo electrónico</label>
-          <div class="auth-input-wrap">
-            <input v-model="form.email" type="email" class="login-input" placeholder="tu@correo.com" required />
+          <div class="auth-input-wrap relative">
+            <Mail class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" aria-hidden="true" />
+            <input v-model="form.email" type="email" class="login-input pl-10" placeholder="tu@correo.com" required />
           </div>
         </div>
 
         <div class="auth-field">
           <label class="login-label">Nombre del Gimnasio</label>
-          <div class="auth-input-wrap">
-            <input v-model="form.gym_name" type="text" class="login-input" placeholder="Nombre de tu gimnasio" required />
+          <div class="auth-input-wrap relative">
+            <Dumbbell class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" aria-hidden="true" />
+            <input v-model="form.gym_name" type="text" class="login-input pl-10" placeholder="Nombre de tu gimnasio" required />
           </div>
         </div>
 
         <div class="auth-field">
           <label class="login-label">Contraseña</label>
-          <div class="auth-input-wrap">
-            <input v-model="form.password" :type="showPassword ? 'text' : 'password'" class="login-input pr-11" placeholder="••••••••" required />
-            <button type="button" class="login-eye-btn" @click="showPassword = !showPassword" tabindex="-1">
-              {{ showPassword ? 'Ocultar' : 'Ver' }}
+          <div class="auth-input-wrap relative">
+            <Lock class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" aria-hidden="true" />
+            <input v-model="form.password" :type="showPassword ? 'text' : 'password'" class="login-input pl-10 pr-11" placeholder="••••••••" required />
+            <button type="button" class="login-eye-btn" @click="showPassword = !showPassword" tabindex="-1" :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <component :is="showPassword ? EyeOff : Eye" class="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
 
         <div class="auth-field">
           <label class="login-label">Confirmar contraseña</label>
-          <div class="auth-input-wrap">
-            <input v-model="form.password_confirmation" :type="showPassword ? 'text' : 'password'" class="login-input" placeholder="••••••••" required />
+          <div class="auth-input-wrap relative">
+            <Lock class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" aria-hidden="true" />
+            <input v-model="form.password_confirmation" :type="showPassword ? 'text' : 'password'" class="login-input pl-10" placeholder="••••••••" required />
           </div>
         </div>
 
         <div class="pt-2">
-          <button type="submit" :disabled="loading" class="auth-submit-btn">
-            {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+          <button type="submit" :disabled="loading" class="auth-submit-btn inline-flex items-center justify-center gap-2">
+            <Loader2 v-if="loading" class="w-4 h-4 animate-spin" aria-hidden="true" />
+            <UserPlus v-else class="w-4 h-4" aria-hidden="true" />
+            <span>{{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}</span>
           </button>
         </div>
       </form>
@@ -82,6 +89,7 @@ import { useRouter } from 'vue-router'
 import api from '@/axios'
 import { useAuthStore } from '@/stores/useAuthStore'
 import Swal from 'sweetalert2'
+import { User, Mail, Lock, Dumbbell, Eye, EyeOff, Loader2, UserPlus } from 'lucide-vue-next'
 
 const router = useRouter()
 const auth = useAuthStore()

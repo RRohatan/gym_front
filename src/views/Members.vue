@@ -9,17 +9,24 @@
           <p class="text-sm text-subtle mt-0.5">Gestión de clientes y membresías</p>
         </div>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none">Inicio</router-link>
-          <button @click="showRegisterModal = true" class="btn btn-success flex-1 sm:flex-none">Nuevo cliente</button>
+          <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none inline-flex items-center justify-center gap-2">
+            <Home class="w-4 h-4" aria-hidden="true" />
+            <span>Inicio</span>
+          </router-link>
+          <button @click="showRegisterModal = true" class="btn btn-success flex-1 sm:flex-none inline-flex items-center justify-center gap-2">
+            <UserPlus class="w-4 h-4" aria-hidden="true" />
+            <span>Nuevo cliente</span>
+          </button>
         </div>
       </div>
 
-      <div class="mb-6">
+      <div class="mb-6 relative">
+        <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" aria-hidden="true" />
         <input
           v-model="busqueda"
           type="text"
           placeholder="Buscar por nombre o teléfono..."
-          class="field-input"
+          class="field-input pl-10"
         />
       </div>
 
@@ -62,14 +69,15 @@
             </div>
             <button
               @click="toggleDetalle(member.id)"
-              class="text-xs font-bold px-3 py-1 rounded-full border transition-all h-8 flex items-center select-none"
+              class="text-xs font-bold px-3 py-1 rounded-full border transition-all h-8 inline-flex items-center gap-1 select-none"
               :class="
                 detallesAbiertos.includes(member.id)
                   ? 'detail-toggle-active'
                   : 'bg-[var(--color-overlay)] text-muted border-default-soft'
               "
             >
-              {{ detallesAbiertos.includes(member.id) ? "Ocultar" : "Ver más" }}
+              <component :is="detallesAbiertos.includes(member.id) ? ChevronUp : ChevronDown" class="w-3.5 h-3.5" aria-hidden="true" />
+              <span>{{ detallesAbiertos.includes(member.id) ? "Ocultar" : "Ver más" }}</span>
             </button>
           </div>
 
@@ -99,7 +107,7 @@
                 class="action-btn action-primary"
                 @click="abrirDetalle(member)"
               >
-                
+                <Eye class="w-3.5 h-3.5" aria-hidden="true" />
                 Detalle
               </button>
 
@@ -109,7 +117,7 @@
                 target="_blank"
                 class="action-btn action-success"
               >
-                
+                <MessageCircle class="w-3.5 h-3.5" aria-hidden="true" />
                 WhatsApp
               </a>
 
@@ -117,7 +125,7 @@
                 :to="{ name: 'MemberEdit', params: { id: member.id } }"
                 class="action-btn action-neutral"
               >
-                
+                <Pencil class="w-3.5 h-3.5" aria-hidden="true" />
                 Editar
               </router-link>
 
@@ -126,12 +134,12 @@
                 :class="member.memberships?.[0]?.status === 'expired' ? 'action-warning' : 'action-indigo'"
                 @click="abrirAsignar(member)"
               >
-                
+                <component :is="member.memberships?.[0]?.status === 'expired' ? RefreshCw : CalendarCheck2" class="w-3.5 h-3.5" aria-hidden="true" />
                 {{ member.memberships?.[0]?.status === "expired" ? "Renovar" : "Membresía" }}
               </button>
 
               <button class="action-btn action-success" @click="abrirPagar(member)">
-                
+                <DollarSign class="w-3.5 h-3.5" aria-hidden="true" />
                 Pagar
               </button>
             </div>
@@ -144,12 +152,14 @@
         <span>Página {{ currentPageMiembros }} de {{ totalMiembrosPages }} ({{ miembrosFiltrados.length }} clientes)</span>
         <div class="flex gap-1">
           <button @click="currentPageMiembros--" :disabled="currentPageMiembros === 1"
-            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
-            Anterior
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1">
+            <ChevronLeft class="w-4 h-4" aria-hidden="true" />
+            <span>Anterior</span>
           </button>
           <button @click="currentPageMiembros++" :disabled="currentPageMiembros === totalMiembrosPages"
-            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
-            Siguiente
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1">
+            <span>Siguiente</span>
+            <ChevronRight class="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -193,6 +203,21 @@ import { ref, computed, watch, onMounted } from "vue";
 import api from "@/axios";
 import Sidebar from "@/views/Sidebar.vue";
 import Swal from "sweetalert2";
+import {
+  Home,
+  UserPlus,
+  Search,
+  Eye,
+  Pencil,
+  MessageCircle,
+  CalendarCheck2,
+  RefreshCw,
+  DollarSign,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-vue-next";
 
 // Importar Componentes Hijos
 import MemberRegisterModal from "@/components/members/MemberRegisterModal.vue";

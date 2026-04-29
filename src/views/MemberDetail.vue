@@ -5,13 +5,13 @@
         to="/members"
         class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-default transition mb-5"
       >
-        ←
+        <ArrowLeft class="w-4 h-4" aria-hidden="true" />
         Volver a clientes
       </router-link>
 
       <div v-if="loading" class="py-20 text-center">
         <div class="inline-flex items-center gap-3 text-muted">
-          
+          <Loader2 class="w-5 h-5 animate-spin" aria-hidden="true" />
           Cargando detalle...
         </div>
       </div>
@@ -30,16 +30,16 @@
             </div>
             <div class="relative flex items-start justify-between gap-4">
               <div class="flex items-center gap-2 text-white/70 text-xs font-semibold uppercase tracking-widest">
-                
+                <FileText class="w-4 h-4" aria-hidden="true" />
                 Ficha del cliente
               </div>
               <div class="flex gap-2">
                 <router-link :to="{ name: 'MemberEdit', params: { id: member.id } }" class="btn-ghost-white">
-                  
+                  <Pencil class="w-4 h-4" aria-hidden="true" />
                   Editar
                 </router-link>
                 <a v-if="member.phone" :href="`https://wa.me/${formatearTelefono(member.phone)}`" target="_blank" class="btn-ghost-white">
-                  
+                  <MessageCircle class="w-4 h-4" aria-hidden="true" />
                   WhatsApp
                 </a>
               </div>
@@ -62,15 +62,15 @@
                   <BaseBadge v-else color="gray">Sin plan</BaseBadge>
 
                   <span v-if="member.identification" class="meta-chip">
-                    
+                    <IdCard class="w-4 h-4" aria-hidden="true" />
                     {{ member.identification }}
                   </span>
                   <span v-if="member.phone" class="meta-chip">
-                    
+                    <Phone class="w-4 h-4" aria-hidden="true" />
                     {{ member.phone }}
                   </span>
                   <span v-if="member.email" class="meta-chip">
-                    
+                    <Mail class="w-4 h-4" aria-hidden="true" />
                     {{ member.email }}
                   </span>
                 </div>
@@ -83,7 +83,7 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <div class="stat-card">
             <div class="stat-icon bg-primary-100 text-primary-700">
-              
+              <Cake class="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
               <p class="stat-label">Edad</p>
@@ -92,7 +92,7 @@
           </div>
           <div class="stat-card">
             <div class="stat-icon bg-success-100 text-success-700">
-              
+              <Ruler class="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
               <p class="stat-label">Estatura</p>
@@ -101,7 +101,7 @@
           </div>
           <div class="stat-card">
             <div class="stat-icon bg-success-100 text-success-700">
-              
+              <Weight class="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
               <p class="stat-label">Peso</p>
@@ -110,7 +110,7 @@
           </div>
           <div class="stat-card">
             <div class="stat-icon" :class="imcIconCls">
-              
+              <Activity class="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
               <p class="stat-label">IMC</p>
@@ -236,6 +236,20 @@ import { useRoute } from "vue-router";
 import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import {
+  Activity,
+  ArrowLeft,
+  Cake,
+  FileText,
+  IdCard,
+  Loader2,
+  Mail,
+  MessageCircle,
+  Pencil,
+  Phone,
+  Ruler,
+  Weight,
+} from 'lucide-vue-next'
 import { BaseBadge } from "@/components/ui";
 
 const route = useRoute();

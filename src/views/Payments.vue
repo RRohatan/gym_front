@@ -9,8 +9,14 @@
           <p class="page-subtitle">Consulta y registra pagos</p>
         </div>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none">Inicio</router-link>
-          <button @click="openModal = true" class="btn btn-success flex-1 sm:flex-none">Registrar pago</button>
+          <router-link to="/Menu" class="btn btn-secondary flex-1 sm:flex-none inline-flex items-center justify-center gap-2">
+            <Home class="w-4 h-4" aria-hidden="true" />
+            <span>Inicio</span>
+          </router-link>
+          <button @click="openModal = true" class="btn btn-success flex-1 sm:flex-none inline-flex items-center justify-center gap-2">
+            <Plus class="w-4 h-4" aria-hidden="true" />
+            <span>Registrar pago</span>
+          </button>
         </div>
       </div>
 
@@ -36,10 +42,12 @@
 
         <button
           @click="cargarHistorial"
-          class="btn btn-primary w-full sm:w-auto justify-center"
+          class="btn btn-primary w-full sm:w-auto justify-center inline-flex items-center gap-2"
           :disabled="loadingHistorial"
         >
-          {{ loadingHistorial ? 'Cargando...' : 'Consultar' }}
+          <Loader2 v-if="loadingHistorial" class="w-4 h-4 animate-spin" aria-hidden="true" />
+          <Search v-else class="w-4 h-4" aria-hidden="true" />
+          <span>{{ loadingHistorial ? 'Cargando...' : 'Consultar' }}</span>
         </button>
       </div>
 
@@ -97,12 +105,14 @@
         <span>Página {{ currentPagePagos }} de {{ totalPagesPagos }}</span>
         <div class="flex gap-1">
           <button @click="currentPagePagos--" :disabled="currentPagePagos === 1"
-            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
-            ← Anterior
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1">
+            <ChevronLeft class="w-4 h-4" aria-hidden="true" />
+            <span>Anterior</span>
           </button>
           <button @click="currentPagePagos++" :disabled="currentPagePagos === totalPagesPagos"
-            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
-            Siguiente →
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1">
+            <span>Siguiente</span>
+            <ChevronRight class="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -117,6 +127,7 @@
           :style="{ background: 'var(--modal-panel-bg)', border: '1px solid var(--modal-panel-border)' }"
         >
           <h2 id="payments-modal-title" class="text-lg font-bold mb-4 text-default border-b border-default-soft pb-2 flex items-center gap-2">
+            <CreditCard class="w-5 h-5" aria-hidden="true" />
             Registrar Pago
           </h2>
 
@@ -174,13 +185,16 @@
               <button
                 type="button"
                 @click="cerrarModal"
-                class="btn btn-secondary flex-1"
+                class="btn btn-secondary flex-1 inline-flex items-center justify-center gap-2"
                 :disabled="ProcesandoPago"
               >
-                Cancelar
+                <X class="w-4 h-4" aria-hidden="true" />
+                <span>Cancelar</span>
               </button>
-              <button type="submit" class="btn btn-primary flex-1" :disabled="ProcesandoPago">
-                {{ ProcesandoPago ? "Guardando..." : "Guardar" }}
+              <button type="submit" class="btn btn-primary flex-1 inline-flex items-center justify-center gap-2" :disabled="ProcesandoPago">
+                <Loader2 v-if="ProcesandoPago" class="w-4 h-4 animate-spin" aria-hidden="true" />
+                <Check v-else class="w-4 h-4" aria-hidden="true" />
+                <span>{{ ProcesandoPago ? "Guardando..." : "Guardar" }}</span>
               </button>
             </div>
           </form>
@@ -196,6 +210,17 @@ import { ref, computed, onMounted } from "vue";
 import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import {
+  Home,
+  Plus,
+  Search,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  CreditCard,
+  X,
+  Check,
+} from "lucide-vue-next";
 // --- ESTADO ---
 const pagos = ref([]);
 const currentPagePagos = ref(1);

@@ -37,9 +37,9 @@
               class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center cursor-pointer z-10"
               title="Borrar selección"
             >
-              ✕
+              <X class="w-5 h-5" aria-hidden="true" />
             </button>
-            <span v-else class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">&#8964;</span>
+            <ChevronDown v-else class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" aria-hidden="true" />
             <ul v-if="isClientDropdownOpen" class="absolute z-50 w-full mt-1 bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               <li
                 v-if="filteredClientOptions.length === 0"
@@ -60,7 +60,7 @@
           </div>
           <div class="flex-1 relative search-input-wrap">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400 dark:text-gray-500">
-              
+              <Search class="w-4 h-4" aria-hidden="true" />
             </div>
             <input v-model="search" type="text" placeholder="Buscar producto por nombre..." class="field-input text-sm pos-search-input">
           </div>
@@ -105,7 +105,7 @@
         <!-- Ticket items -->
         <div class="pos-ticket-items">
           <div v-if="cart.length === 0" class="h-full flex flex-col items-center justify-center opacity-40">
-            
+            <ShoppingCart class="w-8 h-8" aria-hidden="true" />
             <p class="text-sm" style="color: var(--color-text-subtle);">Carrito vacío</p>
           </div>
 
@@ -149,6 +149,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 import api from '@/axios'
+import { ChevronDown, Search, ShoppingCart, X } from 'lucide-vue-next'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
 

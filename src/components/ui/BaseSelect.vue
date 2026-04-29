@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
+import { ChevronDown } from 'lucide-vue-next'
 
 defineOptions({ inheritAttrs: false })
 
@@ -84,15 +85,10 @@ const onChange = (event: Event) => {
         <slot />
       </select>
 
-      <svg
+      <ChevronDown
         class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-subtle pointer-events-none"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-      </svg>
+        aria-hidden="true"
+      />
     </div>
 
     <p v-if="error" class="text-xs text-red-600 dark:text-red-400">{{ error }}</p>

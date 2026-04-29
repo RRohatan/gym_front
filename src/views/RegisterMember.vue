@@ -20,7 +20,7 @@
           class="p-2 hover:bg-[var(--color-overlay)] rounded-full transition-colors"
           aria-label="Cerrar"
         >
-          ✕
+          <X class="w-5 h-5 text-muted" aria-hidden="true" />
         </router-link>
       </div>
 
@@ -283,6 +283,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/axios";
+import { X } from 'lucide-vue-next'
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";

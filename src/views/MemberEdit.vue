@@ -5,7 +5,7 @@
       <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-default-soft">
         <div class="flex items-center gap-4">
           <div class="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
-            
+            <User class="w-5 h-5 text-primary-700" aria-hidden="true" />
           </div>
           <div>
             <h1 class="text-xl font-bold text-default tracking-tight leading-tight">
@@ -21,7 +21,7 @@
           class="p-2 hover:bg-[var(--color-overlay)] rounded-full transition-colors"
           aria-label="Cerrar"
         >
-          ✕
+          <X class="w-5 h-5 text-muted" aria-hidden="true" />
         </router-link>
       </div>
 
@@ -185,6 +185,7 @@
 import { reactive, ref, onMounted } from "vue";
 
 import { useRoute, useRouter } from "vue-router";
+import { User, X } from 'lucide-vue-next'
 import api from "@/axios";
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";

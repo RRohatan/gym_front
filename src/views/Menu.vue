@@ -32,6 +32,7 @@
         <div class="stat-card" style="background:linear-gradient(135deg,#059669 0%,#065f46 100%)">
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(167,243,208,0.85)">Activos</p>
+            <UserCheck class="w-5 h-5" style="color:rgba(167,243,208,0.85)" aria-hidden="true" />
           </div>
           <p class="stat-num">{{ stats.active || 0 }}</p>
           <p class="stat-desc" style="color:rgba(167,243,208,0.6)">Membresías vigentes</p>
@@ -44,6 +45,7 @@
         >
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(254,202,202,0.85)">Vencidos</p>
+            <AlertTriangle class="w-5 h-5" style="color:rgba(254,202,202,0.85)" aria-hidden="true" />
           </div>
           <p class="stat-num">{{ stats.expired || 0 }}</p>
           <p class="stat-desc" style="color:rgba(254,202,202,0.6)">Requieren renovación</p>
@@ -56,6 +58,7 @@
         >
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(253,230,138,0.85)">Por Pagar</p>
+            <Clock class="w-5 h-5" style="color:rgba(253,230,138,0.85)" aria-hidden="true" />
           </div>
           <p class="stat-num">{{ stats.inactive_unpaid || 0 }}</p>
           <p class="stat-desc" style="color:rgba(253,230,138,0.6)">Pendientes de cobro</p>
@@ -68,6 +71,7 @@
         >
           <div class="flex items-start justify-between mb-4">
             <p class="stat-tag" style="color:rgba(191,219,254,0.85)">Vencen Pronto</p>
+            <CalendarClock class="w-5 h-5" style="color:rgba(191,219,254,0.85)" aria-hidden="true" />
           </div>
           <p class="stat-num">{{ stats.expiring_soon || 0 }}</p>
           <p class="stat-desc" style="color:rgba(191,219,254,0.6)">En los próximos días</p>
@@ -79,18 +83,22 @@
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
 
         <router-link to="/pos" class="quick-card group" style="--qc:#6366f1">
+          <ShoppingCart class="w-6 h-6 mb-2" aria-hidden="true" />
           <span class="quick-label">Punto de Venta</span>
         </router-link>
 
         <router-link to="/members" class="quick-card group" style="--qc:#34d399">
+          <Users class="w-6 h-6 mb-2" aria-hidden="true" />
           <span class="quick-label">Clientes</span>
         </router-link>
 
         <router-link to="/Membership" class="quick-card group" style="--qc:#38bdf8">
+          <CalendarCheck2 class="w-6 h-6 mb-2" aria-hidden="true" />
           <span class="quick-label">Membresías</span>
         </router-link>
 
         <router-link to="/CashBox" class="quick-card group" style="--qc:#2dd4bf">
+          <BadgeDollarSign class="w-6 h-6 mb-2" aria-hidden="true" />
           <span class="quick-label">Caja</span>
         </router-link>
       </div>
@@ -104,6 +112,16 @@ import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore'
 import api from '@/axios'
 import Swal from 'sweetalert2'
+import {
+  UserCheck,
+  AlertTriangle,
+  Clock,
+  CalendarClock,
+  ShoppingCart,
+  Users,
+  CalendarCheck2,
+  BadgeDollarSign,
+} from 'lucide-vue-next'
 
 const auth  = useAuthStore()
 const user  = auth.user

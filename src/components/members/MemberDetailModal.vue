@@ -12,7 +12,7 @@
 
             <div class="relative flex items-start justify-between gap-3">
               <div class="flex items-center gap-2 text-white/70 text-[11px] font-semibold uppercase tracking-widest">
-                
+                <FileText class="w-4 h-4" aria-hidden="true" />
                 Ficha del cliente
               </div>
               <div class="flex items-center gap-2">
@@ -22,15 +22,20 @@
                   class="btn-ghost-white"
                   @click="close"
                 >
-                  
+                  <Pencil class="w-4 h-4" aria-hidden="true" />
                   Editar
                 </router-link>
-                <a v-if="member?.phone" :href="`https://wa.me/${formatearTelefono(member.phone)}`" target="_blank" class="btn-ghost-white">
-                  
+                <a
+                  v-if="member?.phone"
+                  :href="`https://wa.me/${formatearTelefono(member.phone)}`"
+                  target="_blank"
+                  class="btn-ghost-white"
+                >
+                  <MessageCircle class="w-4 h-4" aria-hidden="true" />
                   WhatsApp
                 </a>
                 <button type="button" class="btn-icon-white" aria-label="Cerrar" @click="close">
-                  ✕
+                  <X class="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -55,15 +60,15 @@
                   <BaseBadge v-else-if="member" color="gray">Sin plan</BaseBadge>
 
                   <span v-if="member?.identification" class="meta-chip">
-                    
+                    <IdCard class="w-4 h-4" aria-hidden="true" />
                     {{ member.identification }}
                   </span>
                   <span v-if="member?.phone" class="meta-chip">
-                    
+                    <Phone class="w-4 h-4" aria-hidden="true" />
                     {{ member.phone }}
                   </span>
                   <span v-if="member?.email" class="meta-chip">
-                    
+                    <Mail class="w-4 h-4" aria-hidden="true" />
                     {{ member.email }}
                   </span>
                 </div>
@@ -76,7 +81,7 @@
         <div class="detail-body">
           <div v-if="loading" class="py-16 text-center">
             <div class="inline-flex items-center gap-3 text-muted">
-              
+              <Loader2 class="w-5 h-5 animate-spin" aria-hidden="true" />
               Cargando detalle...
             </div>
           </div>
@@ -90,7 +95,7 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
               <div class="stat-card">
                 <div class="stat-icon stat-icon-primary">
-                  
+                  <Cake class="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p class="stat-label">Edad</p>
@@ -99,7 +104,7 @@
               </div>
               <div class="stat-card">
                 <div class="stat-icon stat-icon-success">
-                  
+                  <Ruler class="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p class="stat-label">Estatura</p>
@@ -108,7 +113,7 @@
               </div>
               <div class="stat-card">
                 <div class="stat-icon stat-icon-success">
-                  
+                  <Weight class="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p class="stat-label">Peso</p>
@@ -117,7 +122,7 @@
               </div>
               <div class="stat-card">
                 <div class="stat-icon" :class="imcIconCls">
-                  
+                  <Activity class="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p class="stat-label">IMC</p>
@@ -225,7 +230,7 @@
 
                 <div v-else class="detail-card text-center">
                   <div class="w-12 h-12 rounded-full bg-[var(--color-overlay)] flex items-center justify-center mx-auto mb-3">
-                    
+                    <CalendarX2 class="w-6 h-6 text-muted" aria-hidden="true" />
                   </div>
                   <p class="text-sm text-muted">Sin membresía asignada</p>
                 </div>
@@ -244,6 +249,21 @@ import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { BaseBadge } from "@/components/ui";
+import {
+  Activity,
+  CalendarX2,
+  Cake,
+  FileText,
+  IdCard,
+  Loader2,
+  Mail,
+  MessageCircle,
+  Pencil,
+  Phone,
+  Ruler,
+  Weight,
+  X,
+} from 'lucide-vue-next'
 
 const props = defineProps({
   show: Boolean,
