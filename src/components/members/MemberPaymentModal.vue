@@ -43,10 +43,10 @@
           </button>
           <button
             type="submit"
-            class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg"
+            class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold shadow-lg flex items-center gap-2"
             :disabled="processing"
           >
-            {{ processing ? "Procesando..." : "✅ Confirmar Pago" }}
+            {{ processing ? 'Procesando...' : 'Confirmar Pago' }}
           </button>
         </div>
       </form>

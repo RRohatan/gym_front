@@ -20,9 +20,7 @@
           class="p-2 hover:bg-[var(--color-overlay)] rounded-full transition-colors"
           aria-label="Cerrar"
         >
-          <svg class="w-5 h-5 text-subtle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          ✕
         </router-link>
       </div>
 
@@ -274,10 +272,6 @@
           class="register-submit-btn"
           @click="registerMember"
         >
-          <svg v-if="saving" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-          </svg>
           <span>{{ saving ? "Guardando..." : "Guardar Cliente" }}</span>
         </button>
       </div>

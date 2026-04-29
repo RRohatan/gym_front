@@ -26,7 +26,7 @@
         <form v-else @submit.prevent="guardarConfiguracion" class="space-y-6">
           <div>
             <label class="block text-sm font-bold text-muted mb-2 uppercase tracking-wide">
-              🕒 Horarios de Atención
+              Horarios de Atención
             </label>
             <div class="relative">
               <textarea
@@ -35,14 +35,14 @@
                 class="field-input rounded-xl p-3"
                 placeholder="Ej: Lunes a Viernes: 6:00 AM - 10:00 PM&#10;Sábados: 8:00 AM - 4:00 PM"
               ></textarea>
-              <div class="absolute top-3 right-3 text-xl opacity-50">📅</div>
+
             </div>
             <p class="text-xs text-muted mt-1">Aparecerá en el correo de bienvenida.</p>
           </div>
 
           <div>
             <label class="block text-sm font-bold text-muted mb-2 uppercase tracking-wide">
-              📜 Normas y Políticas
+              Normas y Políticas
             </label>
             <div class="relative">
               <textarea
@@ -51,7 +51,7 @@
                 class="field-input rounded-xl p-3"
                 placeholder="Ej: 1. Uso obligatorio de toalla.&#10;2. Ordenar las pesas al terminar.&#10;3. No ingresar alimentos."
               ></textarea>
-              <div class="absolute top-3 right-3 text-xl opacity-50">⚖️</div>
+
             </div>
           </div>
 
@@ -59,7 +59,7 @@
             <label
               class="block text-sm font-bold mb-2 uppercase tracking-wide flex items-center gap-2 text-emerald-600 dark:text-emerald-400"
             >
-              <span class="text-xl">📲</span> Enlace Grupo WhatsApp
+              Enlace Grupo WhatsApp
             </label>
             <input
               v-model="form.url_grupo_whatsapp"
@@ -76,7 +76,7 @@
           <!-- SECCIÓN CÓDIGO QR -->
           <div class="border-t pt-6" v-if="qrImageUrl">
             <h3 class="text-lg font-bold text-default mb-2 flex items-center gap-2">
-              🏁 Código QR de Registro
+              Código QR de Registro
             </h3>
             <p class="text-sm text-muted mb-4">
               Imprime este código y colócalo en la recepción. Los clientes podrán escanearlo para
@@ -99,13 +99,13 @@
                   @click="descargarImagen"
                   class="btn btn-dark flex items-center justify-center gap-2 text-sm"
                 >
-                  📥 Descargar Imagen
+                  Descargar Imagen
                 </button>
                 <button
                   @click="imprimirQR"
                   class="btn btn-primary flex items-center justify-center gap-2 text-sm"
                 >
-                  🖨️ Imprimir / Guardar PDF
+                  Imprimir / Guardar PDF
                 </button>
                 <a
                   :href="registrationUrl"
@@ -124,8 +124,7 @@
               class="btn btn-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center gap-2"
               :disabled="guardando"
             >
-              <span v-if="guardando" class="animate-spin">🔄</span>
-              {{ guardando ? "Guardando..." : "💾 Guardar Cambios" }}
+              {{ guardando ? "Guardando..." : "Guardar Cambios" }}
             </button>
           </div>
         </form>
@@ -136,6 +135,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+
 import api from "@/axios";
 import Swal from "sweetalert2";
 

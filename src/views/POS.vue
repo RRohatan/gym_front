@@ -37,11 +37,9 @@
               class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center cursor-pointer z-10"
               title="Borrar selección"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              ✕
             </button>
-            <svg v-else class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            <span v-else class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">&#8964;</span>
             <ul v-if="isClientDropdownOpen" class="absolute z-50 w-full mt-1 bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               <li
                 v-if="filteredClientOptions.length === 0"
@@ -62,7 +60,7 @@
           </div>
           <div class="flex-1 relative search-input-wrap">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400 dark:text-gray-500">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              
             </div>
             <input v-model="search" type="text" placeholder="Buscar producto por nombre..." class="field-input text-sm pos-search-input">
           </div>
@@ -98,7 +96,7 @@
         <!-- Ticket header -->
         <div class="pos-ticket-header">
           <h3 class="font-bold flex items-center gap-2" style="color: var(--color-text);">
-            🧾 Ticket
+            Ticket
             <span class="badge badge-blue text-xs px-2 py-0.5 rounded-full">{{ cart.length }} items</span>
           </h3>
           <button @click="cart = []" v-if="cart.length > 0" class="text-xs text-red-400 hover:text-red-300 hover:underline cursor-pointer">Vaciar</button>
@@ -107,7 +105,7 @@
         <!-- Ticket items -->
         <div class="pos-ticket-items">
           <div v-if="cart.length === 0" class="h-full flex flex-col items-center justify-center opacity-40">
-            <svg class="w-10 h-10 mb-2" style="color: var(--color-text-subtle);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+            
             <p class="text-sm" style="color: var(--color-text-subtle);">Carrito vacío</p>
           </div>
 
@@ -149,6 +147,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+
 import api from '@/axios'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'

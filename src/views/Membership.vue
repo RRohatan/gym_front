@@ -27,21 +27,21 @@
           class="btn btn-sm whitespace-nowrap"
           :class="statusFilter === 'active' ? 'btn-primary' : 'btn-secondary'"
         >
-          ✅ Activas
+          Activas
         </button>
         <button
           @click="filtrarMembresias('inactive_unpaid')"
           class="btn btn-sm whitespace-nowrap"
           :class="statusFilter === 'inactive_unpaid' ? 'btn-primary' : 'btn-secondary'"
         >
-          ⏳ Por Pagar
+          Por Pagar
         </button>
         <button
           @click="filtrarMembresias('expiring_soon')"
           class="btn btn-sm whitespace-nowrap"
           :class="statusFilter === 'expiring_soon' ? 'btn-primary' : 'btn-secondary'"
         >
-          ⚠️ Vencen Pronto
+          Vencen Pronto
         </button>
       </div>
 
@@ -85,7 +85,7 @@
               </td>
 
               <td class="py-3 px-4 text-xs text-muted">
-                {{ formatDate(m.start_date) }} ➝ {{ formatDate(m.end_date) }}
+                {{ formatDate(m.start_date) }} → {{ formatDate(m.end_date) }}
               </td>
 
               <td class="py-3 px-4 text-center">
@@ -113,7 +113,7 @@
                     class="btn btn-sm bg-orange-500 hover:bg-orange-600 text-white shadow-sm flex items-center gap-1"
                     title="Renovar Membresía"
                   >
-                    <span>🔄</span> Renovar
+                    Renovar
                   </button>
 
                   <!-- Mostrar Editar solo si NO está vencida (activa, pendiente, etc.) -->
@@ -123,7 +123,7 @@
                     @click="abrirEditarModal(m)"
                     title="Editar / Corregir"
                   >
-                    <span>✏️</span> Editar
+                    Editar
                   </button>
                 </div>
               </td>
@@ -279,6 +279,7 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
+
 import { useRoute } from "vue-router";
 import api from "@/axios";
 import dayjs from "dayjs";

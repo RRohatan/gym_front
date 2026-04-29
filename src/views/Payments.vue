@@ -39,7 +39,7 @@
           class="btn btn-primary w-full sm:w-auto justify-center"
           :disabled="loadingHistorial"
         >
-          {{ loadingHistorial ? "⏳" : "🔍 Consultar" }}
+          {{ loadingHistorial ? 'Cargando...' : 'Consultar' }}
         </button>
       </div>
 
@@ -47,7 +47,7 @@
         class="p-4 mb-6 rounded-r-xl shadow-sm flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left border-l-4"
         style="background: var(--color-surface-soft); border-color: #10b981; border-top: 1px solid var(--color-border); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);"
       >
-        <span class="text-sm sm:text-lg font-semibold" style="color: var(--color-text-muted);">💰 Total en rango:</span>
+        <span class="text-sm sm:text-lg font-semibold" style="color: var(--color-text-muted);">Total en rango:</span>
         <span
           class="text-xl sm:text-2xl font-bold px-4 py-1 rounded shadow-sm w-full sm:w-auto"
           style="background: var(--color-surface); border: 1px solid var(--color-border); color: #10b981;"
@@ -180,7 +180,7 @@
                 Cancelar
               </button>
               <button type="submit" class="btn btn-primary flex-1" :disabled="ProcesandoPago">
-                {{ ProcesandoPago ? "💾..." : "Guardar" }}
+                {{ ProcesandoPago ? "Guardando..." : "Guardar" }}
               </button>
             </div>
           </form>
@@ -192,6 +192,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+
 import api from "@/axios";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";

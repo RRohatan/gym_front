@@ -12,9 +12,7 @@
       <div class="sidebar-logo">
         <span class="sidebar-logo-text font-black">COSMO<span class="text-red-500">GYM</span></span>
         <button class="lg:hidden sidebar-close-btn" @click="sidebarOpen = false" aria-label="Cerrar menú">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          ✕
         </button>
       </div>
 
@@ -44,29 +42,6 @@
               :aria-label="isDark ? 'Activar modo claro' : 'Activar modo oscuro'"
             >
               <div class="sidebar-icon-wrap theme-icon-wrap" :class="{ 'is-dark': isDark }">
-                <Transition name="icon-swap" mode="out-in">
-                  <svg
-                    v-if="isDark"
-                    key="sun"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="theme-svg sun"
-                  >
-                    <circle cx="12" cy="12" r="4"/>
-                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-                  </svg>
-                  <svg
-                    v-else
-                    key="moon"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="theme-svg moon"
-                  >
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                  </svg>
-                </Transition>
               </div>
               <span class="sidebar-item-label">
                 {{ isDark ? 'Modo claro' : 'Modo oscuro' }}
@@ -102,14 +77,7 @@
             <p class="admin-role">Administrador</p>
             <p class="admin-name">{{ userName }}</p>
           </div>
-          <svg
-            class="admin-chevron"
-            :class="{ 'rotate-180': adminOpen }"
-            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke-width="2.5" stroke="currentColor"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
+          <span class="admin-chevron" :class="{ 'rotate-180': adminOpen }">&#8964;</span>
         </button>
       </div>
     </aside>
@@ -121,9 +89,7 @@
       <div class="app-topbar lg:hidden">
         <!-- Hamburger solo en móvil -->
         <button class="lg:hidden topbar-ham" @click="sidebarOpen = true" aria-label="Abrir menú">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
+          ☰
         </button>
 
         <!-- Logo solo en móvil -->
@@ -140,6 +106,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useTheme } from '@/composables/useTheme'
