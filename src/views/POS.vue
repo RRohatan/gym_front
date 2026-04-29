@@ -31,7 +31,17 @@
               class="pos-client-select w-full"
               placeholder="Seleccionar Cliente"
             />
-            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            <button
+              v-if="clientSearchText"
+              @click.stop="clearClientSelection"
+              class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center cursor-pointer z-10"
+              title="Borrar selección"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <svg v-else class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             <ul v-if="isClientDropdownOpen" class="absolute z-50 w-full mt-1 bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               <li
                 v-if="filteredClientOptions.length === 0"
@@ -162,6 +172,12 @@ const filteredClientOptions = computed(() => {
 const selectMember = (member) => {
   selectedMemberId.value = member.id
   clientSearchText.value = member.name
+  isClientDropdownOpen.value = false
+}
+
+const clearClientSelection = () => {
+  selectedMemberId.value = ''
+  clientSearchText.value = ''
   isClientDropdownOpen.value = false
 }
 
