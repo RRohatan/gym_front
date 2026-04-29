@@ -22,15 +22,33 @@
 
         <!-- Barra de filtros -->
         <div class="pos-filters">
-          <div class="flex-1 relative client-select-wrap">
-            <BaseSelect
-              v-model="selectedMemberId"
-              class="pos-client-select"
-              :options="[
-                { value: null, label: 'Seleccionar Cliente (Opcional)' },
-                ...members.map((m) => ({ value: m.id, label: m.name })),
-              ]"
+          <div class="flex-1 relative client-select-wrap" ref="clientSelectRef">
+            <input
+              type="text"
+              v-model="clientSearchText"
+              @focus="isClientDropdownOpen = true"
+              @input="isClientDropdownOpen = true; selectedMemberId = ''"
+              class="pos-client-select w-full"
+              placeholder="Seleccionar Cliente"
             />
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            <ul v-if="isClientDropdownOpen" class="absolute z-50 w-full mt-1 bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <li
+                v-if="filteredClientOptions.length === 0"
+                class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400"
+              >
+                No se encontraron clientes
+              </li>
+              <li
+                v-for="member in filteredClientOptions"
+                :key="member.id"
+                @click="selectMember(member)"
+                class="px-4 py-2.5 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/30 text-gray-700 dark:text-gray-200 transition-colors"
+                :class="{ 'bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-semibold': selectedMemberId === member.id }"
+              >
+                {{ member.name }}
+              </li>
+            </ul>
           </div>
           <div class="flex-1 relative search-input-wrap">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400 dark:text-gray-500">
@@ -120,17 +138,40 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
-import { BaseSelect } from '@/components/ui'
 import dayjs from 'dayjs'
 
 const products = ref([])
 const members = ref([])
 const cart = ref([])
 const search = ref('')
-const selectedMemberId = ref(null)
+const selectedMemberId = ref('')
+
+const clientSearchText = ref('')
+const isClientDropdownOpen = ref(false)
+const clientSelectRef = ref(null)
+
+const filteredClientOptions = computed(() => {
+  if (!clientSearchText.value) return members.value
+  const lower = clientSearchText.value.toLowerCase()
+  return members.value.filter(m => m.name.toLowerCase().includes(lower))
+})
+
+const selectMember = (member) => {
+  selectedMemberId.value = member.id
+  clientSearchText.value = member.name
+  isClientDropdownOpen.value = false
+}
+
+const handleClickOutside = (e) => {
+  if (clientSelectRef.value && !clientSelectRef.value.contains(e.target)) {
+    isClientDropdownOpen.value = false
+    const m = members.value.find(x => x.id === selectedMemberId.value)
+    clientSearchText.value = m ? m.name : ''
+  }
+}
 
 const fetchData = async () => {
   try {
@@ -191,7 +232,7 @@ const formatCurrency = (val) => new Intl.NumberFormat('es-CO', { maximumFraction
 const procesarVenta = async () => {
   try {
     await api.post('/supplement-sales/bulk', {
-      member_id: selectedMemberId.value,
+      member_id: selectedMemberId.value || null,
       cart: cart.value,
       payment_method_id: 1,
       payment_method_name: 'Efectivo',
@@ -206,6 +247,8 @@ const procesarVenta = async () => {
     })
 
     cart.value = []
+    selectedMemberId.value = ''
+    clientSearchText.value = ''
     fetchData()
   } catch (error) {
     console.error(error)
@@ -213,7 +256,14 @@ const procesarVenta = async () => {
   }
 }
 
-onMounted(() => fetchData())
+onMounted(() => {
+  fetchData()
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped>
@@ -290,38 +340,60 @@ onMounted(() => fetchData())
 /* ═══════════════════════════════════════════
    Estilos Premium para los Inputs de Filtro
    ═══════════════════════════════════════════ */
-.client-select-wrap :deep(select) {
+.client-select-wrap input {
   height: 3rem;
   font-weight: 600;
   border: 1.5px solid rgba(59, 130, 246, 0.3);
   background: rgba(59, 130, 246, 0.04);
-  color: #2563eb;
+  color: var(--color-text);
   border-radius: 0.75rem;
   transition: all 0.3s ease;
   font-size: 0.95rem;
+  padding-left: 1rem;
+  padding-right: 2.5rem;
+  outline: none;
 }
-.client-select-wrap :deep(select:hover) {
+.client-select-wrap input::placeholder {
+  color: var(--color-text);
+  opacity: 0.85;
+}
+.client-select-wrap input:hover {
   background: rgba(59, 130, 246, 0.08);
   border-color: rgba(59, 130, 246, 0.5);
 }
-.client-select-wrap :deep(select:focus) {
+.client-select-wrap input:focus {
   border-color: #3b82f6;
   background: var(--color-surface);
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
-:global(.dark) .client-select-wrap :deep(select) {
+:global(.dark) .client-select-wrap input {
   background: rgba(96, 165, 250, 0.08);
   border-color: rgba(96, 165, 250, 0.25);
   color: #93c5fd;
 }
-:global(.dark) .client-select-wrap :deep(select:hover) {
+:global(.dark) .client-select-wrap input::placeholder {
+  color: rgba(147, 197, 253, 0.7);
+}
+:global(.dark) .client-select-wrap input:hover {
   background: rgba(96, 165, 250, 0.12);
   border-color: rgba(96, 165, 250, 0.4);
 }
-:global(.dark) .client-select-wrap :deep(select:focus) {
+:global(.dark) .client-select-wrap input:focus {
   background: var(--color-surface);
   border-color: #60a5fa;
   box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+}
+
+/* Custom Scrollbar for dropdown */
+.client-select-wrap ul::-webkit-scrollbar {
+  width: 6px;
+}
+.client-select-wrap ul::-webkit-scrollbar-track {
+  background: transparent;
+}
+.client-select-wrap ul::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
 }
 
 .search-input-wrap .pos-search-input {
