@@ -11,7 +11,7 @@
 
     <!-- Formulario -->
     <div class="flex justify-center items-center w-full">
-      <div class="bg-white shadow-lg rounded-2xl p-6 md:p-10 w-full max-w-lg">
+      <div class="bg-[var(--color-surface)] shadow-lg rounded-2xl p-6 md:p-10 w-full max-w-lg border border-default-soft">
 
         <!-- Estado de éxito -->
         <div v-if="successMessage" class="text-center p-4 bg-green-100 text-green-700 rounded-lg">
@@ -21,9 +21,9 @@
 
         <!-- Estado de carga o formulario -->
         <div v-else>
-          <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Formulario de Inscripción</h2>
+          <h2 class="text-2xl font-bold mb-6 text-center text-default">Formulario de Inscripción</h2>
 
-          <div v-if="loading" class="text-center text-gray-600">
+          <div v-if="loading" class="text-center text-muted">
             Cargando planes...
           </div>
 
@@ -31,33 +31,33 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Nombre Completo</label>
+                <label class="block text-muted text-sm mb-1">Nombre Completo</label>
                 <input v-model="form.name" type="text" class="input-field" required />
               </div>
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Identificación (Cédula)</label>
+                <label class="block text-muted text-sm mb-1">Identificación (Cédula)</label>
                 <input v-model="form.identification" type="text" class="input-field" required />
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Correo</label>
+                <label class="block text-muted text-sm mb-1">Correo</label>
                 <input v-model="form.email" type="email" class="input-field" required/>
               </div>
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Teléfono</label>
+                <label class="block text-muted text-sm mb-1">Teléfono</label>
                 <input v-model="form.phone" type="tel" class="input-field" required/>
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Fecha de Nacimiento</label>
+                <label class="block text-muted text-sm mb-1">Fecha de Nacimiento</label>
                 <input v-model="form.birth_date" type="date" class="input-field" required />
               </div>
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Sexo</label>
+                <label class="block text-muted text-sm mb-1">Sexo</label>
                 <BaseSelect
                   v-model="form.sexo"
                   placeholder="Seleccione..."
@@ -69,11 +69,11 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Peso (kg)</label>
+                <label class="block text-muted text-sm mb-1">Peso (kg)</label>
                 <input v-model.number="form.peso" type="number" step="0.1" class="input-field" placeholder="Ej. 70.5" />
               </div>
               <div>
-                <label class="block text-gray-600 text-sm mb-1">Estatura (m)</label>
+                <label class="block text-muted text-sm mb-1">Estatura (m)</label>
                 <input v-model.number="form.estatura" type="number" step="0.01" class="input-field" placeholder="Ej. 1.75" />
               </div>
             </div>
@@ -81,7 +81,7 @@
             <!-- CAMPO 'OBJETIVO' ELIMINADO -->
 
             <div>
-              <label class="block text-gray-600 text-sm mb-1">Plan de Membresía</label>
+              <label class="block text-muted text-sm mb-1">Plan de Membresía</label>
               <BaseSelect
                 v-model="form.plan_id"
                 placeholder="Seleccione el plan que desea"
@@ -122,13 +122,8 @@
   animation: fadeScale 1.2s ease-out forwards;
   text-shadow: 0 2px 10px rgba(255, 0, 0, 0.4);
 }
-body {
-  margin: 0;
-  background-color: black;
-  overflow-x: hidden;
-}
 .input-field {
-  @apply w-full px-4 py-2 border rounded-lg focus:outline-none text-black focus:ring-2 focus:ring-blue-400;
+  @apply field-input;
 }
 </style>
 

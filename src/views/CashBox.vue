@@ -13,33 +13,34 @@
         </BaseButton>
       </template>
 
-      <div v-if="loading" class="text-center py-10 text-gray-500">Cargando...</div>
+      <div v-if="loading" class="text-center py-10 text-muted">Cargando...</div>
 
       <div v-else class="space-y-6">
         <div
           v-if="todayCashbox"
-          class="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-sm"
+          class="p-4 rounded-xl border shadow-sm"
+          style="background: var(--color-surface-soft); border-color: var(--color-border);"
         >
-          <h3 class="text-sm font-semibold mb-3 text-blue-900 uppercase tracking-wide">
+          <h3 class="text-sm font-semibold mb-3 uppercase tracking-wide" style="color: var(--color-text-muted);">
             Resumen Hoy ({{ todayCashbox.date }})
           </h3>
 
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-            <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-gray-500 text-xs">Apertura</p>
-              <p class="text-lg font-semibold text-gray-800">
+            <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
+              <p class="text-muted text-xs">Apertura</p>
+              <p class="text-lg font-semibold text-default">
                 {{ formatCurrency(todayCashbox.opening_balance) }}
               </p>
             </div>
-            <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-emerald-600 text-xs">Ingresos</p>
-              <p class="text-lg font-semibold text-emerald-700">
+            <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
+              <p class="text-emerald-600 dark:text-emerald-400 text-xs">Ingresos</p>
+              <p class="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
                 {{ formatCurrency(todayCashbox.total_income) }}
               </p>
             </div>
-            <div class="bg-white p-3 rounded-lg shadow-sm">
-              <p class="text-red-600 text-xs">Gastos</p>
-              <p class="text-lg font-semibold text-red-700">
+            <div class="bg-[var(--color-surface)] p-3 rounded-lg shadow-sm border border-default-soft">
+              <p class="text-red-500 dark:text-red-400 text-xs">Gastos</p>
+              <p class="text-lg font-semibold text-red-500 dark:text-red-400">
                 {{ formatCurrency(todayCashbox.total_expense) }}
               </p>
             </div>
@@ -54,9 +55,10 @@
 
         <div
           v-else
-          class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 text-center"
+          class="p-6 rounded-xl border text-center"
+          style="background: var(--color-surface-soft); border-color: var(--color-border);"
         >
-          <p class="text-yellow-800 font-semibold mb-4">Caja cerrada</p>
+          <p class="font-semibold mb-4" style="color: var(--color-text-muted);">Caja cerrada</p>
           <form
             class="flex gap-2 max-w-sm mx-auto items-end"
             @submit.prevent="abrirCaja"
@@ -73,7 +75,7 @@
         </div>
 
         <div>
-          <h3 class="font-semibold mb-3 text-gray-700">Historial</h3>
+          <h3 class="font-semibold mb-3 text-default">Historial</h3>
           <div class="table-wrap">
             <table class="w-full text-sm min-w-[600px]">
               <thead class="table-head">
@@ -85,7 +87,7 @@
                   <th class="!text-right">Cierre</th>
                 </tr>
               </thead>
-              <tbody class="bg-white">
+              <tbody class="bg-[var(--color-surface)]">
                 <tr v-for="cb in cashboxes" :key="cb.id" class="table-row">
                   <td class="font-medium">{{ cb.date }}</td>
                   <td class="text-right">{{ formatCurrency(cb.opening_balance) }}</td>

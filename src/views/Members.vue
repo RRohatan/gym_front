@@ -5,8 +5,8 @@
       <!-- Header -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Clientes</h1>
-          <p class="text-sm text-slate-400 mt-0.5">Gestión de clientes y membresías</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-default tracking-tight">Clientes</h1>
+          <p class="text-sm text-subtle mt-0.5">Gestión de clientes y membresías</p>
         </div>
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
           <router-link to="/Menu" class="btn btn-dark flex-1 sm:flex-none">Inicio</router-link>
@@ -23,10 +23,10 @@
         />
       </div>
 
-    <div v-if="loading" class="text-gray-400 text-center mt-10">Cargando Clientes...</div>
+    <div v-if="loading" class="text-subtle text-center mt-10">Cargando Clientes...</div>
 
     <div v-else>
-      <div v-if="members.length === 0" class="text-gray-400 text-center mt-10">
+      <div v-if="members.length === 0" class="text-subtle text-center mt-10">
         No hay Clientes registrados.
       </div>
 
@@ -34,10 +34,10 @@
         <div
           v-for="member in miembrosPaginados"
           :key="member.id"
-          class="relative rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-white text-black"
+          class="relative rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-lg bg-[var(--color-surface)] text-default"
           :class="[
             'shadow-card',
-            member.is_expired ? 'ring-2 ring-red-200' : 'ring-1 ring-gray-100/80',
+            member.is_expired ? 'ring-2 ring-red-400/40' : 'ring-1 ring-[var(--color-border-soft)]',
           ]"
         >
           <!-- Barra de estado superior -->
@@ -56,17 +56,17 @@
 
           <div class="p-4 flex justify-between items-center">
             <div>
-              <h2 class="text-base font-bold text-gray-900">{{ member.name }}</h2>
-              <p class="text-sm text-gray-500 mt-0.5">{{ member.phone || "Sin teléfono" }}</p>
-              <p class="text-sm text-gray-500">{{ member.birth_date }}</p>
+              <h2 class="text-base font-bold text-default">{{ member.name }}</h2>
+              <p class="text-sm text-muted mt-0.5">{{ member.phone || "Sin teléfono" }}</p>
+              <p class="text-sm text-muted">{{ member.birth_date }}</p>
             </div>
             <button
               @click="toggleDetalle(member.id)"
               class="text-xs font-bold px-3 py-1 rounded-full border transition-all h-8 flex items-center select-none"
               :class="
                 detallesAbiertos.includes(member.id)
-                  ? 'bg-blue-100 text-blue-700 border-blue-200'
-                  : 'bg-gray-100 text-gray-600'
+                  ? 'detail-toggle-active'
+                  : 'bg-[var(--color-overlay)] text-muted border-default-soft'
               "
             >
               {{ detallesAbiertos.includes(member.id) ? "Ocultar" : "Ver más" }}
@@ -75,15 +75,15 @@
 
           <div
             v-if="detallesAbiertos.includes(member.id)"
-            class="px-4 pb-4 text-sm space-y-2 border-t border-gray-200/50 pt-3 bg-gray-50/50"
+            class="px-4 pb-4 text-sm space-y-2 border-t border-default-soft pt-3 bg-[var(--color-surface-soft)]"
           >
             <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
-              <p><span class="text-gray-400">Cédula</span><br/><span class="font-medium">{{ member.identification || "—" }}</span></p>
-              <p><span class="text-gray-400">Email</span><br/><span class="font-medium">{{ member.email || "—" }}</span></p>
-              <p><span class="text-gray-400">Peso</span><br/><span class="font-medium">{{ member.peso ?? "—" }} kg</span></p>
-              <p><span class="text-gray-400">Altura</span><br/><span class="font-medium">{{ member.estatura ? (member.estatura > 3 ? (member.estatura/100).toFixed(2) : member.estatura) : "—" }} m</span></p>
-              <p><span class="text-gray-400">Sexo</span><br/><span class="font-medium">{{ member.sexo || "—" }}</span></p>
-              <p><span class="text-gray-400">Estado</span><br/>
+              <p><span class="text-subtle">Cédula</span><br/><span class="font-medium">{{ member.identification || "—" }}</span></p>
+              <p><span class="text-subtle">Email</span><br/><span class="font-medium">{{ member.email || "—" }}</span></p>
+              <p><span class="text-subtle">Peso</span><br/><span class="font-medium">{{ member.peso ?? "—" }} kg</span></p>
+              <p><span class="text-subtle">Altura</span><br/><span class="font-medium">{{ member.estatura ? (member.estatura > 3 ? (member.estatura/100).toFixed(2) : member.estatura) : "—" }} m</span></p>
+              <p><span class="text-subtle">Sexo</span><br/><span class="font-medium">{{ member.sexo || "—" }}</span></p>
+              <p><span class="text-subtle">Estado</span><br/>
                 <span class="badge" :class="{
                   'badge-green':  member.memberships?.[0]?.status === 'active',
                   'badge-red':    member.memberships?.[0]?.status === 'expired',
@@ -92,7 +92,7 @@
                 }">{{ member.memberships?.length ? traducirEstado(member.memberships[0].status) : "Sin plan" }}</span>
               </p>
             </div>
-            <p class="text-xs text-gray-400 italic mt-1">{{ member.medical_history || "Sin antecedentes médicos" }}</p>
+            <p class="text-xs text-subtle italic mt-1">{{ member.medical_history || "Sin antecedentes médicos" }}</p>
 
             <div class="pt-3 flex flex-wrap items-center gap-1.5">
               <button
@@ -151,15 +151,15 @@
       </div>
 
       <!-- Paginación -->
-      <div v-if="totalMiembrosPages > 1" class="flex items-center justify-between mt-6 text-sm text-gray-600">
+      <div v-if="totalMiembrosPages > 1" class="flex items-center justify-between mt-6 text-sm text-muted">
         <span>Página {{ currentPageMiembros }} de {{ totalMiembrosPages }} ({{ miembrosFiltrados.length }} clientes)</span>
         <div class="flex gap-1">
           <button @click="currentPageMiembros--" :disabled="currentPageMiembros === 1"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
             Anterior
           </button>
           <button @click="currentPageMiembros++" :disabled="currentPageMiembros === totalMiembrosPages"
-            class="px-3 py-1 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-3 py-1 rounded border border-default-soft bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)] disabled:opacity-40 disabled:cursor-not-allowed">
             Siguiente
           </button>
         </div>
@@ -395,19 +395,65 @@ const traducirEstado = (estado) => {
   background: rgb(22 163 74); color: white;
 }
 .action-success:hover { background: rgb(21 128 61); }
+
+/* Claro */
 .action-neutral {
   background: rgb(243 244 246); color: rgb(55 65 81);
   border-color: rgb(229 231 235);
 }
 .action-neutral:hover { background: rgb(229 231 235); }
+
 .action-indigo {
   background: rgb(238 242 255); color: rgb(67 56 202);
   border-color: rgb(199 210 254);
 }
 .action-indigo:hover { background: rgb(224 231 255); }
+
 .action-warning {
   background: rgb(255 237 213); color: rgb(154 52 18);
   border-color: rgb(254 215 170);
 }
 .action-warning:hover { background: rgb(254 215 170); }
+
+/* Modo oscuro */
+:global(.dark) .action-neutral {
+  background: rgba(255,255,255,0.07);
+  color: rgba(148,163,184,0.9);
+  border-color: rgba(255,255,255,0.12);
+}
+:global(.dark) .action-neutral:hover {
+  background: rgba(255,255,255,0.12);
+  color: #f1f5f9;
+}
+
+:global(.dark) .action-indigo {
+  background: rgba(99,102,241,0.15);
+  color: #c7d2fe;
+  border-color: rgba(99,102,241,0.35);
+}
+:global(.dark) .action-indigo:hover {
+  background: rgba(99,102,241,0.25);
+  border-color: rgba(99,102,241,0.5);
+}
+
+:global(.dark) .action-warning {
+  background: rgba(249,115,22,0.15);
+  color: #fdba74;
+  border-color: rgba(249,115,22,0.35);
+}
+:global(.dark) .action-warning:hover {
+  background: rgba(249,115,22,0.25);
+  border-color: rgba(249,115,22,0.5);
+}
+
+.detail-toggle-active {
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+:global(.dark) .detail-toggle-active {
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+  border-color: rgba(96, 165, 250, 0.30);
+}
 </style>

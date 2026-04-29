@@ -26,7 +26,7 @@
               <td>
                 <BaseBadge color="blue">{{ traducirFrecuencia(plan.frequency) }}</BaseBadge>
               </td>
-              <td class="font-mono text-emerald-700 font-semibold">
+              <td class="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                 ${{ Number(plan.price).toLocaleString() }}
               </td>
               <td>
@@ -46,7 +46,7 @@
 
       <div
         v-if="totalPlanesPages > 1"
-        class="flex items-center justify-between text-sm text-gray-600"
+        class="flex items-center justify-between text-sm text-muted"
       >
         <span>Página {{ currentPagePlanes }} de {{ totalPlanesPages }}</span>
         <div class="flex gap-1">

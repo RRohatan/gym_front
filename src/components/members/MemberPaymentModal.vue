@@ -1,31 +1,33 @@
 <template>
   <div
     v-if="show"
-    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 flex items-center justify-center z-50 p-4"
+    :style="{ background: 'var(--modal-backdrop)' }"
   >
     <div
-      class="bg-white text-black w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500"
+      class="w-full max-w-md p-6 rounded-lg shadow-2xl border-t-4 border-green-500"
+      :style="{ background: 'var(--modal-panel-bg)', borderLeft: '1px solid var(--modal-panel-border)', borderRight: '1px solid var(--modal-panel-border)', borderBottom: '1px solid var(--modal-panel-border)' }"
     >
-      <h2 id="member-payment-modal-title" class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+      <h2 id="member-payment-modal-title" class="text-xl font-bold mb-2 text-default flex items-center gap-2">
         Registrar Pago
       </h2>
-      <p class="text-sm text-gray-600 mb-4">
+      <p class="text-sm text-muted mb-4">
         Cliente: <strong>{{ member?.name }}</strong>
       </p>
 
       <div v-if="loadingBalance" class="text-center py-4">Buscando deuda...</div>
 
       <form v-else @submit.prevent="pagar">
-        <div class="mb-4 bg-gray-100 p-3 rounded">
-          <p class="text-sm text-gray-500">Monto a pagar:</p>
-          <p class="text-2xl font-bold text-green-700">
+        <div class="mb-4 bg-[var(--color-surface-soft)] p-3 rounded border border-default-soft">
+          <p class="text-sm text-muted">Monto a pagar:</p>
+          <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
             {{ formatCurrency(amount) }}
           </p>
         </div>
 
         <div class="mb-4">
           <label class="block mb-1 text-sm font-medium">Método de Pago</label>
-          <select v-model="paymentMethodId" class="w-full border rounded px-3 py-2" required>
+          <select v-model="paymentMethodId" class="field-input" required>
             <option value="" disabled>Seleccione...</option>
             <option v-for="m in paymentMethods" :key="m.id" :value="m.id">{{ m.name }}</option>
           </select>
@@ -35,7 +37,7 @@
           <button
             type="button"
             @click="$emit('close')"
-            class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
+            class="btn btn-secondary"
           >
             Cancelar
           </button>

@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto">
       <router-link
         to="/members"
-        class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition mb-5"
+        class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-default transition mb-5"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -12,7 +12,7 @@
       </router-link>
 
       <div v-if="loading" class="py-20 text-center">
-        <div class="inline-flex items-center gap-3 text-gray-500">
+        <div class="inline-flex items-center gap-3 text-muted">
           <svg class="w-5 h-5 animate-spin text-primary-600" viewBox="0 0 24 24" fill="none">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
@@ -27,7 +27,7 @@
 
       <template v-else>
         <!-- Hero card -->
-        <div class="rounded-2xl overflow-hidden shadow-xl bg-white border border-gray-100 mb-6">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-[var(--color-surface)] border border-default-soft mb-6">
           <div class="relative bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-700 px-6 sm:px-10 pt-8 pb-20">
             <div class="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
               <div class="absolute -top-20 -right-20 w-80 h-80 bg-white/20 rounded-full blur-3xl" />
@@ -59,13 +59,13 @@
 
           <div class="relative px-6 sm:px-10 pb-6 -mt-14">
             <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-              <div class="w-24 h-24 rounded-2xl bg-white p-1 shadow-lg shrink-0">
+              <div class="w-24 h-24 rounded-2xl bg-[var(--color-surface)] p-1 shadow-lg shrink-0">
                 <div class="w-full h-full rounded-xl flex items-center justify-center text-3xl font-black text-white bg-gradient-to-br from-primary-500 to-indigo-600">
                   {{ (member.name || "?").charAt(0).toUpperCase() }}
                 </div>
               </div>
               <div class="flex-1 min-w-0 pb-1">
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight truncate">{{ member.name }}</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold text-default tracking-tight truncate">{{ member.name }}</h1>
                 <div class="flex flex-wrap items-center gap-3 mt-2">
                   <BaseBadge v-if="member.memberships?.length" :color="statusColor(member.memberships[0].status)">
                     {{ traducirEstado(member.memberships[0].status) }}
@@ -190,11 +190,11 @@
               </div>
               <div
                 v-if="member.medical_history"
-                class="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed"
+                class="bg-[var(--color-surface-soft)] border border-default-soft rounded-xl p-4 text-sm text-default whitespace-pre-wrap leading-relaxed"
               >
                 {{ member.medical_history }}
               </div>
-              <p v-else class="text-sm italic text-gray-400">
+              <p v-else class="text-sm italic text-subtle">
                 No hay antecedentes médicos registrados.
               </p>
             </div>
@@ -210,7 +210,7 @@
                 <p class="text-[10px] font-semibold uppercase tracking-widest text-primary-700/70 mb-1">
                   Plan Actual
                 </p>
-                <p class="text-lg font-bold text-gray-900 capitalize">
+                <p class="text-lg font-bold text-default capitalize">
                   {{ traducirFrecuencia(member.memberships[0].plan?.frequency) }}
                 </p>
                 <p class="text-2xl font-black text-primary-700 mt-1">
@@ -243,12 +243,12 @@
             </div>
 
             <div v-else class="detail-card text-center">
-              <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
-                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <div class="w-12 h-12 rounded-full bg-[var(--color-overlay)] flex items-center justify-center mx-auto mb-3">
+                <svg class="w-6 h-6 text-subtle" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                 </svg>
               </div>
-              <p class="text-sm text-gray-500">Sin membresía asignada</p>
+              <p class="text-sm text-muted">Sin membresía asignada</p>
             </div>
           </div>
         </div>
@@ -317,7 +317,7 @@ const imcIconCls = computed(() => {
   if (cls === "Normal") return "bg-success-100 text-success-700";
   if (cls === "Bajo peso" || cls === "Sobrepeso") return "bg-amber-100 text-amber-700";
   if (cls.startsWith("Obesidad")) return "bg-danger-100 text-danger-600";
-  return "bg-gray-100 text-gray-500";
+  return "bg-[var(--color-overlay)] text-muted";
 });
 
 const imcTextCls = computed(() => {
@@ -325,7 +325,7 @@ const imcTextCls = computed(() => {
   if (cls === "Normal") return "text-success-700";
   if (cls === "Bajo peso" || cls === "Sobrepeso") return "text-amber-700";
   if (cls.startsWith("Obesidad")) return "text-danger-600";
-  return "text-gray-500";
+  return "text-muted";
 });
 
 function formatEstatura(estatura) {
@@ -423,7 +423,7 @@ function traducirEstado(estado) {
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: rgb(107 114 128);
+  color: var(--color-text-muted);
 }
 
 .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
@@ -433,18 +433,20 @@ function traducirEstado(estado) {
 .stat-card {
   display: flex; align-items: center; gap: 0.875rem;
   padding: 1rem 1.125rem;
-  background: white; border: 1px solid rgb(243 244 246);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 0.875rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 .stat-card:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .stat-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.stat-label { font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgb(107 114 128); }
-.stat-value { font-size: 1.125rem; font-weight: 800; color: rgb(17 24 39); line-height: 1.2; }
+.stat-label { font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-subtle); }
+.stat-value { font-size: 1.125rem; font-weight: 800; color: var(--color-text); line-height: 1.2; }
 
 .detail-card {
-  background: white; border: 1px solid rgb(243 244 246);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 1rem; padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
@@ -455,8 +457,8 @@ function traducirEstado(estado) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgb(107 114 128);
+  color: var(--color-text-subtle);
   margin-bottom: 0.25rem;
 }
-.info-val { font-size: 0.875rem; font-weight: 600; color: rgb(17 24 39); }
+.info-val { font-size: 0.875rem; font-weight: 600; color: var(--color-text); }
 </style>

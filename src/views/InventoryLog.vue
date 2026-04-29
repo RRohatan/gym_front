@@ -10,7 +10,7 @@
       </header>
 
       <div
-        class="bg-gray-800 p-1 rounded-xl inline-flex shadow-lg border border-gray-700"
+        class="bg-[var(--color-surface)] p-1 rounded-xl inline-flex shadow-lg border border-default-soft"
         role="tablist"
       >
         <button
@@ -21,7 +21,7 @@
           :class="
             tab === 'ventas'
               ? 'bg-blue-600 text-white shadow'
-              : 'text-gray-400 hover:text-white'
+              : 'text-subtle hover:text-default'
           "
           @click="tab = 'ventas'"
         >
@@ -35,7 +35,7 @@
           :class="
             tab === 'compras'
               ? 'bg-emerald-600 text-white shadow'
-              : 'text-gray-400 hover:text-white'
+              : 'text-subtle hover:text-default'
           "
           @click="tab = 'compras'"
         >
@@ -45,15 +45,16 @@
 
       <section
         v-if="tab === 'ventas'"
-        class="bg-white rounded-2xl shadow-card p-4 sm:p-6 text-gray-800 animate-fade-in space-y-4"
+        class="bg-[var(--color-surface)] rounded-2xl shadow-card p-4 sm:p-6 text-default animate-fade-in space-y-4"
       >
         <div class="flex justify-between items-center gap-3 flex-wrap">
-          <h2 class="text-xl font-semibold text-blue-800">Historial de Ventas</h2>
+          <h2 class="text-xl font-semibold" style="color: var(--color-text);">Historial de Ventas</h2>
           <div
-            class="text-sm text-gray-500 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100"
+            class="text-sm px-3 py-1 rounded-lg border"
+            style="color: var(--color-text-muted); background: var(--color-surface-soft); border-color: var(--color-border);"
           >
             Total Vendido:
-            <span class="font-semibold text-blue-700">
+            <span class="font-semibold text-emerald-500">
               {{ formatCurrency(totalVentas) }}
             </span>
           </div>
@@ -61,7 +62,7 @@
 
         <div class="table-wrap">
           <table class="w-full text-sm text-left">
-            <thead class="bg-blue-50 text-blue-800 uppercase text-xs font-semibold">
+            <thead class="table-head">
               <tr>
                 <th class="p-3">Fecha</th>
                 <th class="p-3">Producto</th>
@@ -71,18 +72,18 @@
                 <th class="p-3">Cliente</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y border-default-soft">
               <tr v-if="ventas.length === 0">
-                <td colspan="6" class="p-8 text-center text-gray-400 italic">
+                <td colspan="6" class="p-8 text-center text-subtle italic">
                   No hay ventas registradas aún.
                 </td>
               </tr>
-              <tr v-for="v in ventasPaginadas" :key="v.id" class="hover:bg-gray-50">
-                <td class="p-3 text-gray-500">{{ formatDate(v.created_at) }}</td>
+              <tr v-for="v in ventasPaginadas" :key="v.id" class="hover:bg-[var(--color-surface-soft)]">
+                <td class="p-3 text-muted">{{ formatDate(v.created_at) }}</td>
                 <td class="p-3 font-medium">
                   {{ v.product?.name || "Producto eliminado" }}
                 </td>
-                <td class="p-3 text-center bg-gray-50 rounded font-mono">
+                <td class="p-3 text-center bg-[var(--color-surface-soft)] rounded font-mono">
                   {{ v.quantity }}
                 </td>
                 <td class="p-3 text-right">
@@ -99,7 +100,7 @@
 
         <div
           v-if="totalPagesVentas > 1"
-          class="flex items-center justify-between pt-3 border-t border-gray-100 text-sm text-gray-600"
+          class="flex items-center justify-between pt-3 border-t border-default-soft text-sm text-muted"
         >
           <span>Página {{ currentPageVentas }} de {{ totalPagesVentas }}</span>
           <div class="flex gap-1">
@@ -125,10 +126,10 @@
 
       <section
         v-if="tab === 'compras'"
-        class="bg-white rounded-2xl shadow-card p-4 sm:p-6 text-gray-800 animate-fade-in space-y-4"
+        class="bg-[var(--color-surface)] rounded-2xl shadow-card p-4 sm:p-6 text-default animate-fade-in space-y-4"
       >
         <div class="flex justify-between items-center gap-3 flex-wrap">
-          <h2 class="text-xl font-semibold text-emerald-800">Historial de Compras</h2>
+          <h2 class="text-xl font-semibold" style="color: var(--color-text);">Historial de Compras</h2>
           <BaseButton variant="success" size="sm" @click="abrirModalCompra">
             Registrar Nueva Compra
           </BaseButton>
@@ -136,9 +137,7 @@
 
         <div class="table-wrap">
           <table class="w-full text-sm text-left">
-            <thead
-              class="bg-emerald-50 text-emerald-800 uppercase text-xs font-semibold"
-            >
+            <thead class="table-head">
               <tr>
                 <th class="p-3">Fecha</th>
                 <th class="p-3">Producto</th>
@@ -147,22 +146,22 @@
                 <th class="p-3">Proveedor / Notas</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y border-default-soft">
               <tr v-if="compras.length === 0">
-                <td colspan="5" class="p-8 text-center text-gray-400 italic">
+                <td colspan="5" class="p-8 text-center text-subtle italic">
                   No has registrado compras de reabastecimiento.
                 </td>
               </tr>
-              <tr v-for="c in comprasPaginadas" :key="c.id" class="hover:bg-gray-50">
-                <td class="p-3 text-gray-500">{{ formatDate(c.purchase_date) }}</td>
+              <tr v-for="c in comprasPaginadas" :key="c.id" class="hover:bg-[var(--color-surface-soft)]">
+                <td class="p-3 text-muted">{{ formatDate(c.purchase_date) }}</td>
                 <td class="p-3 font-medium">{{ c.product?.name }}</td>
                 <td class="p-3 text-center font-semibold text-emerald-700">
                   +{{ c.quantity }}
                 </td>
-                <td class="p-3 text-right text-gray-600">
+                <td class="p-3 text-right text-muted">
                   {{ formatCurrency(c.total_cost) }}
                 </td>
-                <td class="p-3 text-xs text-gray-500">{{ c.supplier || "—" }}</td>
+                <td class="p-3 text-xs text-muted">{{ c.supplier || "—" }}</td>
               </tr>
             </tbody>
           </table>
@@ -170,7 +169,7 @@
 
         <div
           v-if="totalPagesCompras > 1"
-          class="flex items-center justify-between pt-3 border-t border-gray-100 text-sm text-gray-600"
+          class="flex items-center justify-between pt-3 border-t border-default-soft text-sm text-muted"
         >
           <span>Página {{ currentPageCompras }} de {{ totalPagesCompras }}</span>
           <div class="flex gap-1">
