@@ -171,14 +171,12 @@
 
             <div>
               <label class="block mb-1 text-xs font-bold text-muted uppercase">Método</label>
-              <select
+              <BaseSelect
                 v-model="nuevoPago.payment_method_id"
+                placeholder="Seleccionar..."
                 required
-                class="field-input"
-              >
-                <option disabled value="">Seleccionar...</option>
-                <option v-for="m in metodosPago" :key="m.id" :value="m.id">{{ m.name }}</option>
-              </select>
+                :options="metodoPagoOptions"
+              />
             </div>
 
             <div class="flex justify-end gap-2 pt-4 border-t mt-2">
@@ -221,6 +219,7 @@ import {
   X,
   Check,
 } from "lucide-vue-next";
+import { BaseSelect } from "@/components/ui";
 // --- ESTADO ---
 const pagos = ref([]);
 const currentPagePagos = ref(1);
@@ -244,6 +243,10 @@ const filtros = ref({
 });
 
 const nuevoPago = ref({ member_id: "", amount: "", payment_method_id: "" });
+
+const metodoPagoOptions = computed(() =>
+  metodosPago.value.map((m) => ({ value: m.id, label: m.name }))
+);
 
 // --- FUNCIONES ---
 const cargarHistorial = async () => {

@@ -186,11 +186,11 @@
           <form @submit.prevent="guardarCambios" class="space-y-3">
             <div>
               <label class="text-xs font-bold uppercase text-subtle">Plan</label>
-              <select v-model="editarMembresia.plan.id" class="field-input">
-                <option v-for="plan in planes" :key="plan.id" :value="plan.id">
-                  {{ plan.membership_type?.name }} ({{ traducirFrecuencia(plan.frequency) }})
-                </option>
-              </select>
+              <BaseSelect
+                v-model="editarMembresia.plan.id"
+                :options="planEditOptions"
+                placeholder="Seleccione un plan"
+              />
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -214,12 +214,10 @@
 
             <div>
               <label class="text-xs font-bold uppercase text-subtle">Estado</label>
-              <select v-model="editarMembresia.status" class="field-input">
-                <option value="active">Activa</option>
-                <option value="expired">Vencida</option>
-                <option value="inactive_unpaid">Por Pagar</option>
-                <option value="cancelled">Cancelada</option>
-              </select>
+              <BaseSelect
+                v-model="editarMembresia.status"
+                :options="estadoMembresiaOptions"
+              />
             </div>
 
             <div class="flex justify-end gap-2 mt-4 pt-2 border-t">
@@ -273,14 +271,12 @@
 
             <div>
               <label class="text-xs font-bold uppercase text-subtle">Plan</label>
-              <select v-model="form.plan_id" class="field-input" required>
-                <option disabled value="">Seleccione...</option>
-                <option v-for="p in planes" :key="p.id" :value="p.id">
-                  {{ p.membership_type?.name }} - {{ traducirFrecuencia(p.frequency) }} - ${
-                    parseInt(p.price).toLocaleString()
-                  }}
-                </option>
-              </select>
+              <BaseSelect
+                v-model="form.plan_id"
+                :options="planAsignarOptions"
+                placeholder="Seleccione..."
+                required
+              />
             </div>
 
             <div class="flex justify-end gap-2 pt-2">
@@ -322,6 +318,7 @@ import {
   X,
   Check,
 } from "lucide-vue-next";
+import { BaseSelect } from "@/components/ui";
 
 const route = useRoute();
 
@@ -545,6 +542,27 @@ const traducirFrecuencia = (f) => {
   const map = { daily: "Diaria", weekly: "Semanal", biweekly: "Quincenal", monthly: "Mensual" };
   return map[f] || f;
 };
+
+const planEditOptions = computed(() =>
+  planes.value.map((p) => ({
+    value: p.id,
+    label: `${p.membership_type?.name || "Plan"} (${traducirFrecuencia(p.frequency)})`,
+  }))
+);
+
+const planAsignarOptions = computed(() =>
+  planes.value.map((p) => ({
+    value: p.id,
+    label: `${p.membership_type?.name || "Plan"} - ${traducirFrecuencia(p.frequency)} - $${parseInt(p.price).toLocaleString()}`,
+  }))
+);
+
+const estadoMembresiaOptions = [
+  { value: "active", label: "Activa" },
+  { value: "expired", label: "Vencida" },
+  { value: "inactive_unpaid", label: "Por Pagar" },
+  { value: "cancelled", label: "Cancelada" },
+];
 
 const traducirEstado = (s) => {
   const map = {

@@ -38,10 +38,12 @@
             <Banknote class="w-4 h-4 text-muted" aria-hidden="true" />
             Método de Pago
           </label>
-          <select v-model="paymentMethodId" class="field-input" required>
-            <option value="" disabled>Seleccione...</option>
-            <option v-for="m in paymentMethods" :key="m.id" :value="m.id">{{ m.name }}</option>
-          </select>
+          <BaseSelect
+            v-model="paymentMethodId"
+            placeholder="Seleccione..."
+            required
+            :options="paymentMethodOptions"
+          />
         </div>
 
         <div class="flex justify-end gap-3 mt-6">
@@ -70,10 +72,11 @@
 
 // eslint-disable-next-line vue/block-lang
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
 import { CreditCard, User, Wallet, Banknote, X, Check, Loader2 } from "lucide-vue-next";
+import { BaseSelect } from "@/components/ui";
 
 const props = defineProps({
   show: Boolean,
@@ -87,6 +90,10 @@ const amount = ref(0);
 const paymentMethodId = ref("");
 const loadingBalance = ref(false);
 const processing = ref(false);
+
+const paymentMethodOptions = computed(() =>
+  paymentMethods.value.map((m) => ({ value: m.id, label: m.name }))
+);
 
 // Cargar métodos de pago una sola vez
 onMounted(async () => {

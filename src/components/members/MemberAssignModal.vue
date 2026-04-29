@@ -11,12 +11,12 @@
           <Tag class="w-4 h-4 text-muted" aria-hidden="true" />
           Plan
         </label>
-        <select v-model="planId" class="field-input" required>
-          <option disabled value="">Seleccione un plan</option>
-          <option v-for="plan in planes" :key="plan.id" :value="plan.id">
-            {{ plan.name }}
-          </option>
-        </select>
+        <BaseSelect
+          v-model="planId"
+          placeholder="Seleccione un plan"
+          required
+          :options="planOptions"
+        />
 
         <div class="flex justify-end gap-3 mt-4">
           <button type="button" @click="$emit('close')" class="btn btn-secondary inline-flex items-center gap-2">
@@ -35,10 +35,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import api from '@/axios'
 import Swal from 'sweetalert2'
 import { ClipboardList, Tag, X, Check, Loader2 } from 'lucide-vue-next'
+import { BaseSelect } from '@/components/ui'
 
 const props = defineProps({
   show: Boolean,
@@ -49,6 +50,10 @@ const props = defineProps({
 const emit = defineEmits(['close', 'assigned'])
 const planId = ref("")
 const loading = ref(false)
+
+const planOptions = computed(() =>
+  (props.planes || []).map((p) => ({ value: p.id, label: p.name }))
+)
 
 const asignar = async () => {
   if (!planId.value) return
