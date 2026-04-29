@@ -22,17 +22,21 @@
 
         <!-- Barra de filtros -->
         <div class="pos-filters">
-          <div class="flex-1">
+          <div class="flex-1 relative client-select-wrap">
             <BaseSelect
               v-model="selectedMemberId"
+              class="pos-client-select"
               :options="[
-                { value: null, label: '-- Cliente (Opcional) --' },
+                { value: null, label: 'Seleccionar Cliente (Opcional)' },
                 ...members.map((m) => ({ value: m.id, label: m.name })),
               ]"
             />
           </div>
-          <div class="flex-1">
-            <input v-model="search" type="text" placeholder="Buscar producto..." class="field-input text-sm">
+          <div class="flex-1 relative search-input-wrap">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400 dark:text-gray-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input v-model="search" type="text" placeholder="Buscar producto por nombre..." class="field-input text-sm pos-search-input">
           </div>
         </div>
 
@@ -268,17 +272,73 @@ onMounted(() => fetchData())
 .pos-filters {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
   flex-shrink: 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
 }
 @media (min-width: 640px) { .pos-filters { flex-direction: row; } }
 :global(.dark) .pos-filters {
   background: var(--color-surface-muted);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ═══════════════════════════════════════════
+   Estilos Premium para los Inputs de Filtro
+   ═══════════════════════════════════════════ */
+.client-select-wrap :deep(select) {
+  height: 3rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.04);
+  color: #2563eb;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+.client-select-wrap :deep(select:hover) {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+.client-select-wrap :deep(select:focus) {
+  border-color: #3b82f6;
+  background: var(--color-surface);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+:global(.dark) .client-select-wrap :deep(select) {
+  background: rgba(96, 165, 250, 0.08);
+  border-color: rgba(96, 165, 250, 0.25);
+  color: #93c5fd;
+}
+:global(.dark) .client-select-wrap :deep(select:hover) {
+  background: rgba(96, 165, 250, 0.12);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+:global(.dark) .client-select-wrap :deep(select:focus) {
+  background: var(--color-surface);
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+}
+
+.search-input-wrap .pos-search-input {
+  padding-left: 2.75rem;
+  height: 3rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  border: 1.5px solid var(--color-border-strong);
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+.search-input-wrap .pos-search-input:hover {
+  border-color: var(--color-text-subtle);
+}
+.search-input-wrap .pos-search-input:focus {
+  border-color: var(--color-text-soft);
+  box-shadow: 0 0 0 4px var(--color-overlay-strong);
 }
 
 /* ═══════════════════════════════════════════
