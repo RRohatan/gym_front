@@ -41,11 +41,12 @@
         <div class="flex-1 overflow-y-auto px-6 sm:px-8 py-7">
           <form id="register-form" class="space-y-8" @submit.prevent="registrar">
             <!-- ===== Información personal ===== -->
-            <div class="section-header">
-              <span class="section-bar bg-primary-600" />
-              <h2 class="section-title" style="color: var(--color-text-muted);">Información Personal</h2>
-            </div>
-            <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft -mt-4">
+            <div>
+              <div class="section-header" style="margin-bottom: 0.5rem;">
+                <span class="section-bar bg-primary-600" />
+                <h2 class="section-title" style="color: var(--color-text-muted);">Información Personal</h2>
+              </div>
+              <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 <BaseInput
                   v-model="form.name"
@@ -84,42 +85,45 @@
                   :options="sexoOptions"
                 />
               </div>
-            </section>
+              </section>
+            </div>
 
             <!-- ===== Biometría ===== -->
-            <div class="section-header">
-              <span class="section-bar bg-success-600" />
-              <h2 class="section-title" style="color: var(--color-text-muted);">Biometría</h2>
-            </div>
-            <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft -mt-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <BaseInput
-                  v-model.number="form.estatura"
-                  label="Estatura"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="1.70"
-                >
-                  <template #suffix>
-                    <span class="text-xs font-semibold text-success-700">m</span>
-                  </template>
-                </BaseInput>
-
-                <BaseInput
-                  v-model.number="form.peso"
-                  label="Peso"
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  placeholder="70.5"
-                >
-                  <template #suffix>
-                    <span class="text-xs font-semibold text-success-700">kg</span>
-                  </template>
-                </BaseInput>
+            <div>
+              <div class="section-header" style="margin-bottom: 0.5rem;">
+                <span class="section-bar bg-success-600" />
+                <h2 class="section-title" style="color: var(--color-text-muted);">Biometría</h2>
               </div>
-            </section>
+              <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <BaseInput
+                    v-model.number="form.estatura"
+                    label="Estatura"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="1.70"
+                  >
+                    <template #suffix>
+                      <span class="text-xs font-semibold text-success-700">m</span>
+                    </template>
+                  </BaseInput>
+
+                  <BaseInput
+                    v-model.number="form.peso"
+                    label="Peso"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    placeholder="70.5"
+                  >
+                    <template #suffix>
+                      <span class="text-xs font-semibold text-success-700">kg</span>
+                    </template>
+                  </BaseInput>
+                </div>
+              </section>
+            </div>
 
             <!-- ===== Objetivos / Observaciones ===== -->
             <section>
