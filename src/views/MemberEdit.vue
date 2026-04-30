@@ -33,7 +33,7 @@
       <div class="flex-1 overflow-y-auto px-6 sm:px-8 py-7">
         <form id="edit-form" class="space-y-8" @submit.prevent="updateMember">
           <!-- ===== Información personal ===== -->
-          <section>
+          <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
             <div class="section-header">
               <span class="section-bar bg-primary-600" />
               <h2 class="section-title text-primary-700">Información Personal</h2>
@@ -122,18 +122,18 @@
             </div>
           </section>
 
-          <!-- ===== Antecedentes médicos ===== -->
+          <!-- ===== Objetivos / Observaciones ===== -->
           <section>
             <div class="section-header">
-              <span class="section-bar bg-danger-500" />
-              <h2 class="section-title text-danger-600">Antecedentes Médicos</h2>
+              <span class="section-bar bg-amber-500" />
+              <h2 class="section-title" style="color: var(--color-text-muted);">Objetivos / Observaciones</h2>
               <span class="ml-auto optional-tag">Opcional</span>
             </div>
             <textarea
               v-model="form.medical_history"
               rows="3"
               class="field-input resize-none"
-              placeholder="Detalle alergias, lesiones previas o condiciones crónicas relevantes..."
+              placeholder="Ej. perder peso, ganar masa muscular, condiciones a tener en cuenta..."
             />
             <p v-if="errors.medical_history" class="text-xs text-red-600 mt-1">
               {{ errors.medical_history }}
@@ -156,17 +156,51 @@
             </div>
           </section>
 
-          <!-- ===== Fotos de Progreso ===== -->
+          <!-- ===== Fotos Iniciales (frente, perfil, espalda) ===== -->
           <section class="pt-6 border-t border-default-soft">
             <div class="section-header">
               <span class="section-bar bg-success-600" />
-              <h2 class="section-title text-success-700">Fotos de Progreso</h2>
+              <h2 class="section-title text-success-700">Fotos Iniciales</h2>
               <span class="ml-auto optional-tag">Opcional</span>
             </div>
             <div class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-surface-soft)] p-4">
-              <ProgressPhotoCapture v-model="progressPhotos" />
+              <ProgressPhotoCapture
+                v-model="initialPhotos"
+                :labels="['Frente', 'Perfil', 'Espalda']"
+              />
               <p class="mt-3 text-xs text-muted">
-                Toma una foto con la cámara o sube una imagen para cada etapa.
+                Fotos del cliente al ingresar: frente, perfil y espalda.
+              </p>
+            </div>
+          </section>
+
+          <!-- ===== Fotos de Progreso (toggleable) ===== -->
+          <section class="pt-6 border-t border-default-soft">
+            <div class="section-header">
+              <span class="section-bar bg-indigo-500" />
+              <h2 class="section-title" style="color: var(--color-text-muted);">Fotos de Progreso</h2>
+              <button
+                type="button"
+                class="ml-auto progress-toggle"
+                @click="showProgressSection = !showProgressSection"
+              >
+                <svg
+                  class="w-3.5 h-3.5 transition-transform"
+                  :class="{ 'rotate-180': showProgressSection }"
+                  fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                {{ showProgressSection ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+            <div
+              v-if="showProgressSection"
+              class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-surface-soft)] p-4"
+            >
+              <ProgressPhotoGallery v-model="progressPhotos" />
+              <p class="mt-3 text-xs text-muted">
+                Agrega fotos para registrar la evolución del cliente. Cada foto guarda la fecha.
               </p>
             </div>
           </section>
@@ -207,6 +241,7 @@ import api from "@/axios";
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
 import ProgressPhotoCapture from "@/components/members/ProgressPhotoCapture.vue";
+import ProgressPhotoGallery from "@/components/members/ProgressPhotoGallery.vue";
 import { BaseInput, BaseSelect, BaseButton } from "@/components/ui";
 import { SWAL_COLORS } from "@/lib/colors";
 
@@ -237,7 +272,9 @@ const errors = ref({});
 const errorMessage = ref("");
 const loading = ref(false);
 const memberHasFingerprint = ref(false);
-const progressPhotos = ref([null, null, null]);
+const initialPhotos = ref([null, null, null]);
+const progressPhotos = ref([]);
+const showProgressSection = ref(false);
 
 const fetchMember = async () => {
   try {
@@ -254,8 +291,9 @@ const fetchMember = async () => {
       medical_history: data.medical_history ?? "",
     });
     memberHasFingerprint.value = !!data.fingerprint_data;
-    const photos = Array.isArray(data.progress_photos) ? data.progress_photos : [];
-    progressPhotos.value = [photos[0] || null, photos[1] || null, photos[2] || null];
+    const initials = Array.isArray(data.initial_photos) ? data.initial_photos : [];
+    initialPhotos.value = [initials[0] || null, initials[1] || null, initials[2] || null];
+    progressPhotos.value = Array.isArray(data.progress_photos) ? data.progress_photos : [];
   } catch {
     Swal.fire({
       icon: "error",
@@ -274,6 +312,7 @@ const updateMember = async () => {
   try {
     await api.put(`/members/${memberId}`, {
       ...form,
+      initial_photos: initialPhotos.value,
       progress_photos: progressPhotos.value,
     });
 
@@ -363,5 +402,27 @@ onMounted(fetchMember);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: var(--color-text-subtle);
+}
+
+.progress-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.progress-toggle:hover { background: rgba(99, 102, 241, 0.18); }
+:global(.dark) .progress-toggle {
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.18);
 }
 </style>
