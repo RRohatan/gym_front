@@ -172,6 +172,21 @@
                 </p>
               </div>
             </section>
+
+            <!-- ===== Fotos de Progreso ===== -->
+            <section class="pt-6 border-t border-default-soft">
+              <div class="section-header">
+                <span class="section-bar bg-success-600" />
+                <h2 class="section-title" style="color: var(--color-text-muted);">Fotos de Progreso</h2>
+                <span class="ml-auto optional-tag">Opcional</span>
+              </div>
+              <div class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-surface-soft)] p-4">
+                <ProgressPhotoCapture v-model="progressPhotos" />
+                <p class="mt-3 text-xs text-muted">
+                  Toma una foto con la cámara o sube una imagen para cada etapa.
+                </p>
+              </div>
+            </section>
           </form>
         </div>
 
@@ -203,6 +218,7 @@ import { ref, reactive, computed } from "vue";
 import api from "@/axios";
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
+import ProgressPhotoCapture from "@/components/members/ProgressPhotoCapture.vue";
 import { BaseInput, BaseSelect, BaseButton } from "@/components/ui";
 import { SWAL_COLORS } from "@/lib/colors";
 
@@ -215,6 +231,7 @@ const emit = defineEmits(["close", "saved"]);
 
 const loading = ref(false);
 const capturedTemplate = ref("");
+const progressPhotos = ref([null, null, null]);
 
 const sexoOptions = [
   { value: "masculino", label: "Masculino" },
@@ -255,12 +272,17 @@ function resetForm() {
     plan_id: "",
   });
   capturedTemplate.value = "";
+  progressPhotos.value = [null, null, null];
 }
 
 const registrar = async () => {
   loading.value = true;
   try {
-    const { data: nuevoCliente } = await api.post("/members", form);
+    const payload = {
+      ...form,
+      progress_photos: progressPhotos.value.filter(Boolean),
+    };
+    const { data: nuevoCliente } = await api.post("/members", payload);
 
     if (capturedTemplate.value) {
       await api.post(`/members/${nuevoCliente.id}/fingerprint`, {

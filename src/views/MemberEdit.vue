@@ -156,6 +156,21 @@
             </div>
           </section>
 
+          <!-- ===== Fotos de Progreso ===== -->
+          <section class="pt-6 border-t border-default-soft">
+            <div class="section-header">
+              <span class="section-bar bg-success-600" />
+              <h2 class="section-title text-success-700">Fotos de Progreso</h2>
+              <span class="ml-auto optional-tag">Opcional</span>
+            </div>
+            <div class="rounded-xl border-2 border-dashed border-default-soft bg-[var(--color-surface-soft)] p-4">
+              <ProgressPhotoCapture v-model="progressPhotos" />
+              <p class="mt-3 text-xs text-muted">
+                Toma una foto con la cámara o sube una imagen para cada etapa.
+              </p>
+            </div>
+          </section>
+
           <div
             v-if="errorMessage"
             class="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700"
@@ -191,6 +206,7 @@ import { useRoute, useRouter } from "vue-router";
 import api from "@/axios";
 import Swal from "sweetalert2";
 import FingerprintEnroll from "@/components/FingerprintEnroll.vue";
+import ProgressPhotoCapture from "@/components/members/ProgressPhotoCapture.vue";
 import { BaseInput, BaseSelect, BaseButton } from "@/components/ui";
 import { SWAL_COLORS } from "@/lib/colors";
 
@@ -221,6 +237,7 @@ const errors = ref({});
 const errorMessage = ref("");
 const loading = ref(false);
 const memberHasFingerprint = ref(false);
+const progressPhotos = ref([null, null, null]);
 
 const fetchMember = async () => {
   try {
@@ -237,6 +254,8 @@ const fetchMember = async () => {
       medical_history: data.medical_history ?? "",
     });
     memberHasFingerprint.value = !!data.fingerprint_data;
+    const photos = Array.isArray(data.progress_photos) ? data.progress_photos : [];
+    progressPhotos.value = [photos[0] || null, photos[1] || null, photos[2] || null];
   } catch {
     Swal.fire({
       icon: "error",
@@ -253,7 +272,10 @@ const updateMember = async () => {
   errors.value = {};
 
   try {
-    await api.put(`/members/${memberId}`, form);
+    await api.put(`/members/${memberId}`, {
+      ...form,
+      progress_photos: progressPhotos.value,
+    });
 
     await Swal.fire({
       icon: "success",
