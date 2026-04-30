@@ -41,12 +41,11 @@
         <div class="flex-1 overflow-y-auto px-6 sm:px-8 py-7">
           <form id="register-form" class="space-y-8" @submit.prevent="registrar">
             <!-- ===== Información personal ===== -->
-            <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
-              <div class="section-header">
-                <span class="section-bar bg-primary-600" />
-                <h2 class="section-title" style="color: var(--color-text-muted);">Información Personal</h2>
-              </div>
-
+            <div class="section-header">
+              <span class="section-bar bg-primary-600" />
+              <h2 class="section-title" style="color: var(--color-text-muted);">Información Personal</h2>
+            </div>
+            <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft -mt-4">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 <BaseInput
                   v-model="form.name"
@@ -88,12 +87,11 @@
             </section>
 
             <!-- ===== Biometría ===== -->
-            <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft">
-              <div class="section-header">
-                <span class="section-bar bg-success-600" />
-                <h2 class="section-title" style="color: var(--color-text-muted);">Biometría</h2>
-              </div>
-
+            <div class="section-header">
+              <span class="section-bar bg-success-600" />
+              <h2 class="section-title" style="color: var(--color-text-muted);">Biometría</h2>
+            </div>
+            <section class="p-5 sm:p-6 bg-[var(--color-surface-soft)] rounded-xl border border-default-soft -mt-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <BaseInput
                   v-model.number="form.estatura"
