@@ -78,29 +78,21 @@
         </router-link>
       </div>
 
-      <!-- ═══════════ Acceso rápido ═══════════ -->
+      <!-- ═══════════ Acceso rápido (marquee CSS) ═══════════ -->
       <p class="section-label mb-4">Acceso Rápido</p>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-
-        <router-link to="/pos" class="quick-card group" style="--qc:#6366f1">
-          <ShoppingCart class="w-6 h-6 mb-2" aria-hidden="true" />
-          <span class="quick-label">Punto de Venta</span>
-        </router-link>
-
-        <router-link to="/members" class="quick-card group" style="--qc:#34d399">
-          <Users class="w-6 h-6 mb-2" aria-hidden="true" />
-          <span class="quick-label">Clientes</span>
-        </router-link>
-
-        <router-link to="/Membership" class="quick-card group" style="--qc:#38bdf8">
-          <CalendarCheck2 class="w-6 h-6 mb-2" aria-hidden="true" />
-          <span class="quick-label">Membresías</span>
-        </router-link>
-
-        <router-link to="/CashBox" class="quick-card group" style="--qc:#2dd4bf">
-          <BadgeDollarSign class="w-6 h-6 mb-2" aria-hidden="true" />
-          <span class="quick-label">Caja</span>
-        </router-link>
+      <div class="marquee">
+        <div class="marquee-track">
+          <router-link
+            v-for="(item, i) in quickItemsRepeated"
+            :key="i"
+            :to="item.to"
+            class="quick-card group marquee-card"
+            :style="{ '--qc': item.color }"
+          >
+            <component :is="item.icon" class="w-6 h-6 mb-2" aria-hidden="true" />
+            <span class="quick-label">{{ item.label }}</span>
+          </router-link>
+        </div>
       </div>
 
     </div>
@@ -122,6 +114,15 @@ import {
   CalendarCheck2,
   BadgeDollarSign,
 } from 'lucide-vue-next'
+const quickItemsBase = [
+  { to: '/pos',        label: 'Punto de Venta', color: '#6366f1', icon: ShoppingCart },
+  { to: '/members',    label: 'Clientes',       color: '#34d399', icon: Users },
+  { to: '/Membership', label: 'Membresías',     color: '#38bdf8', icon: CalendarCheck2 },
+  { to: '/CashBox',    label: 'Caja',           color: '#2dd4bf', icon: BadgeDollarSign },
+]
+// Duplicamos exactamente una vez. Con translateX(-50%) la animación cae
+// justo donde empieza la 2da copia, así el loop es invisible.
+const quickItemsRepeated = [...quickItemsBase, ...quickItemsBase]
 
 const auth  = useAuthStore()
 const user  = auth.user
@@ -156,3 +157,35 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: marquee-scroll 24s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-card {
+  flex: 0 0 auto;
+  width: 16rem;
+}
+@media (min-width: 640px) {
+  .marquee-card { width: 18rem; }
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - 0.5rem)); }
+}
+</style>
